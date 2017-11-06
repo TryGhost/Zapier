@@ -1,11 +1,11 @@
 {
-  "name": "zapier-platform-example-app-minimal",
-  "version": "1.0.0",
-  "description": "An example app for the Zapier platform.",
-  "repository": "zapier/zapier-platform-example-app-minimal",
-  "homepage": "https://zapier.com/",
-  "author": "Bryan Helmig <bryan@zapier.com>",
-  "license": "BSD-3-Clause",
+  "name": "ghost-zapier",
+  "version": "0.0.1",
+  "description": "Ghost integration for the Zapier platform.",
+  "repository": "TryGhost/Ghost-Zapier",
+  "homepage": "https://ghost.org/",
+  "author": "Ghost Foundation",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive"
