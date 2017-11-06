@@ -9,4 +9,5 @@ Notes:
 
 ## Testing
 
-`zapier test` will run the tests, you _have_ to be running node 6.10.2
+- `zapier test` will run the tests, you _have_ to be running node 6.10.2
+- `zapier test --debug` will test and output request and response logs
