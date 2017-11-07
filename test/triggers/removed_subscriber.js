@@ -8,7 +8,7 @@ const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', () => {
-    describe('New Subscriber', () => {
+    describe('Removed Subscriber', () => {
         let apiMock = nock('http://zapier-test.ghost.io');
         let authData = {
             adminUrl: 'http://zapier-test.ghost.io/ghost/',
@@ -32,7 +32,7 @@ describe('Triggers', () => {
                 }
             });
 
-            appTester(App.triggers.new_subscriber.operation.perform, bundle)
+            appTester(App.triggers.removed_subscriber.operation.perform, bundle)
                 .then((results) => {
                     results.length.should.eql(1);
 
@@ -67,7 +67,7 @@ describe('Triggers', () => {
                     }]
                 });
 
-            appTester(App.triggers.new_subscriber.operation.performList, bundle)
+            appTester(App.triggers.removed_subscriber.operation.performList, bundle)
                 .then((results) => {
                     apiMock.isDone().should.be.true;
                     results.length.should.be.greaterThan(1);
@@ -89,14 +89,14 @@ describe('Triggers', () => {
 
             apiMock.post('/ghost/api/v0.1/webhooks/', {
                 target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                event: 'subscriber.create'
+                event: 'subscriber.delete'
             }).reply(200, {
                 id: 'subscribe-test',
                 target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                event: 'subscriber.create'
+                event: 'subscriber.delete'
             });
 
-            appTester(App.triggers.new_subscriber.operation.performSubscribe, bundle)
+            appTester(App.triggers.removed_subscriber.operation.performSubscribe, bundle)
                 .then((results) => {
                     apiMock.isDone().should.be.true;
                     done();
@@ -109,14 +109,14 @@ describe('Triggers', () => {
                 subscribeData: {
                     id: 'subscribe-test',
                     target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                    event: 'subscriber.create'
+                    event: 'subscriber.delete'
                 }
             });
 
             apiMock.delete('/ghost/api/v0.1/webhooks/subscribe-test/')
                 .reply(204);
 
-            appTester(App.triggers.new_subscriber.operation.performUnsubscribe, bundle)
+            appTester(App.triggers.removed_subscriber.operation.performUnsubscribe, bundle)
                 .then((results) => {
                     apiMock.isDone().should.be.true;
                     done();
