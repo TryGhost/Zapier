@@ -18,7 +18,7 @@ const includeAuthHeaders = (request, z, bundle) => {
     return request;
 }
 
-const sessionRefreshIf401 = (response, z, bundle) => {
+const tokenRefreshIf401 = (response, z, bundle) => {
     if (bundle.authData.token && response.status === 401) {
         throw new z.errors.RefreshAuthError('Auth token needs refreshing.');
     }
@@ -42,7 +42,7 @@ const App = {
     ],
 
     afterResponse: [
-        sessionRefreshIf401
+        tokenRefreshIf401
     ],
 
     // If you want to define optional resources to simplify creation of triggers, searches, creates - do that here!

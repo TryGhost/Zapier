@@ -60,6 +60,7 @@ describe('Authentication', () => {
 
         appTester(App.authentication.test, bundle)
             .then((response) => {
+                apiMock.isDone().should.be.true;
                 response.status.should.eql(200);
                 response.request.headers['Authorization'].should.eql('Bearer my-auth-token');
                 done();
@@ -169,7 +170,7 @@ describe('Authentication', () => {
                     err.message.should.startWith('Too many sign-in attempts try again in 10 minutes');
                 })
                 .finally(done);
-        })
+        });
 
         it('handles unexpected errors', (done) => {
             apiMock.post('/ghost/api/v0.1/authentication/token')

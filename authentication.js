@@ -28,7 +28,7 @@ const getBlogConfig = (z, bundle) => {
             throw new Error(`Unable to fetch blog config, please check your Admin URL. Received status code ${response.status}`);
         }
 
-        let json = JSON.parse(response.content);
+        let json = z.JSON.parse(response.content);
         return json.configuration[0];
     });
 }
@@ -51,7 +51,7 @@ const getAuthToken = (z, bundle) => {
             let json;
 
             try {
-                json = JSON.parse(response.content);
+                json = z.JSON.parse(response.content);
             } catch (e) {
                 // content was not JSON
             }
