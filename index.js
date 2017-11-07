@@ -1,3 +1,4 @@
+const NewSubscriberTrigger = require('./triggers/new_subscriber');
 const authentication = require('./authentication');
 
 const setApiHost = (request, z, bundle) => {
@@ -51,6 +52,7 @@ const App = {
 
     // If you want your trigger to show up, you better include it here!
     triggers: {
+        [NewSubscriberTrigger.key]: NewSubscriberTrigger,
     },
 
     // If you want your searches to show up, you better include it here!
