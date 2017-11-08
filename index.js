@@ -1,3 +1,4 @@
+const NewStoryTrigger = require('./triggers/new_story');
 const NewSubscriberTrigger = require('./triggers/new_subscriber');
 const RemovedSubscriberTrigger = require('./triggers/removed_subscriber');
 const authentication = require('./authentication');
@@ -53,6 +54,7 @@ const App = {
 
     // If you want your trigger to show up, you better include it here!
     triggers: {
+        [NewStoryTrigger.key]: NewStoryTrigger,
         [NewSubscriberTrigger.key]: NewSubscriberTrigger,
         [RemovedSubscriberTrigger.key]: RemovedSubscriberTrigger
     },
