@@ -14,7 +14,7 @@ const listPosts = (z, bundle) => {
     return z.request(options)
         .then((response) => {
             let blogUrl = bundle.authData.blogUrl.replace(/\/?$/, '');
-            let {posts} = JSON.parse(response.content);
+            let {posts} = z.JSON.parse(response.content);
 
             // manipulate data so it's useful
             posts.forEach((post) => {
