@@ -77,10 +77,11 @@ const getAuthToken = (z, bundle) => {
                 token: json.access_token,
                 clientId: config.clientId,
                 clientSecret: config.clientSecret,
-                blogTitle: config.blogTitle
+                blogTitle: config.blogTitle,
+                blogUrl: config.blogUrl
             }
-        })
-    })
+        });
+    });
 }
 
 module.exports = {

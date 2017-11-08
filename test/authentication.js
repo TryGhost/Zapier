@@ -26,10 +26,11 @@ describe('Authentication', () => {
             .reply(200, {
                 configuration: [{
                     blogTitle: 'Test Blog',
+                    blogUrl: 'http://example.com/',
                     clientId: 'test-client-id',
                     clientSecret: 'test-client-secret'
                 }]
-            })
+            });
 
         apiMock.post('/ghost/api/v0.1/authentication/token', {
                 grant_type: 'password',
@@ -46,6 +47,10 @@ describe('Authentication', () => {
             .then((newAuthData) => {
                 apiMock.isDone().should.be.true;
                 newAuthData.token.should.eql('new auth token!');
+                newAuthData.clientId.should.eql('test-client-id');
+                newAuthData.clientSecret.should.eql('test-client-secret');
+                newAuthData.blogTitle.should.eql('Test Blog');
+                newAuthData.blogUrl.should.eql('http://example.com/');
                 done();
             })
             .catch(done);
