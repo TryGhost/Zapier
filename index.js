@@ -13,6 +13,7 @@ const setApiHost = (request, z, bundle) => {
 }
 
 const includeAuthHeaders = (request, z, bundle) => {
+    z.console.log('includeAuthHeaders', bundle);
     if (bundle.authData.token) {
         request.headers = request.headers || {};
         request.headers['Authorization'] = `Bearer ${bundle.authData.token}`;
@@ -22,6 +23,7 @@ const includeAuthHeaders = (request, z, bundle) => {
 }
 
 const tokenRefreshIf401 = (response, z, bundle) => {
+    z.console.log('tokenRefreshIf401', bundle);
     if (bundle.authData.token && response.status === 401) {
         throw new z.errors.RefreshAuthError('Auth token needs refreshing.');
     }
