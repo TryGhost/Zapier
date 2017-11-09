@@ -66,6 +66,8 @@ module.exports = {
 
         perform: listPosts,
 
+        // the sample should be returned as if it's been through the same
+        // manipulation that `listPosts` does
         sample: {
             id: '5a032270d7d07547c8982aa8',
             uuid: 'e7975bae-58b2-4632-9f56-d9f8ded39905',
@@ -177,25 +179,20 @@ module.exports = {
                 parent: null
             },
             url: '/sample-post/',
-            comment_id: '5a032270d7d07547c8982aa8'
+            comment_id: '5a032270d7d07547c8982aa8',
+
+            // added via getPosts
+            permalink: 'https://example.com/sample-post/',
+            preview_url: 'https://example.com/p/e7975bae-58b2-4632-9f56-d9f8ded39905/'
         },
 
         outputFields: [
-            {key: 'id', label: 'ID'},
-            {key: 'slug', label: 'Slug'},
             {key: 'permalink', label: 'Published post URL'},
-            {key: 'preview_url', label: 'Preview URL'},
-            {key: 'title', label: 'Title'},
             {key: 'published_at', label: 'Publish Date (UTC)'},
             {key: 'updated_at', label: 'Last Updated Date (UTC)'},
-            {key: 'featured', label: 'Featured'},
-            {key: 'custom_excerpt', label: 'Custom excerpt'},
             {key: 'html', label: 'HTML Formatted Content'},
             {key: 'mobiledoc', label: 'Raw Mobiledoc Content'},
             {key: 'plaintext', label: 'Plain Text Formatted Content'},
-            {key: 'feature_image', label: 'Featured Image'},
-            {key: 'meta_title', label: 'Meta Title'},
-            {key: 'meta_description', label: 'Meta Description'},
             {key: 'og_image', label: 'Open Graph Image'},
             {key: 'og_title', label: 'Open Graph Title'},
             {key: 'og_description', label: 'Open Graph Description'},
