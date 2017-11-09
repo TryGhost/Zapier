@@ -28,7 +28,7 @@ const listPosts = (z, bundle) => {
                 // convert image urls to full URLs
                 ['feature_image', 'og_image', 'twitter_image'].forEach((key) => {
                     // check for absolute or protocol-relative URLs
-                    if (!post[key].match(/^https?:\/\/|\/\//)) {
+                    if (post[key] && !post[key].match(/^https?:\/\/|\/\//)) {
                         post[key] = `${blogUrl}${post[key]}`;
                     }
                 });
