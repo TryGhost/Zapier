@@ -13,8 +13,10 @@ const setApiHost = (request, z, bundle) => {
 }
 
 const includeAuthHeaders = (request, z, bundle) => {
-    z.console.log('includeAuthHeaders', JSON.stringify(bundle));
-    if (bundle.authData.token) {
+    // Zapier goes through the auth process twice, the second time it will have
+    // an auth token but the Authorization header will crash Ghost so we check to
+    // make sure we don't add it to token requests
+    if (bundle.authData.token && !request.url.match(/authentication\/token$/)) {
         request.headers = request.headers || {};
         request.headers['Authorization'] = `Bearer ${bundle.authData.token}`;
     }
@@ -23,7 +25,6 @@ const includeAuthHeaders = (request, z, bundle) => {
 }
 
 const tokenRefreshIf401 = (response, z, bundle) => {
-    z.console.log('tokenRefreshIf401', JSON.stringify(bundle));
     if (bundle.authData.token && response.status === 401) {
         throw new z.errors.RefreshAuthError('Auth token needs refreshing.');
     }
