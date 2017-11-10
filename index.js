@@ -9,6 +9,11 @@ const setApiHost = (request, z, bundle) => {
     let fullUrl = `${host}/api/v0.1/${path}`;
 
     request.url = fullUrl;
+
+    if (!request.headers['Content-Type']) {
+        request.headers['Content-Type'] = 'application/json; charset=utf-8';
+    }
+
     return request;
 }
 
