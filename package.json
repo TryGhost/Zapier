@@ -1,6 +1,6 @@
 {
   "name": "ghost-zapier",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Ghost integration for the Zapier platform.",
   "repository": "TryGhost/Ghost-Zapier",
   "homepage": "https://ghost.org/",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "lodash": "4.17.4",
-    "zapier-platform-core": "3.2.1"
+    "zapier-platform-core": "3.3.0"
   },
   "devDependencies": {
     "mocha": "3.2.0",
