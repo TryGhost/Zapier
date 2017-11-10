@@ -1,7 +1,9 @@
 const subscribeHook = (eventName, z, bundle) => {
     let data = {
-        target_url: bundle.targetUrl,
-        event: eventName
+        webhooks: [{
+            target_url: bundle.targetUrl,
+            event: eventName
+        }]
     };
 
     let options = {
