@@ -88,12 +88,16 @@ describe('Triggers', () => {
             });
 
             apiMock.post('/ghost/api/v0.1/webhooks/', {
-                target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                event: 'subscriber.delete'
-            }).reply(200, {
-                id: 'subscribe-test',
-                target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                event: 'subscriber.delete'
+                webhooks: [{
+                    target_url: 'https://webooks.zapier.com/ghost/subscriber',
+                    event: 'subscriber.delete'
+                }]
+            }).reply(201, {
+                webhooks: [{
+                    id: 'subscribe-test',
+                    target_url: 'https://webooks.zapier.com/ghost/subscriber',
+                    event: 'subscriber.delete'
+                }]
             });
 
             appTester(App.triggers.removed_subscriber.operation.performSubscribe, bundle)

@@ -15,7 +15,7 @@ const subscribeHook = (eventName, z, bundle) => {
     // the data returned from webhooks endpoint is added directly to
     // bundle.subscribeData
     return z.request(options)
-        .then((response) => JSON.parse(response.content));
+        .then((response) => z.JSON.parse(response.content).webhooks[0]);
 };
 
 const unsubscribeHook = (z, bundle) => {
