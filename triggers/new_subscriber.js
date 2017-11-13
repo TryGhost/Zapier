@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const hooks = require('../hooks');
 
-const subscribeHook = _.partial(hooks.subscribeHook, 'subscriber.create');
+const subscribeHook = _.partial(hooks.subscribeHook, 'subscriber.added');
 const unsubscribeHook = hooks.unsubscribeHook;
 
 // triggers on new subscriber

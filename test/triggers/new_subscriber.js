@@ -90,13 +90,13 @@ describe('Triggers', () => {
             apiMock.post('/ghost/api/v0.1/webhooks/', {
                 webhooks: [{
                     target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                    event: 'subscriber.create'
+                    event: 'subscriber.added'
                 }]
             }).reply(201, {
                 webhooks: [{
                     id: 'subscribe-test',
                     target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                    event: 'subscriber.create'
+                    event: 'subscriber.added'
                 }]
             });
 
@@ -113,7 +113,7 @@ describe('Triggers', () => {
                 subscribeData: {
                     id: 'subscribe-test',
                     target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                    event: 'subscriber.create'
+                    event: 'subscriber.added'
                 }
             });
 

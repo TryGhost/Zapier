@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const hooks = require('../hooks');
 
-const subscribeHook = _.partial(hooks.subscribeHook, 'subscriber.delete');
+const subscribeHook = _.partial(hooks.subscribeHook, 'subscriber.deleted');
 const unsubscribeHook = hooks.unsubscribeHook;
 
 // triggers on deleted subscriber
