@@ -1,3 +1,5 @@
+const SubscriberCreate = require('./creates/create_subscriber');
+const SubscriberDelete = require('./creates/delete_subscriber');
 const NewStoryTrigger = require('./triggers/new_story');
 const NewSubscriberTrigger = require('./triggers/new_subscriber');
 const RemovedSubscriberTrigger = require('./triggers/removed_subscriber');
@@ -74,6 +76,8 @@ const App = {
 
     // If you want your creates to show up, you better include it here!
     creates: {
+        [SubscriberCreate.key]: SubscriberCreate,
+        [SubscriberDelete.key]: SubscriberDelete,
     }
 };
 
