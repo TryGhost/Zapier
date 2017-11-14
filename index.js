@@ -1,5 +1,6 @@
 const SubscriberCreate = require('./creates/create_subscriber');
 const SubscriberDelete = require('./creates/delete_subscriber');
+const SubscriberSearch = require('./searches/subscriber');
 const NewStoryTrigger = require('./triggers/new_story');
 const NewSubscriberTrigger = require('./triggers/new_subscriber');
 const RemovedSubscriberTrigger = require('./triggers/removed_subscriber');
@@ -72,6 +73,7 @@ const App = {
 
     // If you want your searches to show up, you better include it here!
     searches: {
+        [SubscriberSearch.key]: SubscriberSearch,
     },
 
     // If you want your creates to show up, you better include it here!
