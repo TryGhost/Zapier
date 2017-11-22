@@ -27,12 +27,13 @@ const getFallbackRealSubscriber = (z, bundle) => {
 };
 
 module.exports = {
+    // keeping `removed_subscriber` key for backwards compatability
     key: 'removed_subscriber',
     noun: 'Subscriber',
 
     display: {
-        label: 'Removed Subscriber',
-        description: 'Triggers when a subscriber is removed.'
+        label: 'New Unsubscriber',
+        description: 'Triggers when a subscriber unsubscribes.'
     },
 
     operation: {

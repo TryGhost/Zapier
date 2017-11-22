@@ -8,7 +8,7 @@ const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', () => {
-    describe('Removed Subscriber', () => {
+    describe('New Unsubscriber', () => {
         let apiMock = nock('http://zapier-test.ghost.io');
         let authData = {
             adminUrl: 'http://zapier-test.ghost.io/ghost/',

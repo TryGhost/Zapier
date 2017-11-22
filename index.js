@@ -3,7 +3,7 @@ const SubscriberDelete = require('./creates/delete_subscriber');
 const SubscriberSearch = require('./searches/subscriber');
 const NewStoryTrigger = require('./triggers/new_story');
 const NewSubscriberTrigger = require('./triggers/new_subscriber');
-const RemovedSubscriberTrigger = require('./triggers/removed_subscriber');
+const NewUnsubscriberTrigger = require('./triggers/new_unsubscriber');
 const authentication = require('./authentication');
 
 const setApiHost = (request, z, bundle) => {
@@ -68,7 +68,7 @@ const App = {
     triggers: {
         [NewStoryTrigger.key]: NewStoryTrigger,
         [NewSubscriberTrigger.key]: NewSubscriberTrigger,
-        [RemovedSubscriberTrigger.key]: RemovedSubscriberTrigger
+        [NewUnsubscriberTrigger.key]: NewUnsubscriberTrigger
     },
 
     // If you want your searches to show up, you better include it here!
