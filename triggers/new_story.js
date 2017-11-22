@@ -43,6 +43,9 @@ const listPosts = (z, bundle) => {
                     }
                 });
 
+                // add url for author
+                post.author.url = `${blogUrl}/author/${post.author.slug}/`;
+
                 // convert author image urls to absolute
                 ['profile_image', 'cover_image'].forEach((key) => {
                     if (post.author[key] && !post.author[key].match(/^https?:\/\/|\/\//)) {
@@ -113,7 +116,9 @@ module.exports = {
             uuid: 'e7975bae-58b2-4632-9f56-d9f8ded39905',
             title: 'Sample Post',
             slug: 'sample-post',
-            html: '<div class="kg-card-markdown"><p>Sample post that has just been published, has a couple of tags and meta data.</p>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus quis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam maximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut lobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero enim. Nunc ac interdum ex. Sed at mauris purus. Integer     eget dignissim eros. Cras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\n<p>Nulla a lorem eget turpis tincidunt luctus. Cras malesuada sed tellus ac auctor. Suspendisse nec ornare odio, et pellentesque orci. Cras eget suscipit tortor. Curabitur a orci bibendum, viverra odio et, ullamcorper nisl. Ut non lobortis leo. Duis leo ante, eleifend porta nunc at, tincidunt facilisis metus. Aliquam feugiat id leo ac vehicula. Nullam sed    nunc ornare, interdum ipsum vitae, elementum sem. Sed iaculis, nunc non vehicula commodo, enim ex mollis lorem, et tincidunt magna risus sed massa. Aenean quis varius odio. Sed at metus tincidunt, posuere tellus eu, fermentum magna. Fusce blandit rhoncus arcu, a pharetra tortor tristique a. Vivamus finibus non orci vel hendrerit.</p>\n</div>',
+            mobiledoc: "{\"version\":\"0.3.1\",\"markups\":[],\"atoms\":[],\"cards\":[[\"card-markdown\",{\"cardName\":\"card-markdown\",\"markdown\":\"Sample post that has just been published, has a couple of tags and meta data.\\n\\n![NatGeo01](/content/images/2017/11/NatGeo01.jpg)\\n\\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus quis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam maximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut lobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero enim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros. Cras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"}]],\"sections\":[[10,0]]}",
+            html: "<div class=\"kg-card-markdown\"><p>Sample post that has just been published, has a couple of tags and meta data.</p>\n<p><img src=\"/content/images/2017/11/NatGeo01.jpg\" alt=\"NatGeo01\"></p>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus quis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam maximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut lobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero enim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros. Cras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\n</div>",
+            plaintext: "Sample post that has just been published, has a couple of tags and meta data.\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus\nquis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam\nmaximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut\nlobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero\nenim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros.\nCras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit\namet, consectetur adipiscing elit.",
             feature_image: 'https://images.unsplash.com/photo-1510022151265-1bb84d406531?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=bb705e8a157ef7343a8af61b4ce3a565',
             featured: false,
             page: false,
@@ -140,9 +145,10 @@ module.exports = {
             custom_template: null,
             author: {
                 id: '1',
-                name: 'Kevin Ansfield',
-                slug: 'kevin',
-                profile_image: '//www.gravatar.com/avatar/3ae045bc198a157401827c8455cd7c99?s=250&d=mm&r=x',
+                name: 'Slimer',
+                slug: 'slimer',
+                url: 'http://example.com/author/slimer/',
+                profile_image: '//www.gravatar.com/avatar/3ae045bc198a157401827c8455cd7c99?s=250&d=retro&r=x&f=y',
                 cover_image: null,
                 bio: null,
                 website: null,
@@ -161,8 +167,9 @@ module.exports = {
                     id: '5a0322f9d7d07547c8982aa9',
                     name: 'Technology',
                     slug: 'technology',
+                    url: 'http://example.com/tag/technology/',
                     description: null,
-                    feature_image: null,
+                    feature_image: 'http://example.com/content/images/2017/11/technology.jpg',
                     visibility: 'public',
                     meta_title: null,
                     meta_description: null,
@@ -176,6 +183,7 @@ module.exports = {
                     id: '5a0322f9d7d07547c8982aab',
                     name: 'Integration',
                     slug: 'integration',
+                    url: 'http://example.com/tag/integration/',
                     description: null,
                     feature_image: null,
                     visibility: 'public',
@@ -191,6 +199,7 @@ module.exports = {
                     id: '5a0322f9d7d07547c8982aad',
                     name: '#Sample',
                     slug: 'hash-sample',
+                    url: 'http://example.com/tag/sample/',
                     description: null,
                     feature_image: null,
                     visibility: 'internal',
@@ -207,6 +216,7 @@ module.exports = {
                 id: '5a0322f9d7d07547c8982aa9',
                 name: 'Technology',
                 slug: 'technology',
+                url: 'http://example.com/tag/technology/',
                 description: null,
                 feature_image: null,
                 visibility: 'public',
@@ -218,11 +228,10 @@ module.exports = {
                 updated_by: '1',
                 parent: null
             },
-            url: '/sample-post/',
+            url: 'http://example.com/sample-post/',
             comment_id: '5a032270d7d07547c8982aa8',
 
             // added via getPosts
-            permalink: 'https://example.com/sample-post/',
             preview_url: 'https://example.com/p/e7975bae-58b2-4632-9f56-d9f8ded39905/'
         },
 

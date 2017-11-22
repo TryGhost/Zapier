@@ -56,6 +56,7 @@ describe('Triggers', () => {
                     post.og_image.should.eql('http://zapier-test.com/content/images/2017/11/NatGeo04.jpg');
                     post.twitter_image.should.eql('http://zapier-test.com/content/images/2017/11/NatGeo03.jpg');
 
+                    post.author.url.should.eql('http://zapier-test.com/author/kevin/');
                     post.author.profile_image.should.eql('http://zapier-test.com/content/images/2017/08/avatar.png');
                     post.author.cover_image.should.eql('http://zapier-test.com/content/images/2017/08/99be792f74310e5ae47955064fdb31fc-1.jpg');
 
