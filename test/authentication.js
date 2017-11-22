@@ -45,7 +45,7 @@ describe('Authentication', () => {
 
         appTester(App.authentication.sessionConfig.perform, bundle)
             .then((newAuthData) => {
-                apiMock.isDone().should.be.true;
+                nock.pendingMocks().length.should.eql(0);
                 newAuthData.token.should.eql('new auth token!');
                 newAuthData.clientId.should.eql('test-client-id');
                 newAuthData.clientSecret.should.eql('test-client-secret');
@@ -61,13 +61,21 @@ describe('Authentication', () => {
 
         bundle.authData.token = 'my-auth-token';
 
-        apiMock.get('/ghost/api/v0.1/users/me/');
+        apiMock.get('/ghost/api/v0.1/configuration/about/')
+            .matchHeader('Authorization', 'Bearer my-auth-token')
+            .reply(200, {
+                configuration: [{
+                    version: '1.18.0',
+                    environment: 'production',
+                    database: 'mysql',
+                    mail: 'SMTP'
+                }]
+            });
 
         appTester(App.authentication.test, bundle)
             .then((response) => {
                 apiMock.isDone().should.be.true;
                 response.status.should.eql(200);
-                response.request.headers['Authorization'].should.eql('Bearer my-auth-token');
                 done();
             })
             .catch(done);
@@ -77,7 +85,7 @@ describe('Authentication', () => {
         let bundle = Object.assign({}, {authData});
         bundle.authData.token = 'my-expired-token';
 
-        apiMock.get('/ghost/api/v0.1/users/me/')
+        apiMock.get('/ghost/api/v0.1/configuration/about/')
             .reply(401);
 
         appTester(App.authentication.test, bundle)
@@ -201,6 +209,32 @@ describe('Authentication', () => {
                 })
                 .catch((err) => {
                     err.message.should.startWith('Authentication failed. Unexpected response');
+                })
+                .finally(done);
+        });
+
+        it('handles unsupported Ghost version', (done) => {
+            let bundle = Object.assign({}, {authData});
+
+            bundle.authData.token = 'my-auth-token';
+
+            apiMock.get('/ghost/api/v0.1/configuration/about/')
+                .matchHeader('Authorization', 'Bearer my-auth-token')
+                .reply(200, {
+                    configuration: [{
+                        version: '1.17.2',
+                        environment: 'production',
+                        database: 'mysql',
+                        mail: 'SMTP'
+                    }]
+                });
+
+            appTester(App.authentication.test, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.message.should.startWith('Supported Ghost version range is ^1.18.0, you are using 1.17.2');
                 })
                 .finally(done);
         });

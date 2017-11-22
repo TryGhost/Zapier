@@ -1,6 +1,10 @@
+const semver = require('semver');
+
+const SUPPORTED_VERSION = '^1.18.0';
+
 const testAuth = (z) => {
     let promise = z.request({
-        url: `/users/me/`
+        url: `/configuration/about/`
     });
 
     // This method can return any truthy value to indicate valid credentials
@@ -12,6 +16,12 @@ const testAuth = (z) => {
 
         if (response.status !== 200) {
             throw new Error(`An error occurred testing authentication. Received status code ${response.status}`);
+        }
+
+        let [config] = z.JSON.parse(response.content).configuration;
+
+        if (!semver.satisfies(config.version, SUPPORTED_VERSION)) {
+            throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
 
         return response;

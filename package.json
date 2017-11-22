@@ -17,6 +17,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "lodash": "4.17.4",
+    "semver": "^5.4.1",
     "url-join": "^2.0.2",
     "zapier-platform-core": "3.3.0"
   },
