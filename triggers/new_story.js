@@ -1,15 +1,19 @@
 const _ = require('lodash');
+const makeAbsoluteUrls = require('../utils/make-absolute-urls');
 
 const listPosts = (z, bundle) => {
     let options = {
         url: '/posts/',
         params: {
-            status: bundle.inputData.status,
             include: 'author,tags',
             formats: 'mobiledoc,html,plaintext',
             order: 'updated_at desc'
         }
     };
+
+    if (bundle.inputData.status) {
+        options.params.status = bundle.inputData.status;
+    }
 
     return z.request(options)
         .then((response) => {
@@ -20,18 +24,54 @@ const listPosts = (z, bundle) => {
             posts.forEach((post) => {
                 // add a permalink using the stored blogUrl because the API
                 // only returns a relative url
-                post.permalink = `${blogUrl}${post.url}`;
+                post.url = `${blogUrl}${post.url}`;
 
                 // add a preview url in case this is a draft or scheduled post
                 post.preview_url = `${blogUrl}/p/${post.uuid}/`;
 
-                // convert image urls to full URLs
+                // convert relative content URLs to absolute URLs
+                post.html = makeAbsoluteUrls(
+                    post.html,
+                    blogUrl,
+                    post.url
+                ).html();
+
+                // convert relative image urls to absolute URLs
                 ['feature_image', 'og_image', 'twitter_image'].forEach((key) => {
-                    // check for absolute or protocol-relative URLs
                     if (post[key] && !post[key].match(/^https?:\/\/|\/\//)) {
                         post[key] = `${blogUrl}${post[key]}`;
                     }
                 });
+
+                // convert author image urls to absolute
+                ['profile_image', 'cover_image'].forEach((key) => {
+                    if (post.author[key] && !post.author[key].match(/^https?:\/\/|\/\//)) {
+                        post.author[key] = `${blogUrl}${post.author[key]}`;
+                    }
+                });
+
+                // add urls for tags and convert relative image urls to absolute
+                post.tags.forEach((tag) => {
+                    // only public tags have urls
+                    if (tag.visibility === 'public') {
+                        tag.url = `${blogUrl}/tag/${tag.slug}/`;
+                    } else {
+                        tag.url = null;
+                    }
+
+                    if (tag.feature_image && !tag.feature_image.match(/^https?:\/\/|\/\//)) {
+                        tag.feature_image = `${blogUrl}${tag.feature_image}`;
+                    }
+                });
+
+                // same tag treatment for primary_tag
+                if (post.primary_tag) {
+                    post.primary_tag.url = `${blogUrl}/tag/${post.primary_tag.slug}/`;
+
+                    if (post.primary_tag.feature_image && !post.primary_tag.feature_image.match(/^https?:\/\/|\/\//)) {
+                        post.primary_tag.feature_image = `${blogUrl}${post.primary_tag.feature_image}`;
+                    }
+                }
             });
 
             return posts;
