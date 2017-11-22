@@ -96,7 +96,7 @@ module.exports = {
         {
             key: 'adminUrl',
             label: 'Admin URL',
-            helpText: 'URL of your Ghost blog\'s admin area (with https:// and trailing slash). Do not include `/#/`.',
+            helpText: 'The URL of your Ghost admin area, using HTTPS. Should look like: `https://example.com/ghost/`.',
             placeholder: 'https://yourblog.com/ghost/',
             required: true,
             type: 'string'
@@ -104,7 +104,7 @@ module.exports = {
         {
             key: 'email',
             label: 'Email',
-            helpText: 'The email you use to login to your Ghost blog\'s admin area. Make sure this user has the Administrator role.',
+            helpText: 'The email you use to login to your Ghost blog\'s admin area. Make sure this user has the Owner or Administrator role.',
             required: true,
             type: 'string'
         },
