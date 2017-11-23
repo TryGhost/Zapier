@@ -21,11 +21,7 @@ const setApiHost = (request, z, bundle) => {
 }
 
 const includeAuthHeaders = (request, z, bundle) => {
-    // Zapier goes through the auth process twice, the second time it will have
-    // an auth token but the Authorization header will crash Ghost so we check to
-    // make sure we don't add it to token requests
-    // TODO: remove the token check once 1.17.1 has rolled out on (pro)
-    if (bundle.authData.token && (request.url && !request.url.match(/authentication\/token$/))) {
+    if (bundle.authData.token) {
         request.headers = request.headers || {};
         request.headers['Authorization'] = `Bearer ${bundle.authData.token}`;
     }
