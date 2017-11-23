@@ -50,8 +50,8 @@ const getAuthToken = (z, bundle) => {
             url: '/authentication/token',
             body: {
                 grant_type: 'password',
-                username: bundle.authData.email,
-                password: bundle.authData.password,
+                username: bundle.inputData.email,
+                password: bundle.inputData.password,
                 client_id: config.clientId,
                 client_secret: config.clientSecret
             }
@@ -84,6 +84,7 @@ const getAuthToken = (z, bundle) => {
             }
 
             return {
+                adminUrl: bundle.inputData.adminUrl,
                 token: json.access_token,
                 clientId: config.clientId,
                 clientSecret: config.clientSecret,

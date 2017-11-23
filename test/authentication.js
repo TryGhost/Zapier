@@ -20,7 +20,7 @@ describe('Authentication', () => {
     });
 
     it('gets config and exchanges user/pass for auth token', (done) => {
-        let bundle = Object.assign({}, {authData});
+        let bundle = Object.assign({authData: {}}, {inputData: authData});
 
         apiMock.get('/ghost/api/v0.1/configuration/')
             .reply(200, {
@@ -99,7 +99,7 @@ describe('Authentication', () => {
     });
 
     it('handles 404 from configuration URL', (done) => {
-        let bundle = Object.assign({}, {authData});
+        let bundle = Object.assign({}, {inputData: authData});
 
         apiMock.get('/ghost/api/v0.1/configuration/')
             .reply(404);
@@ -115,9 +115,11 @@ describe('Authentication', () => {
     });
 
     describe('errors', function () {
-        let bundle = Object.assign({}, {authData});
+        let bundle;
 
         beforeEach(() => {
+            bundle = Object.assign({}, {inputData: authData});
+
             apiMock.get('/ghost/api/v0.1/configuration/')
                 .reply(200, {
                     configuration: [{
@@ -214,8 +216,7 @@ describe('Authentication', () => {
         });
 
         it('handles unsupported Ghost version', (done) => {
-            let bundle = Object.assign({}, {authData});
-
+            bundle = Object.assign({}, {authData});
             bundle.authData.token = 'my-auth-token';
 
             apiMock.get('/ghost/api/v0.1/configuration/about/')

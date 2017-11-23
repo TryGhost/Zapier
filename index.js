@@ -7,7 +7,7 @@ const NewUnsubscriberTrigger = require('./triggers/new_unsubscriber');
 const authentication = require('./authentication');
 
 const setApiHost = (request, z, bundle) => {
-    let host = bundle.authData.adminUrl.replace(/\/?$/, '');
+    let host = (bundle.inputData.adminUrl || bundle.authData.adminUrl).replace(/\/?$/, '');
     let path = request.url.replace(/^\//, '');
     let fullUrl = `${host}/api/v0.1/${path}`;
 
