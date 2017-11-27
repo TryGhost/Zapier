@@ -10,8 +10,22 @@ const createSubscriber = (z, bundle) => {
             }]
         })
     });
-    return responsePromise
-        .then(response => JSON.parse(response.content).subscribers[0]);
+
+    return responsePromise.then((response) => {
+        let json;
+
+        try {
+            json = z.JSON.parse(response.content);
+        } catch (e) {
+            throw new Error(`Subscriber creation failed: ${response.status}.`)
+        }
+
+        if (response.status !== 201 && json && json.errors) {
+            throw new Error(json.errors[0].message);
+        }
+
+        return json.subscribers[0];
+    });
 };
 
 module.exports = {

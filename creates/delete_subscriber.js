@@ -4,7 +4,22 @@ const deleteSubscriber = (z, bundle) => {
         method: 'DELETE',
         url: `/subscribers/email/${bundle.inputData.email}/`
     });
-    return responsePromise;
+
+    return responsePromise.then((response) => {
+        let json;
+
+        try {
+            json = z.JSON.parse(response.content);
+        } catch (e) {
+            // no content or content not json
+        }
+
+        if (response.status !== 204 && json && json.errors) {
+            throw new Error(json.errors[0].message);
+        }
+
+        return response;
+    });
 };
 
 module.exports = {
