@@ -49,7 +49,7 @@ const unsubscribeHook = (z, bundle) => {
             // content was not JSON
         }
 
-        if (response.status !== 201 && json && json.errors) {
+        if (response.status !== 204 && json && json.errors) {
             throw new Error(json.errors[0].message);
         }
 
