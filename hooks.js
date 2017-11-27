@@ -40,7 +40,21 @@ const unsubscribeHook = (z, bundle) => {
         method: 'DELETE'
     };
 
-    return z.request(options);
+    return z.request(options).then((response) => {
+        let json;
+
+        try {
+            json = z.JSON.parse(response.content);
+        } catch (e) {
+            // content was not JSON
+        }
+
+        if (response.status !== 201 && json && json.errors) {
+            throw new Error(json.errors[0].message);
+        }
+
+        return response;
+    });
 };
 
 module.exports = {
