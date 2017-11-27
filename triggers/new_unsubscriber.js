@@ -16,7 +16,10 @@ const getSubscriber = (z, bundle) => {
 const getFallbackRealSubscriber = (z, bundle) => {
     // For the test poll, you should get some real data, to aid the setup process.
     let options = {
-        url: '/subscribers/'
+        url: '/subscribers/',
+        params: {
+            order: 'created_at desc'
+        }
     };
 
     return z.request(options)

@@ -55,6 +55,9 @@ describe('Triggers', () => {
             });
 
             apiMock.get('/ghost/api/v0.1/subscribers/')
+                .query({
+                    order: 'created_at desc'
+                })
                 .reply(200, {
                     subscribers: [{
                         id: 'one',
