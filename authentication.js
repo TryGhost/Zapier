@@ -123,7 +123,40 @@ module.exports = {
             label: 'Password',
             required: true,
             type: 'password'
-        }
+        },
+        // Computed Fields - not shown in the UI but needed to ensure the values
+        // returned from `sessionConfig.perform` are actually stored
+        // (these are required for zapier-platform-core > 4.0.0)
+        {
+            key: 'token',
+            type: 'string',
+            required: false,
+            computed: true,
+        },
+        {
+            key: 'clientId',
+            type: 'string',
+            required: false,
+            computed: true
+        },
+        {
+            key: 'clientSecret',
+            type: 'string',
+            required: false,
+            computed: true
+        },
+        {
+            key: 'blogTitle',
+            type: 'string',
+            required: false,
+            computed: true
+        },
+        {
+            key: 'blogUrl',
+            type: 'string',
+            required: false,
+            computed: true
+        },
     ],
 
     // The test method allows Zapier to verify that the credentials a user
