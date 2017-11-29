@@ -1,6 +1,8 @@
 const _ = require('lodash');
 const makeAbsoluteUrls = require('../utils/make-absolute-urls');
 
+const ABS_REGEX = /^https?:\/\/|^\/\//;
+
 const listPosts = (z, bundle) => {
     let options = {
         url: '/posts/',
@@ -24,10 +26,14 @@ const listPosts = (z, bundle) => {
             posts.forEach((post) => {
                 // add a permalink using the stored blogUrl because the API
                 // only returns a relative url
-                post.url = `${blogUrl}${post.url}`;
+                if (!post.url.match(ABS_REGEX)) {
+                    post.url = `${blogUrl}${post.url}`;
+                }
 
                 // add a preview url in case this is a draft or scheduled post
-                post.preview_url = `${blogUrl}/p/${post.uuid}/`;
+                if (!post.preview_url || !post.preview_url.match(ABS_REGEX)) {
+                    post.preview_url = `${blogUrl}/p/${post.uuid}/`;
+                }
 
                 // convert relative content URLs to absolute URLs
                 post.html = makeAbsoluteUrls(
@@ -38,17 +44,23 @@ const listPosts = (z, bundle) => {
 
                 // convert relative image urls to absolute URLs
                 ['feature_image', 'og_image', 'twitter_image'].forEach((key) => {
-                    if (post[key] && !post[key].match(/^https?:\/\/|\/\//)) {
+                    if (post[key] && !post[key].match(ABS_REGEX)) {
                         post[key] = `${blogUrl}${post[key]}`;
                     }
                 });
 
-                // add url for author
-                post.author.url = `${blogUrl}/author/${post.author.slug}/`;
+                // add missing url for author
+                if (!post.author.url) {
+                    post.author.url = `${blogUrl}/author/${post.author.slug}/`;
+                }
+                // convert relative author url to absolute
+                if (!post.author.url.match(ABS_REGEX)) {
+                    post.author.url = `${blogUrl}/${post.author.url}/`;
+                }
 
                 // convert author image urls to absolute
                 ['profile_image', 'cover_image'].forEach((key) => {
-                    if (post.author[key] && !post.author[key].match(/^https?:\/\/|\/\//)) {
+                    if (post.author[key] && !post.author[key].match(ABS_REGEX)) {
                         post.author[key] = `${blogUrl}${post.author[key]}`;
                     }
                 });
@@ -56,22 +68,34 @@ const listPosts = (z, bundle) => {
                 // add urls for tags and convert relative image urls to absolute
                 post.tags.forEach((tag) => {
                     // only public tags have urls
-                    if (tag.visibility === 'public') {
+                    if (tag.visibility === 'public' && !tag.url) {
                         tag.url = `${blogUrl}/tag/${tag.slug}/`;
-                    } else {
+                    } else if (!tag.url) {
                         tag.url = null;
                     }
 
-                    if (tag.feature_image && !tag.feature_image.match(/^https?:\/\/|\/\//)) {
+                    // convert relative tag url to absolute
+                    if (tag.url && !tag.url.match(ABS_REGEX)) {
+                        tag.url = `${blogUrl}${tag.url}`;
+                    }
+
+                    if (tag.feature_image && !tag.feature_image.match(ABS_REGEX)) {
                         tag.feature_image = `${blogUrl}${tag.feature_image}`;
                     }
                 });
 
                 // same tag treatment for primary_tag
                 if (post.primary_tag) {
-                    post.primary_tag.url = `${blogUrl}/tag/${post.primary_tag.slug}/`;
+                    if (!post.primary_tag.url) {
+                        post.primary_tag.url = `${blogUrl}/tag/${post.primary_tag.slug}/`;
+                    }
 
-                    if (post.primary_tag.feature_image && !post.primary_tag.feature_image.match(/^https?:\/\/|\/\//)) {
+                    // convert relative tag url to absolute
+                    if (post.primary_tag.url && !post.primary_tag.url.match(ABS_REGEX)) {
+                        post.primary_tag.url = `${blogUrl}${post.primary_tag.url}`;
+                    }
+
+                    if (post.primary_tag.feature_image && !post.primary_tag.feature_image.match(ABS_REGEX)) {
                         post.primary_tag.feature_image = `${blogUrl}${post.primary_tag.feature_image}`;
                     }
                 }
