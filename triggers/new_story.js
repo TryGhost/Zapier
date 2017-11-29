@@ -1,7 +1,9 @@
 const _ = require('lodash');
+const downsize = require('downsize');
 const makeAbsoluteUrls = require('../utils/make-absolute-urls');
 
 const ABS_REGEX = /^https?:\/\/|^\/\//;
+const EXCERPT_SIZE = {words: 50, append: '...'};
 
 const listPosts = (z, bundle) => {
     let options = {
@@ -99,6 +101,11 @@ const listPosts = (z, bundle) => {
                         post.primary_tag.feature_image = `${blogUrl}${post.primary_tag.feature_image}`;
                     }
                 }
+
+                // add excerpt
+                if (!post.excerpt) {
+                    post.excerpt = post.custom_excerpt || post.meta_description || downsize(post.plaintext, EXCERPT_SIZE);
+                }
             });
 
             return posts;
@@ -143,6 +150,7 @@ module.exports = {
             mobiledoc: "{\"version\":\"0.3.1\",\"markups\":[],\"atoms\":[],\"cards\":[[\"card-markdown\",{\"cardName\":\"card-markdown\",\"markdown\":\"Sample post that has just been published, has a couple of tags and meta data.\\n\\n![NatGeo01](/content/images/2017/11/NatGeo01.jpg)\\n\\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus quis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam maximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut lobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero enim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros. Cras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"}]],\"sections\":[[10,0]]}",
             html: "<div class=\"kg-card-markdown\"><p>Sample post that has just been published, has a couple of tags and meta data.</p>\n<p><img src=\"/content/images/2017/11/NatGeo01.jpg\" alt=\"NatGeo01\"></p>\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus quis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam maximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut lobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero enim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros. Cras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\n</div>",
             plaintext: "Sample post that has just been published, has a couple of tags and meta data.\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus\nquis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam\nmaximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut\nlobortis augue sed magna cursus, et ultricies odio interdum. Proin sed libero\nenim. Nunc ac interdum ex. Sed at mauris purus. Integer eget dignissim eros.\nCras vel dui malesuada, semper massa in, laoreet nulla. Lorem ipsum dolor sit\namet, consectetur adipiscing elit.",
+            excerpt: 'Custom excerpt for the sample post.',
             feature_image: 'https://images.unsplash.com/photo-1510022151265-1bb84d406531?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&s=bb705e8a157ef7343a8af61b4ce3a565',
             featured: false,
             page: false,

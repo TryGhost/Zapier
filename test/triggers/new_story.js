@@ -1,4 +1,6 @@
+const fs = require('fs');
 const nock = require('nock');
+const path = require('path');
 const should = require('should');
 
 const zapier = require('zapier-platform-core');
@@ -101,5 +103,67 @@ describe('Triggers', () => {
                 })
                 .catch(done);
         });
+
+        it('adds excerpt', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    status: 'published'
+                }
+            });
+
+            // read content from replies so that we can edit it
+            let [post] = JSON.parse(
+                fs.readFileSync(path.join(__dirname, 'replies', 'posts.json'))
+            ).posts;
+
+            // return 4 posts:
+            // 1 - custom_excerpt + meta_description + plain text
+            // 2 - custom_excerpt + plain text
+            // 3 - meta_description + plain text
+            // 4 - plain text
+
+            let post1 = JSON.parse(JSON.stringify(post));
+            post1.id = 'all-fields';
+
+            let post2 = JSON.parse(JSON.stringify(post));
+            post2.id = 'no-meta-desc';
+            post2.meta_description = null;
+
+            let post3 = JSON.parse(JSON.stringify(post));
+            post3.id = 'no-custom-excerpt';
+            post3.custom_excerpt = null;
+
+            let post4 = JSON.parse(JSON.stringify(post));
+            post4.id = 'only-plain-text';
+            post4.custom_excerpt = null;
+            post4.meta_description = null;
+
+            let content = {
+                posts: [post1, post2, post3, post4]
+            };
+
+            apiMock.get('/ghost/api/v0.1/posts/')
+                .query({
+                    status: 'published',
+                    include: 'author,tags',
+                    formats: 'mobiledoc,html,plaintext',
+                    order: 'updated_at desc'
+                })
+                .reply(200, content);
+
+            appTester(App.triggers.new_story.operation.perform, bundle)
+                .then((results) => {
+                    apiMock.isDone().should.be.true;
+                    results.length.should.eql(4);
+
+                    results[0].excerpt.should.eql('Custom excerpt for the sample post.');
+                    results[1].excerpt.should.eql('Custom excerpt for the sample post.');
+                    results[2].excerpt.should.eql('Meta description for sample post.');
+                    results[3].excerpt.should.eql('Sample post that has just been published, has a couple of tags and meta data.\n\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius risus\nquis tincidunt sodales. Etiam posuere, augue vitae dignissim ultrices, nisl diam\nmaximus lacus, sed mollis tellus libero eget dui. Fusce eget eros lacus. Ut...');
+
+                    done();
+                })
+                .catch(done);
+        })
     });
 });
