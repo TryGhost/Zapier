@@ -14,11 +14,26 @@ const deleteSubscriber = (z, bundle) => {
             // no content or content not json
         }
 
-        if (response.status !== 204 && json && json.errors) {
-            throw new Error(json.errors[0].message);
+        // validation error should be halting
+        if (response.status === 404 && json && json.errors) {
+            let message = json.errors[0].message;
+
+            throw new z.errors.HaltedError(message);
         }
 
-        return response;
+
+        // unexpected status, eg. 500. Normal error.
+        if (response.status !== 204) {
+            let message = `Unknown Error: ${response.status}`;
+
+            if (json && json.errors) {
+                message = json.errors[0].message;
+            }
+
+            throw new Error(message);
+        }
+
+        return {};
     });
 };
 
