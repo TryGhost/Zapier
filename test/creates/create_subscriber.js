@@ -51,5 +51,117 @@ describe('Creates', () => {
                 })
                 .catch(done);
         });
+
+        it('has a friendlier, halting validation error', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    name: 'Test User',
+                    email: 'notanemail'
+                }
+            });
+
+            apiMock.post('/ghost/api/v0.1/subscribers/', {
+                subscribers: [{
+                    name: 'Test User',
+                    email: 'notanemail'
+                }]
+            }).reply(422, {
+                errors: [{
+                    message: 'Validation (isEmail) failed for email'
+                }]
+            });
+
+            appTester(App.creates.create_subscriber.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.name.should.eql('HaltedError');
+                    err.message.should.match(/"notanemail" is not a valid email address\./);
+                })
+                .finally(done);
+        });
+
+        it('handles errors with JSON error body', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }
+            });
+
+            apiMock.post('/ghost/api/v0.1/subscribers/', {
+                subscribers: [{
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }]
+            }).reply(500, {
+                errors: [{
+                    message: 'No permission'
+                }]
+            });
+
+            appTester(App.creates.create_subscriber.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.name.should.eql('Error');
+                    err.message.should.match(/No permission/);
+                })
+                .finally(done);
+        });
+
+        it('handles unknown errors', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }
+            });
+
+            apiMock.post('/ghost/api/v0.1/subscribers/', {
+                subscribers: [{
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }]
+            }).reply(500, '');
+
+            appTester(App.creates.create_subscriber.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.name.should.eql('Error');
+                    err.message.should.match(/Unknown Error: 500/);
+                })
+                .finally(done);
+        });
+
+        it('handles invalid JSON', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }
+            });
+
+            apiMock.post('/ghost/api/v0.1/subscribers/', {
+                subscribers: [{
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }]
+            }).reply(201, 'Not JSON');
+
+            appTester(App.creates.create_subscriber.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.name.should.eql('Error');
+                    err.message.should.match(/Response was not JSON/);
+                })
+                .finally(done);
+        });
     });
 });

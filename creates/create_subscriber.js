@@ -17,11 +17,33 @@ const createSubscriber = (z, bundle) => {
         try {
             json = z.JSON.parse(response.content);
         } catch (e) {
-            throw new Error(`Subscriber creation failed: ${response.status}.`)
+            // noop
         }
 
-        if (response.status !== 201 && json && json.errors) {
-            throw new Error(json.errors[0].message);
+        // validation error should be halting and have a friendly message
+        if (response.status === 422 && json && json.errors) {
+            let message = json.errors[0].message;
+
+            if (message.indexOf('isEmail') >= 0) {
+                message = `"${bundle.inputData.email}" is not a valid email address.`;
+            }
+
+            throw new z.errors.HaltedError(message);
+        }
+
+        // unexpected status, eg. 500. Normal error.
+        if (response.status !== 201) {
+            let message = `Unknown Error: ${response.status}`;
+
+            if (json && json.errors) {
+                message = json.errors[0].message;
+            }
+
+            throw new Error(message);
+        }
+
+        if (!json || (json && !json.subscribers)) {
+            throw new Error('Response was not JSON or was incorrectly formatted.');
         }
 
         return json.subscribers[0];
