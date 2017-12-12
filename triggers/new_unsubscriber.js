@@ -25,7 +25,21 @@ const getFallbackRealSubscriber = (z, bundle) => {
     return z.request(options)
         .then((response) => {
             let {subscribers} = JSON.parse(response.content);
-            return subscribers;
+            let cleanedSubscribers = [];
+
+            // Our API only sends {id, name, email} attrs to the
+            // subscriber.deleted webhook but we've grabbed a standard browse
+            // response here. Test poll data should match real data for better
+            // usability so we create a clean list of subscribers here
+            subscribers.forEach((subscriber) => {
+                cleanedSubscribers.push({
+                    id: subscriber.id,
+                    name: subscriber.name,
+                    email: subscriber.email
+                })
+            });
+
+            return cleanedSubscribers;
         });
 };
 

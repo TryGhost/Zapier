@@ -62,11 +62,15 @@ describe('Triggers', () => {
                     subscribers: [{
                         id: 'one',
                         name: 'Subscriber One',
-                        email: 'one@example.com'
+                        email: 'one@example.com',
+                        subscribed_url: 'http://example.com/post1',
+                        unsubscribed_url: ''
                     }, {
                         id: 'two',
                         name: 'Subscriber Two',
-                        email: 'two@example.com'
+                        email: 'two@example.com',
+                        subscribed_url: 'http://example.com/post2',
+                        unsubscribed_url: ''
                     }]
                 });
 
@@ -79,6 +83,7 @@ describe('Triggers', () => {
                     firstSubscriber.id.should.eql('one');
                     firstSubscriber.name.should.eql('Subscriber One');
                     firstSubscriber.email.should.eql('one@example.com');
+                    firstSubscriber.should.not.have.property('subscribed_url');
 
                     done();
                 })
