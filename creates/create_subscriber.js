@@ -32,7 +32,7 @@ const createSubscriber = (z, bundle) => {
         }
 
         // unexpected status, eg. 500. Normal error.
-        if (response.status !== 201) {
+        if (![200,201].includes(response.status)) {
             let message = `Unknown Error: ${response.status}`;
 
             if (json && json.errors) {

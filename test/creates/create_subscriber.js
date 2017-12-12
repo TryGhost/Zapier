@@ -32,6 +32,39 @@ describe('Creates', () => {
                     name: 'Test User',
                     email: 'test@example.com'
                 }]
+            }).reply(200, {
+                subscribers: [{
+                    id: 'one',
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }]
+            });
+
+            appTester(App.creates.create_subscriber.operation.perform, bundle)
+                .then((result) => {
+                    apiMock.isDone().should.be.true;
+
+                    result.id.should.eql('one');
+                    result.name.should.eql('Test User');
+                    result.email.should.eql('test@example.com');
+                    done();
+                })
+                .catch(done);
+        });
+
+        it('creates a susbcriber with a 201 response', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }
+            });
+
+            apiMock.post('/ghost/api/v0.1/subscribers/', {
+                subscribers: [{
+                    name: 'Test User',
+                    email: 'test@example.com'
+                }]
             }).reply(201, {
                 subscribers: [{
                     id: 'one',
@@ -151,7 +184,7 @@ describe('Creates', () => {
                     name: 'Test User',
                     email: 'test@example.com'
                 }]
-            }).reply(201, 'Not JSON');
+            }).reply(200, 'Not JSON');
 
             appTester(App.creates.create_subscriber.operation.perform, bundle)
                 .then(() => {

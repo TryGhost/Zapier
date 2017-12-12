@@ -24,7 +24,7 @@ const subscribeHook = (eventName, z, bundle) => {
                 throw new Error(`Webhook subscription failed: ${response.status}.`)
             }
 
-            if (response.status !== 201 && json && json.errors) {
+            if (![200,201].includes(response.status) && json && json.errors) {
                 throw new Error(json.errors[0].message);
             }
 
