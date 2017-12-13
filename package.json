@@ -20,7 +20,7 @@
     "lodash": "4.17.4",
     "semver": "^5.4.1",
     "url-join": "^2.0.2",
-    "zapier-platform-core": "4.1.0"
+    "zapier-platform-core": "4.2.1"
   },
   "devDependencies": {
     "mocha": "4.0.1",
