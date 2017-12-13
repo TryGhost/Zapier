@@ -65,7 +65,7 @@ describe('Authentication', () => {
             .matchHeader('Authorization', 'Bearer my-auth-token')
             .reply(200, {
                 configuration: [{
-                    version: '1.18.0',
+                    version: '1.19.0',
                     environment: 'production',
                     database: 'mysql',
                     mail: 'SMTP'
@@ -234,7 +234,7 @@ describe('Authentication', () => {
                     true.should.eql(false);
                 })
                 .catch((err) => {
-                    err.message.should.startWith('Supported Ghost version range is ^1.18.0, you are using 1.17.2');
+                    err.message.should.startWith('Supported Ghost version range is ^1.19.0, you are using 1.17.2');
                 })
                 .finally(done);
         });
