@@ -1,6 +1,7 @@
 const SubscriberCreate = require('./creates/create_subscriber');
 const SubscriberDelete = require('./creates/delete_subscriber');
 const SubscriberSearch = require('./searches/subscriber');
+const SubscriberSearchOrCreate = require('./search_or_creates/subscriber');
 const NewStoryTrigger = require('./triggers/new_story');
 const NewSubscriberTrigger = require('./triggers/new_subscriber');
 const NewUnsubscriberTrigger = require('./triggers/new_unsubscriber');
@@ -76,6 +77,10 @@ const App = {
     creates: {
         [SubscriberCreate.key]: SubscriberCreate,
         [SubscriberDelete.key]: SubscriberDelete,
+    },
+
+    searchOrCreates: {
+        [SubscriberSearchOrCreate.key]: SubscriberSearchOrCreate
     }
 };
 
