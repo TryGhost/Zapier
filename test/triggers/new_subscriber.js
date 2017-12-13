@@ -62,11 +62,27 @@ describe('Triggers', () => {
                     subscribers: [{
                         id: 'one',
                         name: 'Subscriber One',
-                        email: 'one@example.com'
+                        email: 'one@example.com',
+                        post_id: '5a1d8648a629fc69c2706d29',
+                        status: 'subscribed',
+                        subscribed_referrer: 'http://ghost.blog/',
+                        subscribed_url: 'http://ghost.blog/the-editor-2/',
+                        unsubscribed_at: null,
+                        unsubscribed_url: null,
+                        updated_at: '2017-12-13T16:33:24.000Z',
+                        updated_by: '5a315654eddbd3ce4c0cd92c'
                     }, {
                         id: 'two',
                         name: 'Subscriber Two',
-                        email: 'two@example.com'
+                        email: 'two@example.com',
+                        post_id: '5a1d8648a629fc69c2706d29',
+                        status: 'subscribed',
+                        subscribed_referrer: 'http://ghost.blog/',
+                        subscribed_url: 'http://ghost.blog/the-editor-2/',
+                        unsubscribed_at: null,
+                        unsubscribed_url: null,
+                        updated_at: '2017-12-13T16:33:24.000Z',
+                        updated_by: '5a315654eddbd3ce4c0cd92c'
                     }]
                 });
 
@@ -79,6 +95,11 @@ describe('Triggers', () => {
                     firstSubscriber.id.should.eql('one');
                     firstSubscriber.name.should.eql('Subscriber One');
                     firstSubscriber.email.should.eql('one@example.com');
+
+                    firstSubscriber.should.not.have.property('unsubscribed_at');
+                    firstSubscriber.should.not.have.property('unsubscribed_url');
+                    firstSubscriber.should.not.have.property('updated_at');
+                    firstSubscriber.should.not.have.property('updated_by');
 
                     done();
                 })

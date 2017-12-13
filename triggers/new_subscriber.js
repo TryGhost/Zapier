@@ -25,6 +25,15 @@ const getFallbackRealSubscriber = (z, bundle) => {
     return z.request(options)
         .then((response) => {
             let {subscribers} = JSON.parse(response.content);
+
+            // remove fields that have no relevance for new subscribers
+            subscribers.forEach((subscriber) => {
+                delete subscriber.unsubscribed_at;
+                delete subscriber.unsubscribed_url;
+                delete subscriber.updated_at;
+                delete subscriber.updated_by;
+            });
+
             return subscribers;
         });
 };
