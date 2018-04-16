@@ -81,6 +81,36 @@ describe('Authentication', () => {
             .catch(done);
     });
 
+    it('skips authorization header for token refresh', (done) => {
+        let bundle = Object.assign({}, {authData});
+
+        bundle.authData.token = 'my-expired-token';
+
+        apiMock.get('/ghost/api/v0.1/configuration/')
+            .reply(200, {
+                configuration: [{
+                    blogTitle: 'Test Blog',
+                    blogUrl: 'http://example.com/',
+                    clientId: 'test-client-id',
+                    clientSecret: 'test-client-secret'
+                }]
+            });
+
+        apiMock.post('/ghost/api/v0.1/authentication/token')
+            // ensure skipped auth header
+            .matchHeader('Authorization', val => !val)
+            .reply(200, {
+                access_token: 'new auth token!'
+            });
+
+        appTester(App.authentication.sessionConfig.perform, bundle)
+            .then((newAuthData) => {
+                apiMock.isDone().should.be.true;
+                done();
+            })
+            .catch(done);
+    });
+
     it('throws auth refresh error if response is 401', (done) => {
         let bundle = Object.assign({}, {authData});
         bundle.authData.token = 'my-expired-token';

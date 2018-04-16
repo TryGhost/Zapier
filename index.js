@@ -21,8 +21,10 @@ const setApiHost = (request, z, bundle) => {
     return request;
 }
 
+const SKIPPED_AUTH_REGEX = /\/authentication\/token/;
+
 const includeAuthHeaders = (request, z, bundle) => {
-    if (bundle.authData.token) {
+    if (bundle.authData.token && !SKIPPED_AUTH_REGEX.test(request.url)) {
         request.headers = request.headers || {};
         request.headers['Authorization'] = `Bearer ${bundle.authData.token}`;
     }
