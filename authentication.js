@@ -1,6 +1,6 @@
 const semver = require('semver');
 
-const SUPPORTED_VERSION = '^1.19.0';
+const SUPPORTED_VERSION = '^1.19.0 || ^2';
 
 const testAuth = (z) => {
     let promise = z.request({

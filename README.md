@@ -7,6 +7,12 @@ All Zapier CLI apps are run using Node.js v6.10.2. More details are available in
 Notes:
 - there is a `.nvmrc` file in this project if you have `nvm` auto-switching enabled
 
+## Ghost version support
+
+Zapier checks the version of Ghost when authenticating to ensure that the API supports the required webhooks endpoints and other features. This is done by fetching the `/ghost/api/v0.1/configuration/about/` endpoint.
+
+When a new major version of Ghost is released the [supported version string](https://github.com/TryGhost/Ghost-Zapier/blob/master/authentication.js#L3) must be updated!
+
 ## Local Testing
 
 - `zapier test` will run the tests, you _have_ to be running node 6.10.2

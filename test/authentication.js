@@ -56,6 +56,30 @@ describe('Authentication', () => {
             .catch(done);
     });
 
+    it('doesn\'t error for Ghost 2.0', (done) => {
+        let bundle = Object.assign({}, { authData });
+
+        bundle.authData.token = 'my-auth-token';
+
+        apiMock.get('/ghost/api/v0.1/configuration/about/')
+            .matchHeader('Authorization', 'Bearer my-auth-token')
+            .reply(200, {
+                configuration: [{
+                    version: '2.0.0',
+                    environment: 'production',
+                    database: 'mysql',
+                    mail: 'SMTP'
+                }]
+            });
+
+        appTester(App.authentication.test, bundle)
+            .then(() => {
+                nock.pendingMocks().length.should.eql(0);
+                done();
+            })
+            .catch(done);
+    });
+
     it('adds authorization header to every request', (done) => {
         let bundle = Object.assign({}, {authData});
 
@@ -264,7 +288,7 @@ describe('Authentication', () => {
                     true.should.eql(false);
                 })
                 .catch((err) => {
-                    err.message.should.startWith('Supported Ghost version range is ^1.19.0, you are using 1.17.2');
+                    err.message.should.startWith('Supported Ghost version range is ^1.19.0 || ^2, you are using 1.17.2');
                 })
                 .finally(done);
         });
