@@ -7,11 +7,9 @@ const App = require('../index');
 const appTester = zapier.createAppTester(App);
 
 describe('My App', () => {
-
-  it('should test something', (done) => {
-    const x = 1;
-    x.should.eql(1);
-    done();
-  });
-
+    it('should test something', (done) => {
+        const x = 1;
+        x.should.eql(1);
+        done();
+    });
 });
