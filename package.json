@@ -1,6 +1,6 @@
 {
   "name": "ghost-zapier",
-  "version": "1.0.5",
+  "version": "2.0.0-alpha.1",
   "description": "Ghost integration for the Zapier platform.",
   "repository": "TryGhost/Ghost-Zapier",
   "homepage": "https://ghost.org/",
@@ -8,23 +8,17 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --recursive --timeout=5000"
+    "test": "mocha --recursive"
   },
   "engines": {
-    "node": "6.10.2",
-    "npm": ">=3.10.10"
+    "node": "8.10.0",
+    "npm": ">=5.6.0"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "downsize": "^0.0.8",
-    "lodash": "4.17.5",
-    "semver": "^5.5.0",
-    "url-join": "^4.0.0",
-    "zapier-platform-core": "5.1.0"
+    "zapier-platform-core": "7.6.1"
   },
   "devDependencies": {
-    "mocha": "5.1.0",
-    "nock": "9.2.5",
-    "should": "13.2.1"
+    "mocha": "^5.2.0",
+    "should": "^13.2.0"
   }
 }
