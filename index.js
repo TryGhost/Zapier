@@ -1,3 +1,5 @@
+const authentication = require('./authentication');
+
 // We can roll up all our behaviors in an App.
 const App = {
     // This is just shorthand to reference the installed dependencies you have. Zapier will
@@ -5,12 +7,11 @@ const App = {
     version: require('./package.json').version,
     platformVersion: require('zapier-platform-core').version,
 
-    // beforeRequest & afterResponse are optional hooks into the provided HTTP client
-    beforeRequest: [
-    ],
+    authentication,
 
-    afterResponse: [
-    ],
+    // beforeRequest & afterResponse are optional hooks into the provided HTTP client
+    beforeRequest: [],
+    afterResponse: [],
 
     // If you want to define optional resources to simplify creation of triggers, searches, creates - do that here!
     resources: {
