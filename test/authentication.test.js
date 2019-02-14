@@ -18,7 +18,7 @@ describe('Authentication', () => {
     });
 
     describe('test', () => {
-        it('is success with valid api key and Ghost version', function (done) {
+        it('is success with valid api key and Ghost version', function () {
             let bundle = Object.assign({}, authData);
 
             apiMock.get('/ghost/api/v2/admin/configuration/about/')
@@ -26,15 +26,13 @@ describe('Authentication', () => {
                     configuration: [{version: '2.13.2'}]
                 });
 
-            appTester(App.authentication.test, bundle)
+            return appTester(App.authentication.test, bundle)
                 .then(() => {
                     nock.pendingMocks().length.should.eql(0);
-                    done();
-                })
-                .catch(done);
+                });
         });
 
-        it('errors with invalid Admin API Key', function (done) {
+        it('errors with invalid Admin API Key', function () {
             let bundle = Object.assign({}, authData);
 
             apiMock.get('/ghost/api/v2/admin/configuration/about/')
@@ -45,29 +43,67 @@ describe('Authentication', () => {
                     }]
                 });
 
-            appTester(App.authentication.test, bundle)
+            return appTester(App.authentication.test, bundle)
                 .then(() => {
                     true.should.eql(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-                }).finally(done);
+                }, (err) => {
+                    err.message.should.match(/^Invalid token/);
+                    nock.pendingMocks().length.should.eql(0);
+                });
         });
 
-        it('errors with invalid Ghost version', function (done) {
+        it('errors with invalid Ghost v2 version', function () {
             let bundle = Object.assign({}, authData);
 
             apiMock.get('/ghost/api/v2/admin/configuration/about/')
                 .reply(200, {
-                    configuration: [{version: '2.13.2'}]
+                    configuration: [{version: '2.10.0'}]
                 });
 
-            appTester(App.authentication.test, bundle)
+            return appTester(App.authentication.test, bundle)
                 .then(() => {
+                    true.should.eql(false);
+                }, (err) => {
+                    err.message.should.match(/^Supported Ghost version/);
+                    err.message.should.match(/you are using 2\.10\.0/);
                     nock.pendingMocks().length.should.eql(0);
-                    done();
-                })
-                .catch(done);
+                });
+        });
+
+        it('errors with non-v2 Ghost version', function () {
+            let bundle = Object.assign({}, authData);
+
+            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+                .reply(404);
+
+            apiMock.get('/ghost/api/v0.1/configuration/about/')
+                .reply(401);
+
+            return appTester(App.authentication.test, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                }, (err) => {
+                    // nock.pendingMocks().length.should.eql(0);
+                    err.message.should.match(/^Supported Ghost version/);
+                });
+        });
+
+        it('errors with non-Ghost site', function () {
+            let bundle = Object.assign({}, authData);
+
+            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+                .reply(404);
+
+            apiMock.get('/ghost/api/v0.1/configuration/about/')
+                .reply(404);
+
+            return appTester(App.authentication.test, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                }, (err) => {
+                    // nock.pendingMocks().length.should.eql(0);
+                    err.message.should.match(/^Supplied 'Admin API URL' does not/);
+                });
         });
     });
 });

@@ -1,5 +1,5 @@
 const semver = require('semver');
-const {initAdminApi} = require('./lib/utils');
+const {initAdminApi, RequestError} = require('./lib/utils');
 
 // TODO: update to version where Admin API is stable
 const SUPPORTED_VERSION = '^2.13.2';
@@ -17,6 +17,23 @@ const testAuth = (z, bundle) => {
         }
 
         return true;
+    }).catch((err) => {
+        if (err instanceof RequestError) {
+            // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
+            if (err.response.status === 404) {
+                // try fetching a Ghost v0.1 endpoint
+                let v01url = `${bundle.adminApiUrl}api/v0.1/configuration/about/`;
+                return z.request(v01url).then((response) => {
+                    if (response.status === 401) {
+                        throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);
+                    } else {
+                        throw new Error('Supplied \'Admin API URL\' does not appear to be valid or does not point to a Ghost site');
+                    }
+                });
+            }
+        }
+
+        throw new Error(err.message);
     });
 };
 
