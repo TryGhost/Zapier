@@ -17,12 +17,12 @@
   },
   "dependencies": {
     "semver": "^5.6.0",
-    "zapier-platform-core": "7.6.1"
+    "zapier-platform-core": "8.0.1"
   },
   "devDependencies": {
-    "@tryghost/admin-api": "0.0.3",
-    "eslint-plugin-ghost": "^0.1.0",
-    "mocha": "^5.2.0",
+    "@tryghost/admin-api": "0.4.0",
+    "eslint-plugin-ghost": "0.2.0",
+    "mocha": "6.0.2",
     "nock": "^10.0.6",
     "should": "^13.2.0"
   }
