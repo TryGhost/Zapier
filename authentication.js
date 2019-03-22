@@ -1,8 +1,7 @@
 const semver = require('semver');
 const {initAdminApi, RequestError} = require('./lib/utils');
 
-// TODO: update to version where Admin API is stable
-const SUPPORTED_VERSION = '^2.13.2';
+const SUPPORTED_VERSION = '^2.18.1';
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
@@ -11,7 +10,7 @@ const testAuth = (z, bundle) => {
     const api = initAdminApi(z, bundle);
 
     // ensure that we can grab the about config (requires auth, will error if invalid)
-    return api.configuration.about.read().then((config) => {
+    return api.site.read().then((config) => {
         if (!semver.satisfies(config.version, SUPPORTED_VERSION)) {
             throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
@@ -20,9 +19,9 @@ const testAuth = (z, bundle) => {
     }).catch((err) => {
         if (err instanceof RequestError) {
             // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
-            if (err.response.status === 404) {
+            if (err.res.status === 404) {
                 // try fetching a Ghost v0.1 endpoint
-                let v01url = `${bundle.adminApiUrl}api/v0.1/configuration/about/`;
+                let v01url = `${bundle.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
                 return z.request(v01url).then((response) => {
                     if (response.status === 401) {
                         throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);
@@ -50,7 +49,7 @@ module.exports = {
             key: 'adminApiUrl',
             label: 'Admin API URL',
             helpText: 'The Admin API URL copied from the Zapier Integration in your Ghost admin area.',
-            placeholder: 'https://yoursite.com/ghost/api/',
+            placeholder: 'https://yoursite.com',
             required: true,
             type: 'string'
         },

@@ -9,7 +9,7 @@ const appTester = zapier.createAppTester(App);
 describe('Authentication', () => {
     let apiMock = nock('http://zapier-test.ghost.io');
     let authData = {
-        adminApiUrl: 'http://zapier-test.ghost.io/ghost/',
+        adminApiUrl: 'http://zapier-test.ghost.io',
         adminApiKey: '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1'
     };
 
@@ -21,9 +21,9 @@ describe('Authentication', () => {
         it('is success with valid api key and Ghost version', function () {
             let bundle = Object.assign({}, authData);
 
-            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+            apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
-                    configuration: [{version: '2.13.2'}]
+                    site: {version: '2.18.1'}
                 });
 
             return appTester(App.authentication.test, bundle)
@@ -35,7 +35,7 @@ describe('Authentication', () => {
         it('errors with invalid Admin API Key', function () {
             let bundle = Object.assign({}, authData);
 
-            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+            apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(400, {
                     errors: [{
                         message: 'Invalid token',
@@ -55,9 +55,9 @@ describe('Authentication', () => {
         it('errors with invalid Ghost v2 version', function () {
             let bundle = Object.assign({}, authData);
 
-            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+            apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
-                    configuration: [{version: '2.10.0'}]
+                    site: {version: '2.10.0'}
                 });
 
             return appTester(App.authentication.test, bundle)
@@ -73,7 +73,7 @@ describe('Authentication', () => {
         it('errors with non-v2 Ghost version', function () {
             let bundle = Object.assign({}, authData);
 
-            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+            apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(404);
 
             apiMock.get('/ghost/api/v0.1/configuration/about/')
@@ -91,7 +91,7 @@ describe('Authentication', () => {
         it('errors with non-Ghost site', function () {
             let bundle = Object.assign({}, authData);
 
-            apiMock.get('/ghost/api/v2/admin/configuration/about/')
+            apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(404);
 
             apiMock.get('/ghost/api/v0.1/configuration/about/')
