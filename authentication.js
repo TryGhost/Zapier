@@ -15,7 +15,11 @@ const testAuth = (z, bundle) => {
             throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
 
-        return true;
+        // anything returned here gets added to `bundle.authData`
+        return {
+            blogTitle: config.title,
+            blogUrl: config.url
+        };
     }).catch((err) => {
         if (err instanceof RequestError) {
             // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
@@ -38,6 +42,8 @@ const testAuth = (z, bundle) => {
 
 module.exports = {
     type: 'custom',
+
+    connectionLabel: '{{bundle.authData.blogUrl}}',
 
     // The test method allows Zapier to verify that the credentials a user
     // provides are valid. It will be executed whenever a user connects their
