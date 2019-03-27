@@ -1,4 +1,5 @@
 const authentication = require('./authentication');
+const triggers = require('./triggers');
 
 // We can roll up all our behaviors in an App.
 const App = {
@@ -18,8 +19,7 @@ const App = {
     },
 
     // If you want your trigger to show up, you better include it here!
-    triggers: {
-    },
+    triggers,
 
     // If you want your searches to show up, you better include it here!
     searches: {
