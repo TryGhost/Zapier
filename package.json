@@ -1,6 +1,6 @@
 {
   "name": "ghost-zapier",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0",
   "description": "Ghost integration for the Zapier platform.",
   "repository": "TryGhost/Ghost-Zapier",
   "homepage": "https://ghost.org/",
@@ -20,7 +20,7 @@
     "zapier-platform-core": "8.0.1"
   },
   "devDependencies": {
-    "@tryghost/admin-api": "0.4.0",
+    "@tryghost/admin-api": "0.4.1",
     "eslint-plugin-ghost": "0.2.0",
     "mocha": "6.0.2",
     "nock": "^10.0.6",

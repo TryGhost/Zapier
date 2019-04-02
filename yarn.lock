@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@tryghost/admin-api@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@tryghost/admin-api/-/admin-api-0.4.0.tgz#27f62cd907b2616102a2588873f492c90ef2c386"
-  integrity sha512-+iAd5/eEKVa9jYJQNHQNZcsLQ+gXwc6eiv8zOS2OQiVDk+rpzMaVMigFH4b3Ch+uwF9PfUljWb62JFq5mk8SgQ==
+"@tryghost/admin-api@0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@tryghost/admin-api/-/admin-api-0.4.1.tgz#1f4a18097e3b436df2aea27dc39be30c25fab997"
+  integrity sha512-z32f9mSWlqG9MqffvnQXF9b2AM6x9fXRvIBjGOJUqtv3OM1oAU1dfMYW1OpMPc8LfVhj1eub7h0SpNYJWO2P7Q==
   dependencies:
     axios "0.18.0"
     form-data "^2.3.3"
