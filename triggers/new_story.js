@@ -104,7 +104,7 @@ const listPosts = (z, bundle) => {
 
                 // add excerpt
                 if (!post.excerpt) {
-                    post.excerpt = post.custom_excerpt || post.meta_description || downsize(post.plaintext, EXCERPT_SIZE);
+                    post.excerpt = post.custom_excerpt || post.meta_description || downsize(post.plaintext || '', EXCERPT_SIZE);
                 }
             });
 
