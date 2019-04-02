@@ -20,11 +20,8 @@ When a new major version of Ghost is released the [supported version string](htt
 
 ## Deploying
 
-*Note:* These instructions will need updating once our app is public because we'll want to test the private version before promoting it to public.
-
 1. bump the version in `package.json`, update `CHANGELOG.md`, and commit
 2. `zapier push`
 3. `zapier promote {newVersion}` - new intregrations will use this version
 4. `zapier migrate {oldVersion} {newVersion}`, eg: `zapier migrate 1.0.4 0.0.5`, existing integrations will be moved to the new version
 5. `zapier history` to check migration status, continue once 100% complete
-6. `zapier delete version {oldVersion}`, eg: `zapier delete version 1.0.4`
