@@ -1,3 +1,7 @@
+## 1.0.6
+
+* (Fix) Fixed "Cannot read property 'length' of null" error when post.plaintext is null
+
 ## 1.0.5
 
 * (Fix) Added Ghost 2.x to supported Ghost versions
