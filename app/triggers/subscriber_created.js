@@ -18,8 +18,10 @@ const handleWebhook = (z, bundle) => {
 const getLatestSubscriber = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
-    return api.subscribers
-        .browse({order: 'created_at DESC', limit: 1});
+    return api.subscribers.browse({
+        order: 'created_at DESC',
+        limit: 1
+    });
 };
 
 module.exports = {
