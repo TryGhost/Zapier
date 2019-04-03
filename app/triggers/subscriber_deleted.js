@@ -24,7 +24,7 @@ const getLatestUnsubscriber = (z, bundle) => {
 
 module.exports = {
     key: 'subscriber_deleted',
-    noun: 'subscriber',
+    noun: 'Subscriber',
 
     display: {
         label: 'Subscriber Deleted',

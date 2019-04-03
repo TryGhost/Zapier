@@ -17,8 +17,9 @@ const searchSubscribers = (z, bundle) => {
 };
 
 module.exports = {
-    key: 'search_subscribers',
+    key: 'subscriber',
     noun: 'Subscriber',
+
     display: {
         label: 'Find a Subscriber',
         description: 'Search for a subscriber by email address.'
