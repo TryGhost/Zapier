@@ -6,8 +6,8 @@ const SUPPORTED_VERSION = '^2.18.1';
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
 // Throwing an error shows the error message to the user
-const testAuth = (z, bundle) => {
-    const api = initAdminApi(z, bundle);
+const testAuth = (z, {authData}) => {
+    const api = initAdminApi(z, authData);
 
     // ensure that we can grab the about config (requires auth, will error if invalid)
     return api.site.read().then((config) => {
@@ -25,7 +25,7 @@ const testAuth = (z, bundle) => {
             // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
             if (err.res.status === 404) {
                 // try fetching a Ghost v0.1 endpoint
-                let v01url = `${bundle.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
+                let v01url = `${authData.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
                 return z.request(v01url).then((response) => {
                     if (response.status === 401) {
                         throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);

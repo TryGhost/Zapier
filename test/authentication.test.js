@@ -19,7 +19,7 @@ describe('Authentication', () => {
 
     describe('test', () => {
         it('is success with valid api key and Ghost version', function () {
-            let bundle = Object.assign({}, authData);
+            let bundle = Object.assign({}, {authData});
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
@@ -33,7 +33,7 @@ describe('Authentication', () => {
         });
 
         it('errors with invalid Admin API Key', function () {
-            let bundle = Object.assign({}, authData);
+            let bundle = Object.assign({}, {authData});
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(400, {
@@ -53,7 +53,7 @@ describe('Authentication', () => {
         });
 
         it('errors with invalid Ghost v2 version', function () {
-            let bundle = Object.assign({}, authData);
+            let bundle = Object.assign({}, {authData});
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
@@ -71,7 +71,7 @@ describe('Authentication', () => {
         });
 
         it('errors with non-v2 Ghost version', function () {
-            let bundle = Object.assign({}, authData);
+            let bundle = Object.assign({}, {authData});
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(404);
@@ -89,7 +89,7 @@ describe('Authentication', () => {
         });
 
         it('errors with non-Ghost site', function () {
-            let bundle = Object.assign({}, authData);
+            let bundle = Object.assign({}, {authData});
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(404);
