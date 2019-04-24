@@ -2,6 +2,7 @@ const {initAdminApi} = require('../lib/utils');
 
 const createPost = (z, {inputData, authData}) => {
     const api = initAdminApi(z, authData);
+    const queryParams = {};
 
     // convert list of slug strings into minimal tag/author objects so that the
     // API can perform lookups
@@ -19,12 +20,13 @@ const createPost = (z, {inputData, authData}) => {
     // ensure we're supplying the right input format
     if (inputData.input_format === 'html') {
         delete inputData.mobiledoc;
+        queryParams.source = 'html';
     } else {
         delete inputData.html;
     }
     delete inputData.input_format;
 
-    return api.posts.add(inputData);
+    return api.posts.add(inputData, queryParams);
 };
 
 module.exports = {
