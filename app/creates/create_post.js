@@ -6,8 +6,8 @@ const createPost = (z, {inputData, authData}) => {
 
     // convert list of slug strings into minimal tag/author objects so that the
     // API can perform lookups
-    const tagSlugs = inputData.tags;
-    const authorSlugs = inputData.authors;
+    const tagSlugs = inputData.tags || [];
+    const authorSlugs = inputData.authors || [];
 
     inputData.tags = tagSlugs.map((slug) => {
         return {slug};
