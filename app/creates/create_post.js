@@ -1,24 +1,27 @@
 const {initAdminApi} = require('../lib/utils');
 
-const createPost = (z, bundle) => {
-    const api = initAdminApi(z, bundle.authData);
+const createPost = (z, {inputData, authData}) => {
+    // TODO: remove me!
+    z.console.log(inputData);
+
+    const api = initAdminApi(z, authData);
 
     // convert list of slug strings into minimal tag/author objects so that the
     // API can perform lookups
-    const tagSlugs = bundle.inputData.tags;
-    const authorSlugs = bundle.inputData.authors;
+    const tagSlugs = inputData.tags;
+    const authorSlugs = inputData.authors;
 
-    bundle.inputData.tags = tagSlugs.map((slug) => {
+    inputData.tags = tagSlugs.map((slug) => {
         return {slug};
     });
 
-    bundle.inputData.tags = authorSlugs.map((slug) => {
+    inputData.tags = authorSlugs.map((slug) => {
         return {slug};
     });
 
-    delete bundle.inputData.input_format;
+    delete inputData.input_format;
 
-    return api.posts.add(bundle.inputData);
+    return api.posts.add(inputData);
 };
 
 module.exports = {
