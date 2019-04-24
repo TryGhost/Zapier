@@ -20,7 +20,7 @@ const listTags = (z, {authData, meta}) => {
 
     if (meta.isFillingDynamicDropdown) {
         return api.tags.browse({
-            order: 'slug DESC',
+            order: 'name DESC',
             limit: 'all'
         });
     }
