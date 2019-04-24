@@ -65,8 +65,8 @@ module.exports = {
                 key: 'input_format',
                 required: true,
                 choices: {
-                    mobiledoc: 'Mobiledoc',
-                    html: 'HTML'
+                    html: 'HTML',
+                    mobiledoc: 'Mobiledoc'
                 },
                 default: 'mobiledoc',
                 altersDynamicFields: true
@@ -98,9 +98,9 @@ module.exports = {
             {key: 'canonical_url', required: false},
             {key: 'meta_title', required: false},
             {key: 'meta_description', required: false, type: 'text'},
-            {key: 'og_title', required: false},
-            {key: 'og_description', required: false, type: 'text'},
-            {key: 'og_image', required: false},
+            {key: 'og_title', label: 'Facebook Title', required: false},
+            {key: 'og_description', label: 'Facebook Description', required: false, type: 'text'},
+            {key: 'og_image', label: 'Facebook Image', required: false},
             {key: 'twitter_title', required: false},
             {key: 'twitter_description', required: false, type: 'text'},
             {key: 'twitter_image', required: false},
@@ -109,6 +109,12 @@ module.exports = {
         ],
 
         perform: createPost,
+
+        outputFields: [
+            {key: 'og_title', label: 'Facebook Title'},
+            {key: 'og_description', label: 'Facebook Description'},
+            {key: 'og_image', label: 'Facebook Image'}
+        ],
 
         sample: {
             id: '5c34ce2370401002b874c585',
