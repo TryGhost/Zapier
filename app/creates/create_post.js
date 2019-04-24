@@ -18,13 +18,13 @@ const createPost = (z, {inputData, authData}) => {
     });
 
     // ensure we're supplying the right input format
-    if (inputData.input_format === 'html') {
+    if (inputData.content_format === 'html') {
         delete inputData.mobiledoc;
         queryParams.source = 'html';
     } else {
         delete inputData.html;
     }
-    delete inputData.input_format;
+    delete inputData.content_format;
 
     return api.posts.add(inputData, queryParams);
 };
@@ -62,7 +62,9 @@ module.exports = {
                 }
             },
             {
-                key: 'input_format',
+                key: 'content_format',
+                label: 'Content Format',
+                helpText: 'Choose the format of the content you are inserting into the post body',
                 required: true,
                 choices: {
                     html: 'HTML',
@@ -74,10 +76,22 @@ module.exports = {
             // only show a single content field based on the selected input format
             // to avoid any confusion over which one has precedence at the API level
             function (z, bundle) {
-                if (bundle.inputData.input_format === 'mobiledoc') {
-                    return [{key: 'mobiledoc', required: false, type: 'text'}];
+                if (bundle.inputData.content_format === 'html') {
+                    return [{
+                        key: 'html',
+                        label: 'Content (HTML)',
+                        helpText: 'HTML content that will be converted to rich-text (Mobiledoc). Please be aware that any custom styling or layout may be lost during conversion.',
+                        required: false,
+                        type: 'text'
+                    }];
                 } else {
-                    return [{key: 'html', required: false, type: 'text'}];
+                    return [{
+                        key: 'mobiledoc',
+                        label: 'Content (Mobiledoc)',
+                        helpText: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents, you can read more about it [in our docs](https://docs.ghost.org/concepts/posts/#document-storage)',
+                        required: false,
+                        type: 'text'
+                    }];
                 }
             },
             {key: 'custom_excerpt', required: false, type: 'text'},
