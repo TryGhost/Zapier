@@ -2,7 +2,6 @@ const authentication = require('./authentication');
 const creates = require('./creates');
 const searches = require('./searches');
 const triggers = require('./triggers');
-const resources = require('./resources');
 
 // We can roll up all our behaviors in an App.
 const App = {
@@ -16,7 +15,6 @@ const App = {
     creates,
     searches,
     triggers,
-    resources,
 
     // beforeRequest & afterResponse are optional hooks into the provided HTTP client
     beforeRequest: [],
