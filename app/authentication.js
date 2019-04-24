@@ -45,7 +45,7 @@ const testAuth = (z, {authData}) => {
 module.exports = {
     type: 'custom',
 
-    connectionLabel: '{{bundle.authData.blogUrl}}',
+    connectionLabel: '{{blogUrl}}',
 
     // The test method allows Zapier to verify that the credentials a user
     // provides are valid. It will be executed whenever a user connects their
