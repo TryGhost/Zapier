@@ -86,13 +86,15 @@ module.exports = {
                 key: 'tags',
                 helpText: 'Provide a list of tag slugs to attach to the post',
                 required: false,
-                list: true
+                list: true,
+                dynamic: 'tagList.slug.name'
             },
             {
                 key: 'authors',
                 helpText: 'Provide a list of author slugs',
                 required: true,
-                list: true
+                list: true,
+                dynamic: 'authorList.slug.name'
             },
             {key: 'featured', required: false, type: 'boolean'},
             {key: 'canonical_url', required: false},
