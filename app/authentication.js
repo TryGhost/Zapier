@@ -1,7 +1,7 @@
 const semver = require('semver');
 const {initAdminApi, RequestError} = require('./lib/utils');
 
-const SUPPORTED_VERSION = '^2.18.1';
+const SUPPORTED_VERSION = '^2.19';
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
@@ -11,7 +11,9 @@ const testAuth = (z, {authData}) => {
 
     // ensure that we can grab the about config (requires auth, will error if invalid)
     return api.site.read().then((config) => {
-        if (!semver.satisfies(config.version, SUPPORTED_VERSION)) {
+        const version = semver.coerce(config.version);
+
+        if (!semver.satisfies(version, SUPPORTED_VERSION)) {
             throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
 

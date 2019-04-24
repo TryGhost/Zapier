@@ -23,7 +23,7 @@ describe('Authentication', () => {
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
-                    site: {version: '2.18.1'}
+                    site: {version: '2.19'}
                 });
 
             return appTester(App.authentication.test, bundle)
@@ -57,7 +57,7 @@ describe('Authentication', () => {
 
             apiMock.get('/ghost/api/v2/admin/site/')
                 .reply(200, {
-                    site: {version: '2.10.0'}
+                    site: {version: '2.10'}
                 });
 
             return appTester(App.authentication.test, bundle)
@@ -65,7 +65,7 @@ describe('Authentication', () => {
                     true.should.eql(false);
                 }, (err) => {
                     err.message.should.match(/^Supported Ghost version/);
-                    err.message.should.match(/you are using 2\.10\.0/);
+                    err.message.should.match(/you are using 2\.10/);
                     nock.pendingMocks().length.should.eql(0);
                 });
         });
