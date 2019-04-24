@@ -104,8 +104,20 @@ module.exports = {
             {key: 'twitter_title', required: false},
             {key: 'twitter_description', required: false, type: 'text'},
             {key: 'twitter_image', required: false},
-            {key: 'codeinjection_head', required: false, type: 'text'},
-            {key: 'codeinjection_foot', required: false, type: 'text'}
+            {
+                key: 'codeinjection_head',
+                label: 'Code Injection Head',
+                helpText: 'Include custom styles or scripts with the post, see [the docs](https://docs.ghost.org/faq/publishing-options/#inject-custom-code) for more info.',
+                required: false,
+                type: 'text'
+            },
+            {
+                key: 'codeinjection_foot',
+                label: 'Code Injection Foot',
+                helpText: 'Include custom styles or scripts with the post, see [the docs](https://docs.ghost.org/faq/publishing-options/#inject-custom-code) for more info.',
+                required: false,
+                type: 'text'
+            }
         ],
 
         perform: createPost,
@@ -113,7 +125,9 @@ module.exports = {
         outputFields: [
             {key: 'og_title', label: 'Facebook Title'},
             {key: 'og_description', label: 'Facebook Description'},
-            {key: 'og_image', label: 'Facebook Image'}
+            {key: 'og_image', label: 'Facebook Image'},
+            {key: 'codeinjection_head', label: 'Code Injection Head'},
+            {key: 'codeinjection_foot', label: 'Code Injection Foot'}
         ],
 
         sample: {
