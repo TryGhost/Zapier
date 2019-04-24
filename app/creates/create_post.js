@@ -68,7 +68,7 @@ module.exports = {
                     html: 'HTML',
                     mobiledoc: 'Mobiledoc'
                 },
-                default: 'mobiledoc',
+                default: 'html',
                 altersDynamicFields: true
             },
             // only show a single content field based on the selected input format
