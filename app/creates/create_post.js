@@ -1,9 +1,6 @@
 const {initAdminApi} = require('../lib/utils');
 
 const createPost = (z, {inputData, authData}) => {
-    // TODO: remove me!
-    z.console.log(inputData);
-
     const api = initAdminApi(z, authData);
 
     // convert list of slug strings into minimal tag/author objects so that the
@@ -15,10 +12,16 @@ const createPost = (z, {inputData, authData}) => {
         return {slug};
     });
 
-    inputData.tags = authorSlugs.map((slug) => {
+    inputData.authors = authorSlugs.map((slug) => {
         return {slug};
     });
 
+    // ensure we're supplying the right input format
+    if (inputData.input_format === 'html') {
+        delete inputData.mobiledoc;
+    } else {
+        delete inputData.html;
+    }
     delete inputData.input_format;
 
     return api.posts.add(inputData);
