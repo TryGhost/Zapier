@@ -80,7 +80,7 @@ module.exports = {
                     return [{
                         key: 'html',
                         label: 'Content (HTML)',
-                        helpText: 'HTML content that will be converted to rich-text (Mobiledoc). Please be aware that any custom styling or layout may be lost during conversion.',
+                        helpText: 'HTML content that will be converted to rich-text (Mobiledoc). Please be aware that any custom styling or layout may be lost during conversion, you can read more about it [in our docs](https://docs.ghost.org/api/admin/#source-html)',
                         required: false,
                         type: 'text'
                     }];
