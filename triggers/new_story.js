@@ -22,7 +22,30 @@ const listPosts = (z, bundle) => {
     return z.request(options)
         .then((response) => {
             let blogUrl = bundle.authData.blogUrl.replace(/\/?$/, '');
-            let {posts} = z.JSON.parse(response.content);
+            let json;
+
+            try {
+                json = z.JSON.parse(response.content);
+            } catch (e) {
+                // noop
+            }
+
+            // failed request
+            if (response.status !== 200) {
+                let message = `Unknown Error: ${response.status}`;
+
+                if (json && json.errors && json.errors[0].message) {
+                    message = json.errors[0].message;
+                }
+
+                throw new Error(message);
+            }
+
+            if (!json || (json && !json.posts)) {
+                throw new Error('Response was not JSON or was incorrectly formatted.');
+            }
+
+            let {posts} = json;
 
             // manipulate data so it's useful
             posts.forEach((post) => {

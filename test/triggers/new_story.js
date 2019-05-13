@@ -164,6 +164,38 @@ describe('Triggers', () => {
                     done();
                 })
                 .catch(done);
-        })
+        });
+
+        it('handles 403', (done) => {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    status: 'all'
+                }
+            });
+
+            apiMock.get('/ghost/api/v0.1/posts/')
+                .query({
+                    status: 'all',
+                    include: 'author,tags',
+                    formats: 'mobiledoc,html,plaintext',
+                    order: 'updated_at desc'
+                })
+                .reply(403, {
+                    errors: [{
+                            message: 'You do not have permission to perform this action',
+                            errorType: 'NoPermissionError'
+                    }]
+                });
+
+            appTester(App.triggers.new_story.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                })
+                .catch((err) => {
+                    err.name.should.eql('Error');
+                    err.message.should.match(/do not have permission/);
+                })
+                .finally(done);
+        });
     });
 });
