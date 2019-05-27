@@ -1,3 +1,7 @@
+## 1.0.8
+
+* (Chore) Update zapier-platform-cli version
+
 ## 1.0.7
 
 * (Fix) Added error handling to the "New Story" trigger
