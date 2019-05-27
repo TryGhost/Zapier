@@ -11,7 +11,7 @@
     "test": "node node_modules/mocha/bin/mocha --recursive --timeout=5000"
   },
   "engines": {
-    "node": "6.10.2",
+    "node": ">=8.10.0",
     "npm": ">=3.10.10"
   },
   "dependencies": {
@@ -20,7 +20,7 @@
     "lodash": "4.17.5",
     "semver": "^5.5.0",
     "url-join": "^4.0.0",
-    "zapier-platform-core": "5.1.0"
+    "zapier-platform-core": "8.1.0"
   },
   "devDependencies": {
     "mocha": "5.1.0",
