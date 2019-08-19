@@ -175,6 +175,7 @@ describe('Triggers', () => {
 
             apiMock.get('/ghost/api/v2/admin/pages/')
                 .query({
+                    formats: 'mobiledoc,html,plaintext',
                     filter: 'status:published',
                     order: 'published_at DESC',
                     limit: 1

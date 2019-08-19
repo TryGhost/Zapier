@@ -14,6 +14,7 @@ const getLatestPublishedPage = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
     return api.pages.browse({
+        formats: 'mobiledoc,html,plaintext',
         filter: 'status:published',
         order: 'published_at DESC',
         limit: 1

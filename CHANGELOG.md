@@ -1,3 +1,7 @@
+## 2.0.1
+
+* (Fix) Fixed `html` and `plaintext` not being present when fetching sample data for "post/page published" triggers
+
 ## 2.0.0
 
 * (Breaking) Switched to Ghost's v2 Admin API and API Key Authentication (minimum compatible Ghost version is 2.19.0)
