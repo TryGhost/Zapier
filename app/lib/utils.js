@@ -25,7 +25,12 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}) => {
                 // throw a HaltedError for validation and 404 errors so the Zap
                 // doesn't get turned off due to errors from invalid user input
                 if (error.type === 'ValidationError' || error.type === 'NotFoundError') {
-                    throw new z.errors.HaltedError(error.context);
+                    let errorCode = error.type;
+                    if (error.code) {
+                        errorCode = `${errorCode}: ${error.code}`;
+                    }
+                    const message = `${error.context || error.message} (${errorCode})`;
+                    throw new z.errors.HaltedError(message);
                 }
 
                 throw new RequestError(error.message, response);
