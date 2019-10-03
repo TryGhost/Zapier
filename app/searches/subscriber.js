@@ -21,8 +21,8 @@ module.exports = {
     noun: 'Subscriber',
 
     display: {
-        label: 'Find a Subscriber',
-        description: 'Search for a subscriber by email address.'
+        label: 'Find a Subscriber (Deprecated)',
+        description: 'Search for a subscriber by email address. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
     },
 
     operation: {

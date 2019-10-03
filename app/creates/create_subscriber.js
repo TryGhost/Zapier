@@ -11,8 +11,8 @@ module.exports = {
     noun: 'Subscriber',
 
     display: {
-        label: 'Create Susbcriber',
-        description: 'Creates a subscriber.'
+        label: 'Create Susbcriber (Deprecated)',
+        description: 'Creates a subscriber. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
     },
 
     operation: {

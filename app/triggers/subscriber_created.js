@@ -29,8 +29,8 @@ module.exports = {
     noun: 'Subscriber',
 
     display: {
-        label: 'Subscriber Created',
-        description: 'Triggers when a new subscriber is added.'
+        label: 'Subscriber Created (Deprecated)',
+        description: 'Triggers when a new subscriber is added. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
     },
 
     operation: {

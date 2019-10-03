@@ -14,8 +14,8 @@ module.exports = {
     noun: 'Subscriber',
 
     display: {
-        label: 'Delete Susbcriber',
-        description: 'Deletes a subscriber.'
+        label: 'Delete Susbcriber (Deprecated)',
+        description: 'Deletes a subscriber. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
     },
 
     operation: {
