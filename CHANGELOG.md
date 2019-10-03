@@ -1,3 +1,8 @@
+## 2.1.0
+
+* (New) Added a "Create Member" action
+* (Deprecated) Subscribers-related functionality is deprecated, it will cease to function when used with Ghost 3.0 or later
+
 ## 2.0.1
 
 * (Fix) Fixed `html` and `plaintext` not being present when fetching sample data for "post/page published" triggers
