@@ -53,9 +53,9 @@ module.exports = {
                 label: 'Type of email to send',
                 required: false,
                 choices: [
-                    {value: 'signup', label: 'signup', sample: 'You\'ve successfully signed up'},
-                    {value: 'signin', label: 'login', sample: 'Click here to log in'},
-                    {value: 'subscribe', label: 'subscribe', sample: 'Confirm your subscription'}
+                    {value: 'signup', label: 'Signup Confirmation', sample: '"You\'ve successfully signed up"'},
+                    {value: 'signin', label: 'Login Link', sample: '"Click here to log in"'},
+                    {value: 'subscribe', label: 'Newsletter Subscription', sample: '"Confirm your subscription"'}
                 ]
             }
         ],
