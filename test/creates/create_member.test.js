@@ -28,7 +28,7 @@ describe('Creates', function () {
                 inputData: {
                     name: 'Test Member',
                     email: 'test@example.com',
-                    send_email: 'false',
+                    send_email: 'no',
                     email_type: 'signup'
                 }
             });

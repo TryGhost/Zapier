@@ -14,8 +14,10 @@ const extractQueryParams = function extractQueryParams(params, inputData) {
 const createMember = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
-    // Zapier sends boolean fields through as 1/0 but our API accepts true/false
-    bundle.inputData.send_email = bundle.inputData.send_email === 0 ? 'false' : 'true';
+    // Zapier sends boolean fields through as yes/no but our API accepts true/false break;
+    if (bundle.inputData.send_email) {
+        bundle.inputData.send_email = bundle.inputData.send_email === 'yes' ? 'true' : 'false';
+    }
 
     const queryParams = extractQueryParams(['send_email', 'email_type'], bundle.inputData);
 
