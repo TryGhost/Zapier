@@ -52,11 +52,11 @@ module.exports = {
                 key: 'email_type',
                 label: 'Type of email to send',
                 required: false,
-                choices: {
-                    signin: 'Signin',
-                    signup: 'Signup',
-                    subscribe: 'Subscribe'
-                }
+                choices: [
+                    {value: 'signup', label: 'signup', sample: 'You\'ve successfully signed up'},
+                    {value: 'signin', label: 'login', sample: 'Click here to log in'},
+                    {value: 'subscribe', label: 'subscribe', sample: 'Confirm your subscription'}
+                ]
             }
         ],
 
