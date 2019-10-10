@@ -1,9 +1,19 @@
-const _ = require('lodash');
-const {initAdminApi} = require('../lib/utils');
+const {initAdminApi, versionCheck} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-const subscribeWebhook = _.partial(webhooks.subscribe, 'subscriber.added');
-const unsubscribeWebhook = webhooks.unsubscribe;
+const subscribeWebhook = async (z, bundle) => {
+    // Ghost 3.0 removes all subscriber routes, show an unsupported error
+    await versionCheck('<3.0.0', 'subscribers', z, bundle);
+
+    return webhooks.subscribe('subscriber.added', z, bundle);
+};
+
+const unsubscribeWebhook = async (z, bundle) => {
+    // Ghost 3.0 removes all subscriber routes, show an unsupported error
+    await versionCheck('<3.0.0', 'subscribers', z, bundle);
+
+    return webhooks.unsubscribe(z, bundle);
+};
 
 // triggers on subscriber.added. Formats the API response ready for passing to
 // the zap which expects an array
@@ -15,7 +25,10 @@ const handleWebhook = (z, bundle) => {
     return [subscriber.current];
 };
 
-const getLatestSubscriber = (z, bundle) => {
+const getLatestSubscriber = async (z, bundle) => {
+    // Ghost 3.0 removes all subscriber routes, show an unsupported error
+    await versionCheck('<3.0.0', 'subscribers', z, bundle);
+
     const api = initAdminApi(z, bundle.authData);
 
     return api.subscribers.browse({

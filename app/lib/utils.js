@@ -1,3 +1,4 @@
+const semver = require('semver');
 const GhostAdminApi = require('@tryghost/admin-api');
 
 class RequestError extends Error {
@@ -56,7 +57,21 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}) => {
     });
 };
 
+const versionCheck = (semverRange, action, z, {authData}) => {
+    const api = initAdminApi(z, authData);
+
+    return api.site.read().then((config) => {
+        const version = semver.coerce(config.version);
+
+        if (!semver.satisfies(version, semverRange)) {
+            const message = `The version of Ghost your site is using does not support ${action}. Supported version range is ${semverRange}, you are using ${config.version}.`;
+            throw new z.errors.HaltedError(message);
+        }
+    });
+};
+
 module.exports = {
     initAdminApi,
+    versionCheck,
     RequestError
 };

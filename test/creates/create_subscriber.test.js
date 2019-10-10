@@ -23,105 +23,138 @@ describe('Creates', function () {
             nock.cleanAll();
         });
 
-        it('creates a subscriber', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    name: 'Test Subscriber',
-                    email: 'test@example.com'
-                }
-            });
-
-            apiMock.post('/ghost/api/v2/admin/subscribers/', {
-                subscribers: [{
-                    name: 'Test Subscriber',
-                    email: 'test@example.com'
-                }]
-            }).reply(201, {
-                subscribers: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Subscriber',
-                    email: 'test@example.com',
-                    status: 'subscribed',
-                    created_at: '2019-03-28T10:06:05.862Z',
-                    updated_at: '2019-03-28T10:06:05.862Z',
-                    post_id: null,
-                    subscribed_url: null,
-                    subscribed_referrer: null,
-                    unsubscribed_url: null,
-                    unsubscribed_at: null
-                }]
-            });
-
-            return appTester(App.creates.create_subscriber.operation.perform, bundle)
-                .then((subscriber) => {
-                    apiMock.isDone().should.be.true;
-
-                    subscriber.id.should.eql('5c9c9c8d51b5bf974afad2a4');
-                    subscriber.name.should.eql('Test Subscriber');
-                    subscriber.email.should.eql('test@example.com');
+        describe('with supported version', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '2.34'}
                 });
-        });
-
-        it('has a friendly, halting validation error', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    name: 'Test Subscriber',
-                    email: 'notanemail'
-                }
             });
 
-            apiMock.post('/ghost/api/v2/admin/subscribers/')
-                .reply(422, {
-                    errors: [{
-                        message: 'Validation error, cannot save subscriber.',
-                        context: 'Validation (isEmail) failed for email',
-                        type: 'ValidationError',
-                        details: null,
-                        property: null,
-                        help: null,
-                        code: null,
-                        id: '2749ebe0-5145-11e9-9864-f79cf99013d0'
+            it('creates a subscriber', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Subscriber',
+                        email: 'test@example.com'
+                    }
+                });
+
+                apiMock.post('/ghost/api/v2/admin/subscribers/', {
+                    subscribers: [{
+                        name: 'Test Subscriber',
+                        email: 'test@example.com'
+                    }]
+                }).reply(201, {
+                    subscribers: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Subscriber',
+                        email: 'test@example.com',
+                        status: 'subscribed',
+                        created_at: '2019-03-28T10:06:05.862Z',
+                        updated_at: '2019-03-28T10:06:05.862Z',
+                        post_id: null,
+                        subscribed_url: null,
+                        subscribed_referrer: null,
+                        unsubscribed_url: null,
+                        unsubscribed_at: null
                     }]
                 });
 
-            return appTester(App.creates.create_subscriber.operation.perform, bundle)
-                .then(() => {
-                    true.should.eql(false);
-                }, (err) => {
-                    err.name.should.eql('HaltedError');
-                    err.message.should.match(/Validation \(isEmail\) failed for email/);
-                });
-        });
+                return appTester(App.creates.create_subscriber.operation.perform, bundle)
+                    .then((subscriber) => {
+                        apiMock.isDone().should.be.true;
 
-        it('handles 500 errors with JSON error body', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    name: 'Test Subscriber',
-                    email: 'test@example.com'
-                }
+                        subscriber.id.should.eql('5c9c9c8d51b5bf974afad2a4');
+                        subscriber.name.should.eql('Test Subscriber');
+                        subscriber.email.should.eql('test@example.com');
+                    });
             });
 
-            apiMock.post('/ghost/api/v2/admin/subscribers/')
-                .reply(500, {
-                    errors: [{
-                        message: 'Authorization failed',
-                        context: 'Unable to determine the authenticated user or integration. Check that cookies are being passed through if using session authentication.',
-                        type: 'NoPermissionError',
-                        details: null,
-                        property: null,
-                        help: null,
-                        code: null,
-                        id: '34950f70-5148-11e9-9864-f79cf99013d0'
-                    }]
+            it('has a friendly, halting validation error', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Subscriber',
+                        email: 'notanemail'
+                    }
                 });
 
-            return appTester(App.creates.create_subscriber.operation.perform, bundle)
-                .then(() => {
-                    true.should.eql(false);
-                }, (err) => {
-                    err.name.should.eql('RequestError');
-                    err.message.should.match(/Authorization failed/);
+                apiMock.post('/ghost/api/v2/admin/subscribers/')
+                    .reply(422, {
+                        errors: [{
+                            message: 'Validation error, cannot save subscriber.',
+                            context: 'Validation (isEmail) failed for email',
+                            type: 'ValidationError',
+                            details: null,
+                            property: null,
+                            help: null,
+                            code: null,
+                            id: '2749ebe0-5145-11e9-9864-f79cf99013d0'
+                        }]
+                    });
+
+                return appTester(App.creates.create_subscriber.operation.perform, bundle)
+                    .then(() => {
+                        true.should.eql(false);
+                    }, (err) => {
+                        err.name.should.eql('HaltedError');
+                        err.message.should.match(/Validation \(isEmail\) failed for email/);
+                    });
+            });
+
+            it('handles 500 errors with JSON error body', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Subscriber',
+                        email: 'test@example.com'
+                    }
                 });
+
+                apiMock.post('/ghost/api/v2/admin/subscribers/')
+                    .reply(500, {
+                        errors: [{
+                            message: 'Authorization failed',
+                            context: 'Unable to determine the authenticated user or integration. Check that cookies are being passed through if using session authentication.',
+                            type: 'NoPermissionError',
+                            details: null,
+                            property: null,
+                            help: null,
+                            code: null,
+                            id: '34950f70-5148-11e9-9864-f79cf99013d0'
+                        }]
+                    });
+
+                return appTester(App.creates.create_subscriber.operation.perform, bundle)
+                    .then(() => {
+                        true.should.eql(false);
+                    }, (err) => {
+                        err.name.should.eql('RequestError');
+                        err.message.should.match(/Authorization failed/);
+                    });
+            });
+        });
+
+        describe('with unsupported version', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.0'}
+                });
+            });
+
+            it('shows unsupported error message', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Subscriber',
+                        email: 'test@example.com'
+                    }
+                });
+
+                return appTester(App.creates.create_subscriber.operation.perform, bundle)
+                    .then(() => {
+                        true.should.equal(false);
+                    }, (err) => {
+                        err.name.should.equal('HaltedError');
+                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                    });
+            });
         });
     });
 });

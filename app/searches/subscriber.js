@@ -1,8 +1,10 @@
-const {initAdminApi} = require('../lib/utils');
+const {initAdminApi, versionCheck} = require('../lib/utils');
 
-const searchSubscribers = (z, bundle) => {
+const searchSubscribers = async (z, bundle) => {
+    // Ghost 3.0 removes all subscriber routes, show an unsupported error
+    await versionCheck('<3.0.0', 'subscribers', z, bundle);
+
     const api = initAdminApi(z, bundle.authData);
-
     return api.subscribers.read(bundle.inputData).then((subscriber) => {
         return [subscriber];
     }).catch((err) => {
