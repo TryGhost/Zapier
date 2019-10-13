@@ -8,7 +8,7 @@ const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', function () {
-    describe('Subscriber Created', function () {
+    describe('Member Created', function () {
         let apiMock, authData;
 
         beforeEach(function () {
@@ -26,42 +26,37 @@ describe('Triggers', function () {
         describe('with supported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '2.34'}
+                    site: {version: '3.0'}
                 });
             });
 
-            it('loads subscriber from webhook data', function () {
+            it('loads member from webhook data', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {},
                     cleanedRequest: {
-                        subscriber: {
+                        member: {
                             current: {
                                 id: '5c949f266366346875e0fed3',
-                                name: 'Test Subscriber',
+                                name: 'Test Member',
                                 email: 'test@example.com',
-                                status: 'subscribed',
-                                post_id: null,
-                                subscribed_url: null,
-                                subscribed_referrer: null,
-                                unsubscribed_url: null,
+                                note: 'A test member',
                                 created_at: '2019-03-22T08:39:02.890Z',
-                                updated_at: '2019-03-22T08:39:02.890Z',
-                                unsubscribed_at: null
+                                updated_at: '2019-03-22T08:39:02.890Z'
                             },
                             previous: {}
                         }
                     }
                 });
 
-                return appTester(App.triggers.subscriber_created.operation.perform, bundle)
-                    .then(([subscriber]) => {
-                        subscriber.id.should.eql('5c949f266366346875e0fed3');
-                        subscriber.name.should.eql('Test Subscriber');
-                        subscriber.email.should.eql('test@example.com');
+                return appTester(App.triggers.member_created.operation.perform, bundle)
+                    .then(([member]) => {
+                        member.id.should.eql('5c949f266366346875e0fed3');
+                        member.name.should.eql('Test Member');
+                        member.email.should.eql('test@example.com');
                     });
             });
 
-            it('loads subscriber from list', function () {
+            it('loads member from list', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {},
                     meta: {
@@ -69,22 +64,17 @@ describe('Triggers', function () {
                     }
                 });
 
-                apiMock.get('/ghost/api/v2/admin/subscribers/')
+                apiMock.get('/ghost/api/v2/admin/members/')
                     .query({
                         order: 'created_at DESC',
                         limit: 1
                     })
                     .reply(200, {
-                        subscribers: [{
+                        members: [{
                             id: 'one',
-                            name: 'Subscriber One',
+                            name: 'Member One',
                             email: 'one@example.com',
-                            post_id: '5a1d8648a629fc69c2706d29',
-                            status: 'subscribed',
-                            subscribed_referrer: 'http://ghost.blog/',
-                            subscribed_url: 'http://ghost.blog/the-editor-2/',
-                            unsubscribed_at: null,
-                            unsubscribed_url: null,
+                            note: 'A test member',
                             updated_at: '2017-12-13T16:33:24.000Z',
                             updated_by: '5a315654eddbd3ce4c0cd92c'
                         }],
@@ -100,38 +90,38 @@ describe('Triggers', function () {
                         }
                     });
 
-                return appTester(App.triggers.subscriber_created.operation.performList, bundle)
+                return appTester(App.triggers.member_created.operation.performList, bundle)
                     .then((results) => {
                         apiMock.isDone().should.be.true;
                         results.length.should.eql(1);
 
-                        let [firstSubscriber] = results;
-                        firstSubscriber.id.should.eql('one');
-                        firstSubscriber.name.should.eql('Subscriber One');
-                        firstSubscriber.email.should.eql('one@example.com');
+                        let [firstMember] = results;
+                        firstMember.id.should.eql('one');
+                        firstMember.name.should.eql('Member One');
+                        firstMember.email.should.eql('one@example.com');
                     });
             });
 
             it('subscribes to webhook', function () {
                 let bundle = Object.assign({}, {authData}, {
-                    targetUrl: 'https://webooks.zapier.com/ghost/subscriber'
+                    targetUrl: 'https://webooks.zapier.com/ghost/member'
                 });
 
                 apiMock.post('/ghost/api/v2/admin/webhooks/', {
                     webhooks: [{
                         integration_id: '5c3e1182e79eace7f58c9c3b',
-                        target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                        event: 'subscriber.added'
+                        target_url: 'https://webooks.zapier.com/ghost/member',
+                        event: 'member.added'
                     }]
                 }).reply(201, {
                     webhooks: [{
                         id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                        event: 'subscriber.added'
+                        target_url: 'https://webooks.zapier.com/ghost/member',
+                        event: 'member.added'
                     }]
                 });
 
-                return appTester(App.triggers.subscriber_created.operation.performSubscribe, bundle)
+                return appTester(App.triggers.member_created.operation.performSubscribe, bundle)
                     .then(() => {
                         apiMock.isDone().should.be.true;
                     });
@@ -141,15 +131,15 @@ describe('Triggers', function () {
                 let bundle = Object.assign({}, {authData}, {
                     subscribeData: {
                         id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                        event: 'subscriber.added'
+                        target_url: 'https://webooks.zapier.com/ghost/member',
+                        event: 'member.added'
                     }
                 });
 
                 apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
                     .reply(204);
 
-                return appTester(App.triggers.subscriber_created.operation.performUnsubscribe, bundle)
+                return appTester(App.triggers.member_created.operation.performUnsubscribe, bundle)
                     .then(() => {
                         apiMock.isDone().should.be.true;
                     });
@@ -159,33 +149,33 @@ describe('Triggers', function () {
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.0'}
+                    site: {version: '2.34'}
                 });
             });
 
             it('shows unsupported error for list', function () {
                 let bundle = Object.assign({}, {authData});
 
-                return appTester(App.triggers.subscriber_created.operation.performList, bundle)
+                return appTester(App.triggers.member_created.operation.performList, bundle)
                     .then(() => {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
                     });
             });
 
             it('shows unsupported error when subscribing', function () {
                 let bundle = Object.assign({}, {authData}, {
-                    targetUrl: 'https://webooks.zapier.com/ghost/subscriber'
+                    targetUrl: 'https://webooks.zapier.com/ghost/member'
                 });
 
-                return appTester(App.triggers.subscriber_created.operation.performSubscribe, bundle)
+                return appTester(App.triggers.member_created.operation.performSubscribe, bundle)
                     .then(() => {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
                     });
             });
 
@@ -193,17 +183,17 @@ describe('Triggers', function () {
                 let bundle = Object.assign({}, {authData}, {
                     subscribeData: {
                         id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/subscriber',
-                        event: 'subscriber.added'
+                        target_url: 'https://webooks.zapier.com/ghost/member',
+                        event: 'member.added'
                     }
                 });
 
-                return appTester(App.triggers.subscriber_created.operation.performUnsubscribe, bundle)
+                return appTester(App.triggers.member_created.operation.performUnsubscribe, bundle)
                     .then(() => {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
                     });
             });
         });
