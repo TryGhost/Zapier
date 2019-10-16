@@ -8,7 +8,9 @@ const deleteSubscriber = async (z, bundle) => {
 
     return api.subscribers.delete(bundle.inputData).then(() => {
         // Zapier requires an object back but @tryghost/admin-api returns undefined
-        return {};
+        // Return the inputData as it's all we have - Zapier requires a sample with,
+        // a minimum length of 1 so doing this allows sample and return data to match
+        return bundle.inputData;
     });
 };
 
@@ -26,6 +28,10 @@ module.exports = {
             {key: 'email', required: true}
         ],
 
-        perform: deleteSubscriber
+        perform: deleteSubscriber,
+
+        sample: {
+            email: 'sample@example.com'
+        }
     }
 };

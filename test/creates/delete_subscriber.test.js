@@ -43,7 +43,7 @@ describe('Creates', function () {
                 return appTester(App.creates.delete_subscriber.operation.perform, bundle)
                     .then((result) => {
                         apiMock.isDone().should.be.true;
-                        result.should.eql({});
+                        result.should.eql({email: 'test@example.com'});
                     });
             });
 
