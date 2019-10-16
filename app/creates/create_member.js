@@ -35,7 +35,8 @@ module.exports = {
 
     display: {
         label: 'Create Member',
-        description: 'Creates a member (Only supported by Ghost 2.32.0 and later)'
+        description: 'Creates a member (Only supported by Ghost 2.32.0 and later)',
+        important: true
     },
 
     operation: {
