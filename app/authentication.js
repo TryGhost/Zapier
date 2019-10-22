@@ -1,7 +1,7 @@
 const semver = require('semver');
 const {initAdminApi, RequestError} = require('./lib/utils');
 
-const SUPPORTED_VERSION = '^2.19';
+const SUPPORTED_VERSION = '>=2.19';
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.

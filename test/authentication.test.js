@@ -36,6 +36,20 @@ describe('Authentication', function () {
                 });
         });
 
+        it('is success with valid api key and Ghost 3.x version', function () {
+            let bundle = Object.assign({}, {authData});
+
+            apiMock.get('/ghost/api/v2/admin/site/')
+                .reply(200, {
+                    site: {version: '3.0'}
+                });
+
+            return appTester(App.authentication.test, bundle)
+                .then(() => {
+                    nock.pendingMocks().length.should.eql(0);
+                });
+        });
+
         it('errors with invalid Admin API Key', function () {
             let bundle = Object.assign({}, {authData});
 
