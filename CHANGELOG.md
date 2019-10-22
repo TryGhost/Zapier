@@ -1,3 +1,7 @@
+## 2.1.1
+
+* (Fix)  Fixed invalid version error when connecting a Ghost 3.0 site
+
 ## 2.1.0
 
 * (New) Added a "Create Member" action
