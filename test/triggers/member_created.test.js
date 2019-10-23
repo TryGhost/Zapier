@@ -64,7 +64,7 @@ describe('Triggers', function () {
                     }
                 });
 
-                apiMock.get('/ghost/api/v2/admin/members/')
+                apiMock.get('/ghost/api/v3/admin/members/')
                     .query({
                         order: 'created_at DESC',
                         limit: 1

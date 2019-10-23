@@ -29,7 +29,7 @@ const getLatestMember = async (z, bundle) => {
     // Members was added in Ghost 3.0
     await versionCheck('>=3.0.0', 'members', z, bundle);
 
-    const api = initAdminApi(z, bundle.authData);
+    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
     return api.members
         .browse({order: 'created_at DESC', limit: 1});

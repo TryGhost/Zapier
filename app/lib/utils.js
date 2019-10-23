@@ -11,7 +11,7 @@ class RequestError extends Error {
 }
 
 // Convenience method for creating a GhostAdminAPI instance from the bundle data
-const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}) => {
+const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) => {
     function makeRequest({url, method, data: body, params = {}, headers = {}}) {
         return z.request({
             url,
@@ -49,12 +49,10 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}) => {
         });
     }
 
-    return new GhostAdminApi({
-        url,
-        key,
-        version: 'v2',
-        makeRequest
-    });
+    const defaultOptions = {url, key, makeRequest, version: 'v2'};
+    const options = Object.assign({}, defaultOptions, _options);
+
+    return new GhostAdminApi(options);
 };
 
 const versionCheck = (semverRange, action, z, {authData}) => {
