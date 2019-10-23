@@ -1,6 +1,10 @@
+## 2.1.2
+
+* (Fix) Fixed "Resource not found" error showing when setting up a "Member created" trigger
+
 ## 2.1.1
 
-* (Fix)  Fixed invalid version error when connecting a Ghost 3.0 site
+* (Fix) Fixed invalid version error when connecting a Ghost 3.0 site
 
 ## 2.1.0
 
