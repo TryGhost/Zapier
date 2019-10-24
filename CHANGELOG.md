@@ -1,3 +1,7 @@
+## 2.1.3
+
+* (Fix) Fixed "GhostAdminAPI Config Invalid" error showing when setting up a "Member created" trigger
+
 ## 2.1.2
 
 * (Fix) Fixed "Resource not found" error showing when setting up a "Member created" trigger
