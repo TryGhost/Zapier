@@ -1,4 +1,4 @@
-const {initAdminApi} = require('../lib/utils');
+const {initAdminApi, versionCheck} = require('../lib/utils');
 
 const extractQueryParams = function extractQueryParams(params, inputData) {
     const queryParams = {};
@@ -11,8 +11,11 @@ const extractQueryParams = function extractQueryParams(params, inputData) {
     return queryParams;
 };
 
-const createMember = (z, bundle) => {
-    const api = initAdminApi(z, bundle.authData);
+const createMember = async (z, bundle) => {
+    // Members was added in Ghost 3.0
+    await versionCheck('>=3.0.0', 'members', z, bundle);
+
+    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
     // Zapier sends boolean fields through as yes/no but our API accepts true/false break;
     if (bundle.inputData.send_email) {
@@ -21,12 +24,7 @@ const createMember = (z, bundle) => {
 
     const queryParams = extractQueryParams(['send_email', 'email_type'], bundle.inputData);
 
-    return api.members.add(bundle.inputData, queryParams).catch((err) => {
-        if (err.message.match(/NotFoundError/)) {
-            throw new z.errors.HaltedError('Unsupported Ghost version. Minimum version for members support is 2.32.0.');
-        }
-        throw err;
-    });
+    return api.members.add(bundle.inputData, queryParams);
 };
 
 module.exports = {
@@ -35,7 +33,7 @@ module.exports = {
 
     display: {
         label: 'Create Member',
-        description: 'Creates a member (Only supported by Ghost 2.32.0 and later)',
+        description: 'Creates a member (Only supported by Ghost 3.0.0 and later)',
         important: true
     },
 
