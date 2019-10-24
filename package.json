@@ -1,6 +1,6 @@
 {
   "name": "ghost-zapier",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Ghost integration for the Zapier platform.",
   "repository": "TryGhost/Ghost-Zapier",
   "homepage": "https://ghost.org/",
