@@ -8,9 +8,7 @@ const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', function () {
-    // TODO: re-enable once member deletion webhook payloads are working in Ghost core
-    // eslint-disable-next-line
-    describe.skip('Member Deleted', function () {
+    describe('Member Deleted', function () {
         let apiMock, authData;
 
         beforeEach(function () {
@@ -28,7 +26,7 @@ describe('Triggers', function () {
         describe('with supported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.0'}
+                    site: {version: '3.1'}
                 });
             });
 
@@ -155,7 +153,7 @@ describe('Triggers', function () {
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '2.34'}
+                    site: {version: '3.0'}
                 });
             });
 
@@ -167,7 +165,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
                     });
             });
 
@@ -181,7 +179,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
                     });
             });
 
@@ -199,7 +197,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.0, you are using 2.34/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
                     });
             });
         });
