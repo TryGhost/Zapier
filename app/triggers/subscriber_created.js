@@ -43,7 +43,7 @@ module.exports = {
 
     display: {
         label: 'Subscriber Created (Deprecated)',
-        description: 'Triggers when a new subscriber is added (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later).'
+        description: 'Triggers when a new subscriber is added (Subscribers feature is deprecated and is replaced by [members](https://ghost.org/docs/members/zapier/) in Ghost 3.0 or later).'
     },
 
     operation: {

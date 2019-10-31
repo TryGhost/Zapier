@@ -20,7 +20,7 @@ module.exports = {
 
     display: {
         label: 'Delete Susbcriber (Deprecated)',
-        description: 'Deletes a subscriber. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
+        description: 'Deletes a subscriber. (Subscribers feature is deprecated and is replaced by [members](https://ghost.org/docs/members/zapier/) in Ghost 3.0 or later)'
     },
 
     operation: {

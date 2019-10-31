@@ -24,7 +24,7 @@ module.exports = {
 
     display: {
         label: 'Find a Subscriber (Deprecated)',
-        description: 'Search for a subscriber by email address. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
+        description: 'Search for a subscriber by email address. (Subscribers feature is deprecated and is replaced by [members](https://ghost.org/docs/members/zapier/) in Ghost 3.0 or later)'
     },
 
     operation: {
