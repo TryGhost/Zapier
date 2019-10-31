@@ -41,7 +41,7 @@ module.exports = {
 
     display: {
         label: 'Subscriber Deleted (Deprecated)',
-        description: 'Triggers when a subscriber is deleted. (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later)'
+        description: 'Triggers when a subscriber is deleted (Subscribers feature is deprecated and will no longer function in Ghost 3.0 or later).'
     },
 
     operation: {
