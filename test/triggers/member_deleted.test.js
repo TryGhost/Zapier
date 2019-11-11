@@ -165,7 +165,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -179,7 +179,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -197,7 +197,7 @@ describe('Triggers', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.1.0, you are using 3.0/);
+                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
         });

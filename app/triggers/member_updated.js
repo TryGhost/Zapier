@@ -1,8 +1,8 @@
 const {versionCheck} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-// `member.edited` webhook was added in 3.1.0
-const SUPPORTED_VERSION = '>=3.1.0';
+// `member.edited` webhook was added in 3.0.3
+const SUPPORTED_VERSION = '>=3.0.3';
 
 // we always return a sample payload for this trigger because it's not possible
 // to show useful "changed" data when fetching a record from the API
@@ -56,7 +56,7 @@ module.exports = {
 
     display: {
         label: 'Member Updated',
-        description: 'Triggers when a member is updated (requires Ghost 3.1.0 or later).'
+        description: 'Triggers when a member is updated (requires Ghost 3.0.3 or later).'
     },
 
     operation: {

@@ -1,8 +1,8 @@
 const {initAdminApi, versionCheck} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-// `member.deleted` webhook was added in 3.1.0
-const SUPPORTED_VERSION = '>=3.1.0';
+// `member.deleted` webhook was added in 3.0.3
+const SUPPORTED_VERSION = '>=3.0.3';
 
 const subscribeWebhook = async (z, bundle) => {
     await versionCheck(SUPPORTED_VERSION, 'members', z, bundle);
@@ -39,7 +39,7 @@ module.exports = {
 
     display: {
         label: 'Member Deleted',
-        description: 'Triggers when a member is deleted (requires Ghost 3.1.0 or later).'
+        description: 'Triggers when a member is deleted (requires Ghost 3.0.3 or later).'
     },
 
     operation: {
