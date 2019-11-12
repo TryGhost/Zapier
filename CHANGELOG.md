@@ -1,3 +1,8 @@
+## 2.2.0
+
+* (New) Added "Member updated" trigger
+* (New) Added "Member deleted" trigger
+
 ## 2.1.4
 
 * (Fix) Fixed "ResourceNotFound" error when using the "Create member" action
