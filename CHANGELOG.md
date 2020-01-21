@@ -1,3 +1,7 @@
+## 2.2.1
+
+* (Fix) Fixed "Validation failed for 'members[0]'" error when creating member
+
 ## 2.2.0
 
 * (New) Added "Member updated" trigger
