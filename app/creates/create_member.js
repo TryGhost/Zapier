@@ -1,30 +1,28 @@
 const {initAdminApi, versionCheck} = require('../lib/utils');
 
-const extractQueryParams = function extractQueryParams(params, inputData) {
-    const queryParams = {};
-    params.forEach((param) => {
-        if (inputData[param]) {
-            queryParams[param] = inputData[param];
-            delete inputData[param];
-        }
-    });
-    return queryParams;
-};
-
 const createMember = async (z, bundle) => {
     // Members was added in Ghost 3.0
     await versionCheck('>=3.0.0', 'members', z, bundle);
 
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
-    // Zapier sends boolean fields through as yes/no but our API accepts true/false break;
+    const memberData = {
+        name: bundle.inputData.name,
+        email: bundle.inputData.email
+    };
+
+    const queryParams = {};
+
     if (bundle.inputData.send_email) {
-        bundle.inputData.send_email = bundle.inputData.send_email === 'yes' ? 'true' : 'false';
+        // Zapier sends boolean fields through as yes/no but our API accepts true/false
+        queryParams.send_email = bundle.inputData.send_email === 'yes' ? 'true' : 'false';
     }
 
-    const queryParams = extractQueryParams(['send_email', 'email_type'], bundle.inputData);
+    if (bundle.inputData.email_type) {
+        queryParams.email_type = bundle.inputData.email_type;
+    }
 
-    return api.members.add(bundle.inputData, queryParams);
+    return api.members.add(memberData, queryParams);
 };
 
 module.exports = {
