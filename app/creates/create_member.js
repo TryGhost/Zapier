@@ -8,7 +8,8 @@ const createMember = async (z, bundle) => {
 
     const memberData = {
         name: bundle.inputData.name,
-        email: bundle.inputData.email
+        email: bundle.inputData.email,
+        labels: bundle.inputData.labels || []
     };
 
     const queryParams = {};
@@ -40,6 +41,12 @@ module.exports = {
             {key: 'name', required: false},
             {key: 'email', required: true},
             {
+                key: 'labels',
+                required: false,
+                list: true,
+                helpText: 'Provide a list of labels to attach to the member',
+            },
+            {
                 key: 'send_email',
                 label: 'Send email to member?',
                 type: 'boolean',
@@ -63,6 +70,7 @@ module.exports = {
             id: '5c9c9c8d51b5bf974afad2a4',
             name: 'Test Member',
             email: 'test@example.com',
+            labels: ['Zapier'],
             created_at: '2019-03-28T10:06:05.862Z',
             updated_at: '2019-03-28T10:06:05.862Z'
         }

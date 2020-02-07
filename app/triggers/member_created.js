@@ -65,6 +65,13 @@ module.exports = {
             name: 'Sample Member',
             email: 'sample@example.com',
             note: 'Just a sample member record.',
+            labels: [
+                {
+                    name: 'Zapier',
+                    created_at: '2019-10-13T18:12:00.000Z',
+                    updated_at: '2019-10-13T18:12:00.000Z'
+                }
+            ],
             created_at: '2019-10-13T18:12:00.000Z',
             updated_at: '2019-10-13T18:12:00.000Z'
         }
