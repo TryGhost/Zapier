@@ -68,6 +68,7 @@ module.exports = {
             labels: [
                 {
                     name: 'Zapier',
+                    slug: 'zapier',
                     created_at: '2019-10-13T18:12:00.000Z',
                     updated_at: '2019-10-13T18:12:00.000Z'
                 }

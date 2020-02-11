@@ -2,15 +2,22 @@ const {initAdminApi, versionCheck} = require('../lib/utils');
 
 const createMember = async (z, bundle) => {
     // Members was added in Ghost 3.0
-    await versionCheck('>=3.0.0', 'members', z, bundle);
-
-    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
-
+    let expectedVersion = '>=3.0.0';
+    let action = 'members';
     const memberData = {
         name: bundle.inputData.name,
-        email: bundle.inputData.email,
-        labels: bundle.inputData.labels || []
+        email: bundle.inputData.email
     };
+
+    // Member Labels was added in Ghost 3.6
+    if (bundle.inputData.labels && bundle.inputData.labels.length > 0) {
+        expectedVersion = '>=3.6.0';
+        action = 'member labels';
+        memberData.labels = bundle.inputData.labels
+    }
+    await versionCheck(expectedVersion, action, z, bundle);
+
+    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
     const queryParams = {};
 
@@ -44,7 +51,7 @@ module.exports = {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member',
+                helpText: 'Provide a list of labels to attach to the member ( >= Ghost 3.6)',
             },
             {
                 key: 'send_email',
