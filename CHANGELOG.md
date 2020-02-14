@@ -1,3 +1,7 @@
+## 2.3.0
+
+* (New) Updated "Create Member" action to allow labels (needs >= Ghost 3.6)
+
 ## 2.2.1
 
 * (Fix) Fixed "Validation failed for 'members[0]'" error when creating member

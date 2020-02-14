@@ -65,6 +65,14 @@ module.exports = {
             name: 'Sample Member',
             email: 'sample@example.com',
             note: 'Just a sample member record.',
+            labels: [
+                {
+                    name: 'Zapier',
+                    slug: 'zapier',
+                    created_at: '2019-10-13T18:12:00.000Z',
+                    updated_at: '2019-10-13T18:12:00.000Z'
+                }
+            ], // Labels are available only from Ghost >= 3.6
             created_at: '2019-10-13T18:12:00.000Z',
             updated_at: '2019-10-13T18:12:00.000Z'
         }

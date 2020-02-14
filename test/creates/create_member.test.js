@@ -130,6 +130,64 @@ describe('Creates', function () {
             });
         });
 
+        describe('with supported version >=3.6', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.6'}
+                });
+            });
+
+            it('creates a member with label', function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.6'}
+                });
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        labels: ['Zapier'],
+                        send_email: 'no',
+                        email_type: 'signup'
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=false&email_type=signup', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        labels: ['Zapier']
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        labels: [
+                            {
+                                id: '5e425659230484605f002c57',
+                                name: 'Zapier',
+                                created_at: '2020-02-11T07:23:05.520Z',
+                                updated_at: '2020-02-11T07:23:05.520Z',
+                                slug: 'zapier'
+                            }
+                        ],
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                        member.email.should.equal('test@example.com');
+                        member.labels.should.have.lengthOf(1);
+                    });
+            });
+        });
+
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
@@ -151,6 +209,32 @@ describe('Creates', function () {
                     }, (err) => {
                         err.name.should.eql('HaltedError');
                         err.message.should.match(/2\.34/);
+                    });
+            });
+        });
+
+        describe('with unsupported version <= 3.6', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.0'}
+                });
+            });
+
+            it('has a friendly, halting "unsupported version" error', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        labels: ['Zapier']
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then(() => {
+                        true.should.equal(false);
+                    }, (err) => {
+                        err.name.should.eql('HaltedError');
+                        err.message.should.match(/3\.0/);
                     });
             });
         });
