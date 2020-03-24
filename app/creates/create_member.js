@@ -13,7 +13,7 @@ const createMember = async (z, bundle) => {
     if (bundle.inputData.labels && bundle.inputData.labels.length > 0) {
         expectedVersion = '>=3.6.0';
         action = 'member labels';
-        memberData.labels = bundle.inputData.labels
+        memberData.labels = bundle.inputData.labels;
     }
     await versionCheck(expectedVersion, action, z, bundle);
 
@@ -51,7 +51,7 @@ module.exports = {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member ( >= Ghost 3.6)',
+                helpText: 'Provide a list of labels to attach to the member ( >= Ghost 3.6)'
             },
             {
                 key: 'send_email',
