@@ -1,3 +1,7 @@
+## 2.3.1
+
+* (Fix) Fixed authentication test showing success when API key is incorrect
+
 ## 2.3.0
 
 * (New) Updated "Create Member" action to allow labels (needs >= Ghost 3.6)
