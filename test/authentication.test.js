@@ -30,6 +30,9 @@ describe('Authentication', function () {
                     site: {version: '2.19'}
                 });
 
+            apiMock.get('/ghost/api/v2/admin/config/')
+                .reply(200, {});
+
             return appTester(App.authentication.test, bundle)
                 .then(() => {
                     nock.pendingMocks().length.should.eql(0);
@@ -44,6 +47,9 @@ describe('Authentication', function () {
                     site: {version: '3.0'}
                 });
 
+            apiMock.get('/ghost/api/v2/admin/config/')
+                .reply(200, {});
+
             return appTester(App.authentication.test, bundle)
                 .then(() => {
                     nock.pendingMocks().length.should.eql(0);
@@ -53,7 +59,13 @@ describe('Authentication', function () {
         it('errors with invalid Admin API Key', function () {
             let bundle = Object.assign({}, {authData});
 
+            // emulate Ghost behaviour of unauthed routes not erroring
             apiMock.get('/ghost/api/v2/admin/site/')
+                .reply(200, {
+                    site: {version: '3.0'}
+                });
+
+            apiMock.get('/ghost/api/v2/admin/config/')
                 .reply(400, {
                     errors: [{
                         message: 'Invalid token',

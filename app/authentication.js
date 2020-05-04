@@ -17,11 +17,16 @@ const testAuth = (z, {authData}) => {
             throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
 
-        // anything returned here gets added to `bundle.authData`
-        return {
-            blogTitle: config.title,
-            blogUrl: config.url
-        };
+        // make an authenticated request to ensure the API key is valid
+        // (some versions of Ghost do not error when an invalid key is used
+        //  to access non-authenticated endpoints)
+        return api.config.read().then(() => {
+            // anything returned here gets added to `bundle.authData`
+            return {
+                blogTitle: config.title,
+                blogUrl: config.url
+            };
+        });
     }).catch((err) => {
         if (err instanceof RequestError) {
             // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
