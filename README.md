@@ -11,7 +11,7 @@ Notes:
 
 Zapier checks the version of Ghost when authenticating to ensure that the API supports the required webhooks endpoints and other features. This is done by fetching the `/ghost/api/v2/admin/site/` endpoint.
 
-When a new major version of Ghost is released the [supported version string](https://github.com/TryGhost/Ghost-Zapier/blob/master/authentication.js#L3) must be updated!
+When a new major version of Ghost is released the [supported version string](https://github.com/TryGhost/Ghost-Zapier/blob/4739696c1dde5a197ea89531536deebfab8f57ab/app/authentication.js#L4) must be updated!
 
 ## Local Testing
 
