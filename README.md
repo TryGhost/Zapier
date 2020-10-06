@@ -2,7 +2,7 @@
 
 ## Node version support
 
-All Zapier CLI apps are run using Node.js v8.10.0. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
+All Zapier CLI apps are run using Node.js v10.16.0. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
 
 Notes:
 - there is a `.nvmrc` file in this project if you have `nvm` auto-switching enabled
