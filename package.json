@@ -12,7 +12,7 @@
     "test": "mocha --recursive"
   },
   "engines": {
-    "node": "10.16.0",
+    "node": "10.22.1",
     "npm": ">=5.6.0"
   },
   "dependencies": {
