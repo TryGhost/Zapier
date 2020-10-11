@@ -1,5 +1,22 @@
 # Ghost-Zapier
 
+## Getting started
+The app is build using "Zapier Platform CLI". An introductory guide into building and maintaining such apps is available [here](https://platform.zapier.com/cli_tutorials/getting-started).
+
+Quick command reference to get started with development:
+```
+# install the CLI globally
+yarn global add zapier-platform-cli
+
+# setup auth to Zapier's platform with a deploy key
+zapier login
+
+# setup dependencies
+yarn
+
+zapier test
+```
+
 ## Node version support
 
 All Zapier CLI apps are run using Node.js v12. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
