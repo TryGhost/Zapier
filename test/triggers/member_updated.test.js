@@ -125,6 +125,72 @@ describe('Triggers', function () {
             });
         });
 
+        describe('sample data per version', function () {
+            afterEach(function () {
+                nock.cleanAll();
+            });
+
+            it('>3.1', function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.1'}
+                });
+
+                return appTester(App.triggers.member_updated.operation.performList, {authData})
+                    .then(([member]) => {
+                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
+                        member.current.name.should.eql('New Member Name');
+                        member.current.email.should.eql('sample@example.com');
+                        member.previous.name.should.eql('Old Member Name');
+
+                        should.not.exist(member.current.labels);
+                        should.not.exist(member.current.geolocation);
+                    });
+            });
+
+            it('>3.6.0', function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.4'}
+                });
+
+                return appTester(App.triggers.member_updated.operation.performList, {authData})
+                    .then(([member]) => {
+                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
+                        member.current.name.should.eql('New Member Name');
+                        member.current.email.should.eql('sample@example.com');
+                        member.previous.name.should.eql('Old Member Name');
+
+                        should.exist(member.current.comped);
+                        member.current.comped.should.eql(true);
+
+                        should.not.exist(member.current.labels);
+                        should.not.exist(member.current.geolocation);
+                    });
+            });
+
+            it('>3.8.0', function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.8'}
+                });
+
+                return appTester(App.triggers.member_updated.operation.performList, {authData})
+                    .then(([member]) => {
+                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
+                        member.current.name.should.eql('New Member Name');
+                        member.current.email.should.eql('sample@example.com');
+                        member.previous.name.should.eql('Old Member Name');
+
+                        should.exist(member.current.labels);
+                        member.current.labels[0].name.should.eql('New label');
+
+                        should.exist(member.previous.labels);
+                        member.previous.labels.length.should.eql(0);
+
+                        should.exist(member.current.geolocation);
+                        member.current.geolocation.city.should.eql('Kidderminster');
+                    });
+            });
+        });
+
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
