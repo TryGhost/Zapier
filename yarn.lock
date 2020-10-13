@@ -32,10 +32,10 @@
     form-data "^2.3.3"
     jsonwebtoken "^8.4.0"
 
-"@types/node@8.10.20":
-  version "8.10.20"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.20.tgz#fe674ea52e13950ab10954433a7824438aabbcac"
-  integrity sha512-M7x8+5D1k/CuA6jhiwuSCmE8sbUWJF0wYsjcig9WrXvwUI5ArEoUBdOXpV4JcEMrLp02/QbDjw+kI+vQeKyQgg==
+"@types/node@^10":
+  version "10.17.39"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.39.tgz#ce1122758d0608de8303667cebf171f44192629b"
+  integrity sha512-dJLCxrpQmgyxYGcl0Ae9MTsQgI22qHHcGFj/8VKu7McJA5zQpnuGjoksnxbo1JxSjW/Nahnl13W8MYZf01CZHA==
 
 acorn-jsx@^5.1.0:
   version "5.1.0"
@@ -1884,10 +1884,10 @@ yargs@^14.2.3:
     y18n "^4.0.0"
     yargs-parser "^15.0.1"
 
-zapier-platform-core@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-9.0.0.tgz#232b217da4ecfce4202cfa714514a0acad0e4924"
-  integrity sha512-y3eDE4hwqxiUiJGel9RXgrmEbPkmSZWs4AXssT5hF0lOnWAQeeBT1h9sLZAculT53Lk6thinl9QFdiAC+EUgKw==
+zapier-platform-core@9.4.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-9.4.0.tgz#5acf3c05a42a5a97d0e029dcba42a51ddaebac6b"
+  integrity sha512-499VBrDQ0CWhPHZVqou5/dG0TfigXC2mW8qz16arA3kvv9g+PY3XT9FRtn18ITT3rBofZyFv4BXQ26JJo2Xi5w==
   dependencies:
     bluebird "3.5.5"
     content-disposition "0.5.3"
@@ -1897,14 +1897,14 @@ zapier-platform-core@9.0.0:
     node-fetch "2.6.0"
     oauth-sign "0.9.0"
     semver "5.6.0"
-    zapier-platform-schema "9.0.0"
+    zapier-platform-schema "9.4.0"
   optionalDependencies:
-    "@types/node" "8.10.20"
+    "@types/node" "^10"
 
-zapier-platform-schema@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-9.0.0.tgz#b7f8033d672af8b98bf359cbc1c2d55a9036ed43"
-  integrity sha512-Xh+oU8nFK8mdCpJgXovRvbXDkQsrieMpVElIvcKmvhctX1spVKvpZaeDdYGxOMWTi/0ji6opX3/MKKqgjd2r1w==
+zapier-platform-schema@9.4.0:
+  version "9.4.0"
+  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-9.4.0.tgz#b683ec13e9a56e50bdb8cfbdc9e83a1a9d3fa86c"
+  integrity sha512-+e1Qj1Jg1yOGIKjiOib2PBtKVm8LIX4TeOspA2iZkl+NmKJKcWO6SboFFpjMOLqYCfihEJ8bz3fsepD/idyDoA==
   dependencies:
     jsonschema "1.2.2"
     lodash "4.17.15"
