@@ -5,6 +5,7 @@ module.exports = {
     member_updated: require('./member_updated'),
     page_published: require('./page_published'),
     post_published: require('./post_published'),
+    post_scheduled: require('./post_scheduled'),
     subscriber_created: require('./subscriber_created'),
     subscriber_deleted: require('./subscriber_deleted'),
     tag_created: require('./tag_created')
