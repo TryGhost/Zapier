@@ -55,6 +55,18 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
     return new GhostAdminApi(options);
 };
 
+/**
+ * Checks if version needed to perform an action satisfies connected Ghost instance.
+ * Ghost version is taken from site endpoint (https://ghost.org/docs/api/v3/admin/#the-site-object)
+ * "Semver String (major.minor) The current version of the Ghost site. Use this to check the minimum
+ * version is high enough for compatibility with integrations.". Based on this patch version is not
+ * taken into account during the check.
+ *
+ * @param {String} semverRange semver string, e.g.: `> 3.6' the patch version is not taken into account
+ * @param {String} action name of the action that was attempted, e.g.: 'member labels'
+ * @param {Object} z Zapier's internal z object, passed in as first argument to all function calls in Zapier app
+ * @param {Object} bundle Zapier's internal bundle object, holds the user’s auth details and the data for the API requests.
+ */
 const versionCheck = (semverRange, action, z, {authData}) => {
     const api = initAdminApi(z, authData);
 
