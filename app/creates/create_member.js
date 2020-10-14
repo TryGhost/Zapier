@@ -18,9 +18,9 @@ const createMember = async (z, bundle) => {
         memberData.labels = bundle.inputData.labels;
     }
 
-    // Member Complimentary plan was added after Ghost after 3.35.5
+    // Member Complimentary plan was in Ghost 3.36
     if (bundle.inputData.comped) {
-        expectedVersion = '>3.35.5';
+        expectedVersion = '>3.36.0';
         action = 'member complimentary plan';
         memberData.comped = bundle.inputData.comped;
     }
