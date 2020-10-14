@@ -6,7 +6,7 @@ const SUPPORTED_VERSION = '>=3.0.3';
 
 // we always return a sample payload for this trigger because it's not possible
 // to show useful "changed" data when fetching a record from the API
-const BASE_PAYLOAD = {
+const SAMPLE_PAYLOAD = {
     current: {
         id: '5a01d3ecc8d50d0e606a7e7c',
         name: 'New Member Name',
@@ -60,7 +60,7 @@ const handleWebhook = (z, bundle) => {
 const getSamplePayload = async (z, bundle) => {
     await versionCheck(SUPPORTED_VERSION, 'members', z, bundle);
 
-    return Promise.resolve([BASE_PAYLOAD]);
+    return Promise.resolve([SAMPLE_PAYLOAD]);
 };
 
 module.exports = {
@@ -86,6 +86,6 @@ module.exports = {
         perform: handleWebhook,
         performList: getSamplePayload,
 
-        sample: BASE_PAYLOAD
+        sample: SAMPLE_PAYLOAD
     }
 };
