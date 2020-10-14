@@ -62,22 +62,29 @@ describe('Triggers', function () {
             });
 
             it('loads member from list', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    meta: {
-                        frontend: true
-                    }
-                });
+                return appTester(App.triggers.member_updated.operation.performList, {authData})
+                    .then(([member]) => {
+                        should.exist(member.current);
+                        Object.keys(member.current).length.should.eql(9);
+                        should.exist(member.previous);
+                        Object.keys(member.previous).length.should.eql(7);
 
-                return appTester(App.triggers.member_updated.operation.performList, bundle)
-                    .then((results) => {
-                        results.length.should.eql(1);
+                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
 
-                        let [firstMember] = results;
-                        firstMember.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        firstMember.current.name.should.eql('New Member Name');
-                        firstMember.current.email.should.eql('sample@example.com');
-                        firstMember.previous.name.should.eql('Old Member Name');
+                        member.current.name.should.eql('New Member Name');
+                        member.previous.name.should.eql('Old Member Name');
+
+                        member.current.email.should.eql('sample@example.com');
+                        member.previous.email.should.eql('oldsample@example.com');
+
+                        member.current.note.should.eql('Updated sample member record.');
+                        member.previous.note.should.eql('Old sample member record.');
+
+                        should.exist(member.current.labels);
+                        member.current.labels[0].name.should.eql('New label');
+
+                        should.exist(member.previous.labels);
+                        member.previous.labels.length.should.eql(0);
                     });
             });
 
@@ -121,72 +128,6 @@ describe('Triggers', function () {
                 return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
                     .then(() => {
                         apiMock.isDone().should.be.true;
-                    });
-            });
-        });
-
-        describe('sample data per version', function () {
-            afterEach(function () {
-                nock.cleanAll();
-            });
-
-            it('>3.1', function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.1'}
-                });
-
-                return appTester(App.triggers.member_updated.operation.performList, {authData})
-                    .then(([member]) => {
-                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        member.current.name.should.eql('New Member Name');
-                        member.current.email.should.eql('sample@example.com');
-                        member.previous.name.should.eql('Old Member Name');
-
-                        should.not.exist(member.current.labels);
-                        should.not.exist(member.current.geolocation);
-                    });
-            });
-
-            it('>3.6.0', function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.4'}
-                });
-
-                return appTester(App.triggers.member_updated.operation.performList, {authData})
-                    .then(([member]) => {
-                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        member.current.name.should.eql('New Member Name');
-                        member.current.email.should.eql('sample@example.com');
-                        member.previous.name.should.eql('Old Member Name');
-
-                        should.exist(member.current.comped);
-                        member.current.comped.should.eql(true);
-
-                        should.not.exist(member.current.labels);
-                        should.not.exist(member.current.geolocation);
-                    });
-            });
-
-            it('>3.8.0', function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.8'}
-                });
-
-                return appTester(App.triggers.member_updated.operation.performList, {authData})
-                    .then(([member]) => {
-                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        member.current.name.should.eql('New Member Name');
-                        member.current.email.should.eql('sample@example.com');
-                        member.previous.name.should.eql('Old Member Name');
-
-                        should.exist(member.current.labels);
-                        member.current.labels[0].name.should.eql('New label');
-
-                        should.exist(member.previous.labels);
-                        member.previous.labels.length.should.eql(0);
-
-                        should.exist(member.current.geolocation);
-                        member.current.geolocation.city.should.eql('Kidderminster');
                     });
             });
         });

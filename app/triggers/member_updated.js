@@ -13,7 +13,7 @@ const BASE_PAYLOAD = {
         email: 'sample@example.com',
         note: 'Updated sample member record.',
         subscribed: false,
-        comped: false,
+        comped: true,
         labels: [{
             id: '5f212d395422021ebc4b7043',
             name: 'New label',
@@ -26,12 +26,11 @@ const BASE_PAYLOAD = {
     },
     previous: {
         name: 'Old Member Name',
-        email: 'sample@example.com',
+        email: 'oldsample@example.com',
         note: 'Old sample member record.',
         subscribed: true,
         comped: false,
         labels: [],
-        created_at: '2019-10-13T18:12:00.000Z',
         updated_at: '2019-10-13T18:12:00.000Z'
     }
 };
