@@ -4,9 +4,11 @@ const createMember = async (z, bundle) => {
     // Members was added in Ghost 3.0
     let expectedVersion = '>=3.0.0';
     let action = 'members';
+
     const memberData = {
         name: bundle.inputData.name,
-        email: bundle.inputData.email
+        email: bundle.inputData.email,
+        note: bundle.inputData.note
     };
 
     // Member Labels was added in Ghost 3.6
@@ -15,6 +17,14 @@ const createMember = async (z, bundle) => {
         action = 'member labels';
         memberData.labels = bundle.inputData.labels;
     }
+
+    // Member Complimentary plan was added after Ghost after 3.35.5
+    if (bundle.inputData.comped) {
+        expectedVersion = '>3.35.5';
+        action = 'member complimentary plan';
+        memberData.comped = bundle.inputData.comped;
+    }
+
     await versionCheck(expectedVersion, action, z, bundle);
 
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
@@ -47,6 +57,7 @@ module.exports = {
         inputFields: [
             {key: 'name', required: false},
             {key: 'email', required: true},
+            {key: 'note', required: false},
             {
                 key: 'labels',
                 required: false,
@@ -68,6 +79,13 @@ module.exports = {
                     {value: 'signin', label: 'Login Link', sample: '"Click here to log in"'},
                     {value: 'subscribe', label: 'Newsletter Subscription', sample: '"Confirm your subscription"'}
                 ]
+            },
+            {
+                key: 'comped',
+                label: 'Give Complimentary premium plan?',
+                type: 'boolean',
+                default: 'no',
+                helpText: 'If enabled, member will be placed onto a free of charge premium subscription'
             }
         ],
 
