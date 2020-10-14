@@ -77,8 +77,6 @@ const versionCheck = (semverRange, action, z, {authData}) => {
             const message = `The version of Ghost your site is using does not support ${action}. Supported version range is ${semverRange}, you are using ${config.version}.`;
             throw new z.errors.HaltedError(message);
         }
-
-        return version;
     });
 };
 
