@@ -62,22 +62,29 @@ describe('Triggers', function () {
             });
 
             it('loads member from list', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    meta: {
-                        frontend: true
-                    }
-                });
+                return appTester(App.triggers.member_updated.operation.performList, {authData})
+                    .then(([member]) => {
+                        should.exist(member.current);
+                        Object.keys(member.current).length.should.eql(9);
+                        should.exist(member.previous);
+                        Object.keys(member.previous).length.should.eql(7);
 
-                return appTester(App.triggers.member_updated.operation.performList, bundle)
-                    .then((results) => {
-                        results.length.should.eql(1);
+                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
 
-                        let [firstMember] = results;
-                        firstMember.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        firstMember.current.name.should.eql('New Member Name');
-                        firstMember.current.email.should.eql('sample@example.com');
-                        firstMember.previous.name.should.eql('Old Member Name');
+                        member.current.name.should.eql('New Member Name');
+                        member.previous.name.should.eql('Old Member Name');
+
+                        member.current.email.should.eql('sample@example.com');
+                        member.previous.email.should.eql('oldsample@example.com');
+
+                        member.current.note.should.eql('Updated sample member record.');
+                        member.previous.note.should.eql('Old sample member record.');
+
+                        should.exist(member.current.labels);
+                        member.current.labels[0].name.should.eql('New label');
+
+                        should.exist(member.previous.labels);
+                        member.previous.labels.length.should.eql(0);
                     });
             });
 

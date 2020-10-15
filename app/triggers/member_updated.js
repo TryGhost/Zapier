@@ -12,12 +12,25 @@ const SAMPLE_PAYLOAD = {
         name: 'New Member Name',
         email: 'sample@example.com',
         note: 'Updated sample member record.',
+        subscribed: false,
+        comped: true,
+        labels: [{
+            id: '5f212d395422021ebc4b7043',
+            name: 'New label',
+            slug: 'new-label',
+            created_at: '2020-10-13T18:12:00.000Z',
+            updated_at: '2020-10-13T18:12:00.000Z'
+        }],
         created_at: '2019-10-13T18:12:00.000Z',
-        updated_at: '2019-10-31T14:58:00.000Z'
+        updated_at: '2019-10-31T19:58:00.000Z'
     },
     previous: {
         name: 'Old Member Name',
-        note: 'Just a sample member record.',
+        email: 'oldsample@example.com',
+        note: 'Old sample member record.',
+        subscribed: true,
+        comped: false,
+        labels: [],
         updated_at: '2019-10-13T18:12:00.000Z'
     }
 };
