@@ -20,7 +20,7 @@ const createMember = async (z, bundle) => {
 
     // Member Complimentary plan was in Ghost 3.36
     if (bundle.inputData.comped) {
-        expectedVersion = '>3.36.0';
+        expectedVersion = '>=3.36.0';
         action = 'member complimentary plan';
         memberData.comped = bundle.inputData.comped;
     }
@@ -85,7 +85,7 @@ module.exports = {
                 label: 'Give Complimentary premium plan?',
                 type: 'boolean',
                 default: 'no',
-                helpText: 'If enabled, member will be placed onto a free of charge premium subscription'
+                helpText: 'If enabled, member will be placed onto a free of charge premium subscription ( >= Ghost 3.36)'
             }
         ],
 
@@ -95,6 +95,7 @@ module.exports = {
             id: '5c9c9c8d51b5bf974afad2a4',
             name: 'Test Member',
             email: 'test@example.com',
+            comped: false,
             labels: ['Zapier'],
             created_at: '2019-03-28T10:06:05.862Z',
             updated_at: '2019-03-28T10:06:05.862Z'

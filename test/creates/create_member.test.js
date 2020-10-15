@@ -188,6 +188,55 @@ describe('Creates', function () {
             });
         });
 
+        describe('with supported version >=3.36', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.36'}
+                });
+            });
+
+            it('creates a member with comped flag', function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '3.36'}
+                });
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        comped: true
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        comped: true
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        comped: true,
+                        labels: [],
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                        member.email.should.equal('test@example.com');
+                        member.comped.should.equal(true);
+                    });
+            });
+        });
+
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
@@ -220,12 +269,30 @@ describe('Creates', function () {
                 });
             });
 
-            it('has a friendly, halting "unsupported version" error', function () {
+            it('has a friendly, halting "unsupported version" error for labels', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
                         name: 'Test Member',
                         email: 'test@example.com',
                         labels: ['Zapier']
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then(() => {
+                        true.should.equal(false);
+                    }, (err) => {
+                        err.name.should.eql('HaltedError');
+                        err.message.should.match(/3\.0/);
+                    });
+            });
+
+            it('has a friendly, halting "unsupported version" error for comped flag', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        comped: true
                     }
                 });
 
