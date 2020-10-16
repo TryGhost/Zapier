@@ -30,6 +30,11 @@ Zapier checks the version of Ghost when authenticating to ensure that the API su
 
 When a new major version of Ghost is released the [supported version string](https://github.com/TryGhost/Ghost-Zapier/blob/4739696c1dde5a197ea89531536deebfab8f57ab/app/authentication.js#L4) must be updated!
 
+## Useful resources
+
+- [Integration review guidelines](https://platform.zapier.com/partners/integration-review-guidelines) - guidelines on best practices when publishing a new integration. Useful to keep in mind when developing new features
+- [A guideline](https://zapier.com/developer/documentation/v2/planning-guide-v1/#update-actions) about how to best approach feature design in Zapier integration.
+
 ## Local Testing
 
 - `zapier test` will run the tests, you _have_ to be running Node 12
