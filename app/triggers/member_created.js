@@ -43,7 +43,8 @@ module.exports = {
 
     display: {
         label: 'Member Created',
-        description: 'Triggers when a new member is added (requires Ghost 3.0.0 or later).'
+        description: 'Triggers when a new member is added (requires Ghost 3.0.0 or later).',
+        important: true // show it at the top of the actions list
     },
 
     operation: {
