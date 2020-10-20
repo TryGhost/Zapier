@@ -34,7 +34,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v3/admin/members/?search=ghost-member%40example.com')
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'ghost-member%40example.com'`)
                 .reply(200, {
                     members: [{
                         id: '5951f5fca366002ebd5dbef7',
@@ -55,6 +55,38 @@ describe('Searches', function () {
                 });
         });
 
+        it('handles a 404', function () {
+            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                site: {version: '3.18.0'}
+            });
+
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    email: 'do-not-exist@example.com'
+                }
+            });
+
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'do-not-exist@example.com'`)
+                .reply(404, {
+                    errors: [{
+                        message: 'Resource not found error, cannot read member.',
+                        context: 'Subscriber not found.',
+                        type: 'NotFoundError',
+                        details: null,
+                        property: null,
+                        help: null,
+                        code: null,
+                        id: 'f4d2c030-5165-11e9-9864-f79cf99013d0'
+                    }]
+                });
+
+            return appTester(App.searches.member.operation.perform, bundle)
+                .then((results) => {
+                    apiMock.isDone().should.be.true;
+                    results.length.should.eql(0);
+                });
+        });
+
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
@@ -70,7 +102,7 @@ describe('Searches', function () {
                         true.should.equal(false);
                     }, (err) => {
                         err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support member search. Supported version range is >=3.18.0, you are using 2.34/);
+                        err.message.should.match(/does not support member search. Supported version range is >=3.0.0, you are using 2.34/);
                     });
             });
         });

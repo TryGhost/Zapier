@@ -2,17 +2,25 @@ const {initAdminApi, versionCheck} = require('../lib/utils');
 
 const searchMembers = async (z, bundle) => {
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
-    const requiredVersion = '>=3.18.0';
+    const requiredVersion = '>=3.0.0';
 
     await versionCheck(requiredVersion, 'member search', z, bundle);
 
     const queryParams = {
-        search: bundle.inputData.email
+        filter: `email:'${bundle.inputData.email}'`
     };
 
-    const member = await api.members.browse(queryParams);
+    try {
+        const member = await api.members.browse(queryParams);
 
-    return [member];
+        return [member];
+    } catch (err) {
+        if (err.name === 'HaltedError' && err.message.match(/404/)) {
+            return [];
+        }
+
+        throw err;
+    }
 };
 
 module.exports = {
