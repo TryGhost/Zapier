@@ -67,7 +67,6 @@ module.exports = {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
-                default: 'no',
                 helpText: 'If enabled, member will be placed onto a free of charge premium subscription ( >= Ghost 3.36)'
             }
         ],
