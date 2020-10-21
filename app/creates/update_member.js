@@ -9,7 +9,8 @@ const updateMember = async (z, bundle) => {
         id: bundle.inputData.id,
         name: bundle.inputData.name,
         email: bundle.inputData.email,
-        note: bundle.inputData.note
+        note: bundle.inputData.note,
+        subscribed: bundle.inputData.subscribed
     };
 
     // Member Labels was added in Ghost 3.6
@@ -58,6 +59,13 @@ module.exports = {
             {key: 'email', required: false},
             {key: 'note', required: false},
             {
+                key: 'subscribed',
+                label: 'Subscribed to newsletter',
+                type: 'boolean',
+                helpText: 'If disabled, member will not receive newsletter emails',
+                required: false
+            },
+            {
                 key: 'labels',
                 required: false,
                 list: true,
@@ -78,6 +86,7 @@ module.exports = {
             name: 'Test Member',
             email: 'test@example.com',
             comped: false,
+            subscribed: true,
             labels: ['Zapier'],
             created_at: '2019-03-28T10:06:05.862Z',
             updated_at: '2019-03-28T10:06:05.862Z'
