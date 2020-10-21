@@ -36,20 +36,23 @@ describe('Creates', function () {
                         name: 'Test Member',
                         email: 'test@example.com',
                         send_email: 'no',
-                        email_type: 'signup'
+                        email_type: 'signup',
+                        subscribed: false
                     }
                 });
 
                 apiMock.post('/ghost/api/v3/admin/members/?send_email=false&email_type=signup', {
                     members: [{
                         name: 'Test Member',
-                        email: 'test@example.com'
+                        email: 'test@example.com',
+                        subscribed: false
                     }]
                 }).reply(201, {
                     members: [{
                         id: '5c9c9c8d51b5bf974afad2a4',
                         name: 'Test Member',
                         email: 'test@example.com',
+                        subscribed: false,
                         created_at: '2019-10-03T11:54:10.123Z',
                         updated_at: '2019-10-03T11:54:10.123Z'
                     }]
@@ -62,6 +65,7 @@ describe('Creates', function () {
                         member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
                         member.name.should.equal('Test Member');
                         member.email.should.equal('test@example.com');
+                        member.subscribed.should.equal(false);
                     });
             });
 
