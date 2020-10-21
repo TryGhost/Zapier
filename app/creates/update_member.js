@@ -21,7 +21,7 @@ const updateMember = async (z, bundle) => {
     }
 
     // Member Complimentary plan was in Ghost 3.36
-    if (bundle.inputData.comped) {
+    if (bundle.inputData.comped !== undefined) {
         expectedVersion = '>=3.36.0';
         action = 'member complimentary plan';
         memberData.comped = bundle.inputData.comped;
