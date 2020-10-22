@@ -42,10 +42,24 @@ When a new major version of Ghost is released the [supported version string](htt
 
 ## Deploying
 
-*Note:* This is a non-migratable ALPHA version of a rewrite, do _not_ follow the normal release process!
+There are couple usecases where you would need to do a deploy:
+1. When releasing a new "private" version for testing by invited users
+2. When releasing a "public" version into the wild
+3. Migrate existing integration users to a newly released version
 
-1. bump the version in `package.json`, update `CHANGELOG.md`, and commit
+#### To deploy a "private" version:
+1. bump the version in `package.json` (do not commit)
 2. `zapier push`
-3. <strike>`zapier promote {newVersion}` - new intregrations will use this version</strike>
-4. <strike>`zapier migrate {oldVersion} {newVersion}`, eg: `zapier migrate 1.0.4 0.0.5`, existing integrations will be moved to the new version</strike>
-5. <strike>`zapier history` to check migration status, continue once 100% complete</strike>
+
+#### To deploy a "public" version:
+1. bump the version in `package.json`
+2. update `CHANGELOG.md`
+3. commit
+2. `zapier push`
+3. `zapier promote {newVersion}` - only new integrations will use this version
+
+#### To migrate existing users to a new version
+1. `zapier migrate {oldVersion} {newVersion}`, eg: `zapier migrate 1.0.4 0.0.5`, move users between versions, regardless of deployment status
+2. `zapier history` to check migration status, continue once 100% complete
+
+Full [Zapier reference](https://platform.zapier.com/cli_docs/docs#deploying-an-app-version) for deploying a new version.
