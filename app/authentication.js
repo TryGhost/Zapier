@@ -33,7 +33,7 @@ const testAuth = (z, {authData}) => {
             if (err.res.status === 404) {
                 // try fetching a Ghost v0.1 endpoint
                 let v01url = `${authData.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
-                return z.request(v01url).then((response) => {
+                return z.request(v01url, {skipThrowForStatus: true}).then((response) => {
                     if (response.status === 401) {
                         throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);
                     } else {
