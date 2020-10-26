@@ -16,6 +16,12 @@ const SAMPLE_PAYLOAD = {
         comped: true,
         labels: [{
             id: '5f212d395422021ebc4b7043',
+            name: 'Old label 1',
+            slug: 'old-label-1',
+            created_at: '2020-10-13T18:12:00.000Z',
+            updated_at: '2020-10-13T18:12:00.000Z'
+        }, {
+            id: '5f212d395422021ebc4b7043',
             name: 'New label',
             slug: 'new-label',
             created_at: '2020-10-13T18:12:00.000Z',
@@ -30,7 +36,19 @@ const SAMPLE_PAYLOAD = {
         note: 'Old sample member record.',
         subscribed: true,
         comped: false,
-        labels: [],
+        labels: [{
+            id: '5f212d395422021ebc4b7043',
+            name: 'Old label 1',
+            slug: 'old-label-1',
+            created_at: '2020-10-13T18:12:00.000Z',
+            updated_at: '2020-10-13T18:12:00.000Z'
+        }, {
+            id: '5f212d395422021ebc4b7043',
+            name: 'Old label 2',
+            slug: 'old-label 2',
+            created_at: '2020-10-13T18:12:00.000Z',
+            updated_at: '2020-10-13T18:12:00.000Z'
+        }],
         updated_at: '2019-10-13T18:12:00.000Z'
     }
 };

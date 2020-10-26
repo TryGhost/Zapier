@@ -81,10 +81,14 @@ describe('Triggers', function () {
                         member.previous.note.should.eql('Old sample member record.');
 
                         should.exist(member.current.labels);
-                        member.current.labels[0].name.should.eql('New label');
+                        member.current.labels.length.should.equal(2);
+                        member.current.labels[0].name.should.eql('Old label 1');
+                        member.current.labels[1].name.should.eql('New label');
 
                         should.exist(member.previous.labels);
-                        member.previous.labels.length.should.eql(0);
+                        member.previous.labels.length.should.eql(2);
+                        member.previous.labels[0].name.should.eql('Old label 1');
+                        member.previous.labels[1].name.should.eql('Old label 2');
                     });
             });
 
