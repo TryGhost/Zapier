@@ -18,7 +18,8 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
             method,
             headers,
             params,
-            body
+            body,
+            skipThrowForStatus: true
         }).then((response) => {
             if (response.json && response.json.errors) {
                 const [error] = response.json.errors;
