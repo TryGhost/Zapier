@@ -54,9 +54,11 @@ There are couple usecases where you would need to do a deploy:
 #### To deploy a "public" version:
 1. bump the version in `package.json`
 2. update `CHANGELOG.md`
-3. commit
-2. `zapier push`
-3. `zapier promote {newVersion}` - only new integrations will use this version
+3. commit above changes with a message matching a new version, e.g. `git commit -m "2.4.0"`
+4. add a tag with a new version, e.g. `git tag 2.4.0`
+5. push out new commit and a tag upstream
+6. `zapier push`
+7. `zapier promote {newVersion}` - only new integrations will use this version
 
 #### To migrate existing users to a new version
 1. `zapier migrate {oldVersion} {newVersion}`, eg: `zapier migrate 1.0.4 0.0.5`, move users between versions, regardless of deployment status
