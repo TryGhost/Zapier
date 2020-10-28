@@ -1,3 +1,12 @@
+## 2.4.0
+
+* (New) Added "Post scheduled" trigger
+* (New) Added "Member" search
+* (New) Added "Update member" create action
+* (New) Updated "Create Member" action to allow "subscribed", "comped", and "note" fields
+* (New) Updated "important" triggers by adding "member_create" and "page_published"
+* (New) Updated "Member Updated" trigger fields with "labels", "subscribed", and "comped" fields
+
 ## 2.3.1
 
 * (Fix) Fixed authentication test showing success when API key is incorrect
