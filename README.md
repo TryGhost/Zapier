@@ -61,7 +61,7 @@ There are couple usecases where you would need to do a deploy:
 7. `zapier promote {newVersion}` - only new integrations will use this version
 
 #### To migrate existing users to a new version
-1. `zapier migrate {oldVersion} {newVersion}`, eg: `zapier migrate 1.0.4 0.0.5`, move users between versions, regardless of deployment status
+1. `zapier migrate {oldVersion} {newVersion} {percentage}`, eg: `zapier migrate 2.3.1 2.4.0 10`, move 10% of users between versions (recommended to do gradual rollout and monitor for errors before migrating 100% to a new version)
 2. `zapier history` to check migration status, continue once 100% complete
 
 Full [Zapier reference](https://platform.zapier.com/cli_docs/docs#deploying-an-app-version) for deploying a new version.
