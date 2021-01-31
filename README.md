@@ -65,3 +65,8 @@ There are couple usecases where you would need to do a deploy:
 2. `zapier history` to check migration status, continue once 100% complete
 
 Full [Zapier reference](https://platform.zapier.com/cli_docs/docs#deploying-an-app-version) for deploying a new version.
+
+
+# Copyright & License 
+
+Copyright (c) 2013-2021 Ghost Foundation - Released under the [MIT license](LICENSE).
