@@ -1081,10 +1081,10 @@ nock@13.0.4:
     lodash.set "^4.3.2"
     propagate "^2.0.0"
 
-node-fetch@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+node-fetch@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -1638,27 +1638,27 @@ yargs@13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-zapier-platform-core@10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-10.1.1.tgz#09bb1c4d8704fbd9f7ca292b0501fb1ce6fae562"
-  integrity sha512-SI5XfvSXtP80TsiwHABsUkWU1kmNbZvkztRiAaWuQIrSORKGp2QrEKQHCmHWKSaUIzx11BzxL2h/esyxhCEYDA==
+zapier-platform-core@10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-10.2.0.tgz#015904e58b5a7d174bb0e82414e92a235b84b4bc"
+  integrity sha512-5pueg5ofYP2jgpXDfzWSgZ1NZchFMyPPU8ouwHLRZWk6yBprkVojYaQAAkatAjY7YH2kWqItbR7XdFTqczRNnQ==
   dependencies:
     bluebird "3.7.2"
     content-disposition "0.5.3"
     dotenv "8.2.0"
     form-data "3.0.0"
     lodash "4.17.19"
-    node-fetch "2.6.0"
+    node-fetch "2.6.1"
     oauth-sign "0.9.0"
     semver "7.3.2"
-    zapier-platform-schema "10.1.1"
+    zapier-platform-schema "10.2.0"
   optionalDependencies:
     "@types/node" "^10"
 
-zapier-platform-schema@10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-10.1.1.tgz#c25bf32e162c6685710aa9a8b9448f9534148e36"
-  integrity sha512-CDaixIcfxZSMAEj+ZiYmyPloTXzIufwSN0RJla4MAxa35iHKM+GG+/YfjBWka7ScUC3ZxirJiQv0aLq8CK5dRw==
+zapier-platform-schema@10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-10.2.0.tgz#2a7c668b538a66296ad9540476731489d70fd79b"
+  integrity sha512-UvLJVfKDy/fquiseNM/1pnqJq2WdwJH6MXk5qOf6vUmF08XOkwzAwcv4/XSZ0t3c8sLKyxskDt3mRYz5q5FsCg==
   dependencies:
     jsonschema "1.2.2"
     lodash "4.17.19"
