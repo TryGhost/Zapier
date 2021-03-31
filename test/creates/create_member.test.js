@@ -30,7 +30,32 @@ describe('Creates', function () {
                 });
             });
 
-            it('creates a member', function () {
+            it('creates a member with defaults', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        email: 'test@example.com'
+                    }
+                });
+
+                const expectedQueryString = 'send_email=true';
+                apiMock.post(`/ghost/api/v3/admin/members/?${expectedQueryString}`, {
+                    members: [{
+                        email: 'test@example.com'
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        email: 'test@example.com'
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then(() => {
+                        apiMock.isDone().should.be.true;
+                    });
+            });
+
+            it('creates a member and sends a signup confirmation email', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
                         name: 'Test Member',
