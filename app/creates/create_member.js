@@ -32,9 +32,8 @@ const createMember = async (z, bundle) => {
 
     const queryParams = {};
 
-    if (bundle.inputData.send_email) {
-        // Zapier sends boolean fields through as yes/no but our API accepts true/false
-        queryParams.send_email = bundle.inputData.send_email === 'yes' ? 'true' : 'false';
+    if (bundle.inputData.send_email !== undefined) {
+        queryParams.send_email = bundle.inputData.send_email;
     }
 
     if (bundle.inputData.email_type) {
