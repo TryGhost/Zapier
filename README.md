@@ -19,7 +19,7 @@ zapier test
 
 ## Node version support
 
-All Zapier CLI apps are run using Node.js v12. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
+All Zapier CLI apps are run using Node.js >=14.x. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
 
 Notes:
 - there is a `.nvmrc` file in this project if you have `nvm` auto-switching enabled
@@ -37,7 +37,7 @@ When a new major version of Ghost is released the [supported version string](htt
 
 ## Local Testing
 
-- `zapier test` will run the tests, you _have_ to be running Node 12
+- `zapier test` will run the tests
 - `zapier test --debug` will test and output request and response logs
 
 ## Deploying
