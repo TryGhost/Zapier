@@ -33,12 +33,17 @@ describe('Creates', function () {
             it('creates a member with defaults', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
-                        email: 'test@example.com'
+                        email: 'test@example.com',
+                        send_email: undefined
                     }
                 });
 
+                // TODO: check on the status of https://github.com/zapier/zapier-platform/issues/73
+                //       and stop using preventative code introduced with current changeset
                 const expectedQueryString = 'send_email=true';
-                apiMock.post(`/ghost/api/v3/admin/members/?${expectedQueryString}`, {
+                const mockedUrl = `/ghost/api/v3/admin/members/?${expectedQueryString}`;
+
+                apiMock.post(mockedUrl, {
                     members: [{
                         email: 'test@example.com'
                     }]
@@ -60,13 +65,50 @@ describe('Creates', function () {
                     inputData: {
                         name: 'Test Member',
                         email: 'test@example.com',
-                        send_email: 'no',
+                        send_email: true,
                         email_type: 'signup',
                         subscribed: false
                     }
                 });
 
-                apiMock.post('/ghost/api/v3/admin/members/?send_email=false&email_type=signup', {
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true&email_type=signup', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: false
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: false,
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                        member.email.should.equal('test@example.com');
+                        member.subscribed.should.equal(false);
+                    });
+            });
+
+            it('creates a member and does not send an email', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: false
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
                     members: [{
                         name: 'Test Member',
                         email: 'test@example.com',
@@ -101,7 +143,7 @@ describe('Creates', function () {
                     }
                 });
 
-                apiMock.post('/ghost/api/v3/admin/members/', {
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
                     members: [{
                         name: 'Test Member'
                     }]
@@ -135,7 +177,7 @@ describe('Creates', function () {
                     }
                 });
 
-                apiMock.post('/ghost/api/v3/admin/members/')
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true')
                     .reply(500, {
                         errors: [{
                             message: 'Authorization failed',
@@ -175,7 +217,7 @@ describe('Creates', function () {
                         name: 'Test Member',
                         email: 'test@example.com',
                         labels: ['Zapier'],
-                        send_email: 'no',
+                        send_email: false,
                         email_type: 'signup'
                     }
                 });
@@ -236,7 +278,7 @@ describe('Creates', function () {
                     }
                 });
 
-                apiMock.post('/ghost/api/v3/admin/members/', {
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
                     members: [{
                         name: 'Test Member',
                         email: 'test@example.com',

@@ -34,6 +34,10 @@ const createMember = async (z, bundle) => {
 
     if (bundle.inputData.send_email !== undefined) {
         queryParams.send_email = bundle.inputData.send_email;
+    } else {
+        // NOTE: since the default is always meant to be a boolean true value
+        //       falling back to this behavior unless there is some other value
+        queryParams.send_email = true;
     }
 
     if (bundle.inputData.email_type) {
@@ -75,7 +79,7 @@ module.exports = {
                 key: 'send_email',
                 label: 'Send email to member?',
                 type: 'boolean',
-                default: 'yes'
+                default: true
             },
             {
                 key: 'email_type',
