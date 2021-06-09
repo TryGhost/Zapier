@@ -32,10 +32,10 @@
     form-data "^3.0.0"
     jsonwebtoken "^8.4.0"
 
-"@types/node@^10":
-  version "10.17.39"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.39.tgz#ce1122758d0608de8303667cebf171f44192629b"
-  integrity sha512-dJLCxrpQmgyxYGcl0Ae9MTsQgI22qHHcGFj/8VKu7McJA5zQpnuGjoksnxbo1JxSjW/Nahnl13W8MYZf01CZHA==
+"@types/node@^14.14.35":
+  version "14.17.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.2.tgz#1e94476db57ec93a372c7f7d29aa5707cfb92339"
+  integrity sha512-sld7b/xmFum66AAKuz/rp/CUO8+98fMpyQ3SBfzzBNGMd/1iHBTAg9oyAvcYlAj46bpc74r91jSw2iFdnx29nw==
 
 "@ungap/promise-all-settled@1.1.2":
   version "1.1.2"
@@ -351,10 +351,10 @@ dot-case@^3.0.3:
     no-case "^3.0.3"
     tslib "^1.10.0"
 
-dotenv@8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
-  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+dotenv@9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-9.0.2.tgz#dacc20160935a37dea6364aa1bef819fb9b6ab05"
+  integrity sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==
 
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
@@ -614,7 +614,16 @@ follow-redirects@^1.10.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.13.0.tgz#b42e8d93a2a7eea5ed88633676d6597bc8e384db"
   integrity sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
 
-form-data@3.0.0, form-data@^3.0.0:
+form-data@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    mime-types "^2.1.12"
+
+form-data@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-3.0.0.tgz#31b7e39c85f1355b7139ee0c647cf0de7f83c682"
   integrity sha512-CKMFDglpbMi6PyN+brwB9Q/GOw0eAnsrEZDgcsH5Krhz5Od/haKHAX0NmQfha2zPPz0JpWzA7GJHGSnvCRLWsg==
@@ -947,10 +956,10 @@ lodash.set@^4.3.2:
   resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
   integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
 
-lodash@4.17.19:
-  version "4.17.19"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
-  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+lodash@4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 lodash@^4.17.14, lodash@^4.17.15:
   version "4.17.15"
@@ -970,6 +979,13 @@ lower-case@^2.0.1:
   integrity sha512-LiWgfDLLb1dwbFQZsSglpRj+1ctGnayXz3Uv0/WO8n558JycT5fg6zkNcnW0G68Nn0aEldTFeEfmjCfmqry/rQ==
   dependencies:
     tslib "^1.10.0"
+
+lru-cache@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-6.0.0.tgz#6d6fe6570ebd96aaf90fcad1dafa3b2566db3a94"
+  integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  dependencies:
+    yallist "^4.0.0"
 
 mime-db@1.40.0:
   version "1.40.0"
@@ -1081,10 +1097,10 @@ nock@13.0.4:
     lodash.set "^4.3.2"
     propagate "^2.0.0"
 
-node-fetch@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+node-fetch@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -1310,10 +1326,12 @@ semver@6.3.0, semver@^6.1.2:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
 
-semver@7.3.2:
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz#604962b052b81ed0786aae84389ffba70ffd3938"
-  integrity sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==
+semver@7.3.5:
+  version "7.3.5"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
+  integrity sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
+  dependencies:
+    lru-cache "^6.0.0"
 
 semver@^5.5.0, semver@^5.6.0:
   version "5.7.1"
@@ -1604,6 +1622,11 @@ y18n@^4.0.0:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
   integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
 
+yallist@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-4.0.0.tgz#9bb92790d9c0effec63be73519e11a35019a3a72"
+  integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
+
 yargs-parser@13.1.2, yargs-parser@^13.1.2:
   version "13.1.2"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-13.1.2.tgz#130f09702ebaeef2650d54ce6e3e5706f7a4fb38"
@@ -1638,27 +1661,27 @@ yargs@13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-zapier-platform-core@10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-10.1.1.tgz#09bb1c4d8704fbd9f7ca292b0501fb1ce6fae562"
-  integrity sha512-SI5XfvSXtP80TsiwHABsUkWU1kmNbZvkztRiAaWuQIrSORKGp2QrEKQHCmHWKSaUIzx11BzxL2h/esyxhCEYDA==
+zapier-platform-core@11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-11.0.1.tgz#c8daaea9e62c878db01c27ff57e4c7f0307ee466"
+  integrity sha512-qx+CeCU5ltY4Ocd6Q64fu1x2nD48Ddylh5ThenQzwc3AlalEL7Qaxb0BtIDkxefQCQKusTAMnr1JKMVv0jzEew==
   dependencies:
     bluebird "3.7.2"
     content-disposition "0.5.3"
-    dotenv "8.2.0"
-    form-data "3.0.0"
-    lodash "4.17.19"
-    node-fetch "2.6.0"
+    dotenv "9.0.2"
+    form-data "4.0.0"
+    lodash "4.17.21"
+    node-fetch "2.6.1"
     oauth-sign "0.9.0"
-    semver "7.3.2"
-    zapier-platform-schema "10.1.1"
+    semver "7.3.5"
+    zapier-platform-schema "11.0.1"
   optionalDependencies:
-    "@types/node" "^10"
+    "@types/node" "^14.14.35"
 
-zapier-platform-schema@10.1.1:
-  version "10.1.1"
-  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-10.1.1.tgz#c25bf32e162c6685710aa9a8b9448f9534148e36"
-  integrity sha512-CDaixIcfxZSMAEj+ZiYmyPloTXzIufwSN0RJla4MAxa35iHKM+GG+/YfjBWka7ScUC3ZxirJiQv0aLq8CK5dRw==
+zapier-platform-schema@11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-11.0.1.tgz#c6e64c3bbe88906a06dba13c4dd20c99520aa7b9"
+  integrity sha512-lol5Hw6DCctKD1FTGA5kARtyKudSr0sT7GiRtJHi1Ii9hpc/bm6EwMoVgUcCv2g2jA2vGCnt7qMVMt+ousBI7g==
   dependencies:
     jsonschema "1.2.2"
-    lodash "4.17.19"
+    lodash "4.17.21"
