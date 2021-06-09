@@ -79,7 +79,7 @@ module.exports = {
                 key: 'send_email',
                 label: 'Send email to member?',
                 type: 'boolean',
-                default: true
+                default: 'true'
             },
             {
                 key: 'email_type',
