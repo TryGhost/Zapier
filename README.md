@@ -59,7 +59,7 @@ Tips:
 2. update `CHANGELOG.md`
 3. commit above changes with a message matching a new version, e.g. `git commit -m "2.4.0"`
 4. add a tag with a new version, e.g. `git tag 2.4.0`
-5. push out new commit and a tag upstream
+5. push out new commit and a tag upstream e.g. `git push upstream main --tags`
 6. `zapier push`
 7. `zapier promote {newVersion}` - only new integrations will use this version
 
