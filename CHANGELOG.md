@@ -1,3 +1,7 @@
+## 2.4.1
+
+* (Fix) Fixed handling of `send_email` flag on member creation
+
 ## 2.4.0
 
 * (New) Added "Post scheduled" trigger
