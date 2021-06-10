@@ -51,6 +51,9 @@ There are couple usecases where you would need to do a deploy:
 1. bump the version in `package.json` (do not commit)
 2. `zapier push`
 
+Tips:
+- to test if the private version works in "close-to-live" environment you can migrate a single user account's Zaps to the new version by running: `zapier migrate 2.4.0 2.4.1 --user=user@example.com`. Check if the migrations completed through `zapier history`.
+
 #### To deploy a "public" version:
 1. bump the version in `package.json`
 2. update `CHANGELOG.md`
