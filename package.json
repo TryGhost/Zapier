@@ -21,7 +21,7 @@
     "zapier-platform-core": "11.0.1"
   },
   "devDependencies": {
-    "eslint-plugin-ghost": "2.0.0",
+    "eslint-plugin-ghost": "2.5.0",
     "mocha": "8.2.1",
     "nock": "13.0.4",
     "should": "13.2.3"
