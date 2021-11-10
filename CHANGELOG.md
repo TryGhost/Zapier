@@ -1,3 +1,7 @@
+## 2.4.2
+
+* (Fix) Hide deprecated "subscriber" triggers & actions
+
 ## 2.4.1
 
 * (Fix) Fixed handling of `send_email` flag on member creation
