@@ -41,7 +41,8 @@ module.exports = {
 
     display: {
         label: 'Subscriber Deleted (Deprecated)',
-        description: 'Triggers when a subscriber is deleted (Subscribers feature is deprecated and is replaced by [members](https://ghost.org/docs/members/zapier/) in Ghost 3.0 or later).'
+        description: 'Triggers when a subscriber is deleted (Subscribers feature is deprecated and is replaced by [members](https://ghost.org/docs/members/zapier/) in Ghost 3.0 or later).',
+        hidden: true
     },
 
     operation: {
