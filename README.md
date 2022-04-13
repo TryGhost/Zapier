@@ -1,7 +1,7 @@
 # Ghost-Zapier
 
 ## Getting started
-The app is build using "Zapier Platform CLI". An introductory guide into building and maintaining such apps is available [here](https://platform.zapier.com/cli_tutorials/getting-started).
+The app is built using "Zapier Platform CLI". An introductory guide into building and maintaining such apps is available [here](https://platform.zapier.com/cli_tutorials/getting-started).
 
 Quick command reference to get started with development:
 ```
