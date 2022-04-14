@@ -70,7 +70,7 @@ Tips:
 Full [Zapier reference](https://platform.zapier.com/cli_docs/docs#deploying-an-app-version) for deploying a new version.
 
 ## Testing Zaps locally
-Before releasing a new version a common thing to do is checking if the change work in production-like environment. Follow these rough steps to debug Zapier requests on a local Ghost instance:
+Before releasing a new version a common thing to do is checking if the changes work in production-like environment. Follow these steps to debug Zapier requests on a local Ghost instance:
 1. Deploy a "private" version descrived in the #Deploying section. Make sure to follow the migration instruction to add yourself to the private version users pool.
 2. Expose your local Ghost instance to the world to be able to reach it from Zapier side. As a one-liner can use `ngrok` to do so by running: `ngrok http http://localhost:2368` 
 3. Go to you Zapier account (regular user account) and create a new Zap
