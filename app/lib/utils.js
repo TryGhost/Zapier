@@ -50,7 +50,12 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
         });
     }
 
-    const defaultOptions = {url, key, makeRequest, version: 'v2'};
+    const defaultOptions = {
+        url,
+        key,
+        makeRequest,
+        version: 'v2'
+    };
     const options = Object.assign({}, defaultOptions, _options);
 
     return new GhostAdminApi(options);
