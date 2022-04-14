@@ -1,3 +1,7 @@
+## 2.5.0
+
+* (New) Accept-Version headers sent to connected Ghost instance
+
 ## 2.4.2
 
 * (Fix) Hide deprecated "subscriber" triggers & actions
