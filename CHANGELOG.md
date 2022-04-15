@@ -1,3 +1,6 @@
+## 2.5.1
+
+* (New) User-Agent headers sent to connected Ghost instance
 ## 2.5.0
 
 * (New) Accept-Version headers sent to connected Ghost instance
