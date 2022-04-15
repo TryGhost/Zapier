@@ -1,6 +1,7 @@
 const semver = require('semver');
 const GhostAdminApi = require('@tryghost/admin-api');
-
+const packageInfo = require('../../package.json');
+const packageVersion = packageInfo.version;
 class RequestError extends Error {
     constructor(message, res) {
         super(message);
@@ -13,6 +14,12 @@ class RequestError extends Error {
 // Convenience method for creating a GhostAdminAPI instance from the bundle data
 const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) => {
     function makeRequest({url, method, data: body, params = {}, headers = {}}) {
+        if (headers['User-Agent']) {
+            headers['User-Agent'] = `Zapier/${packageVersion} ${headers['User-Agent']}`;
+        } else {
+            headers['User-Agent'] = `Zapier/${packageVersion}`;
+        }
+
         return z.request({
             url,
             method,
