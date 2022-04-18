@@ -14,7 +14,7 @@ describe('Triggers', function () {
         beforeEach(function () {
             apiMock = nock('http://zapier-test.ghost.io', {
                 reqheaders: {
-                 'User-Agent': new RegExp(`Zapier\/${App.version} GhostAdminSDK\/\\d+.\\d+.\\d+`)
+                    'User-Agent': new RegExp(`Zapier/${App.version} GhostAdminSDK/\\d+.\\d+.\\d+`)
                 }
             });
             authData = {
