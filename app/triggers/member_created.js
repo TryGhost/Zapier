@@ -1,17 +1,11 @@
-const {initAdminApi, versionCheck} = require('../lib/utils');
+const {initAdminApi} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-const subscribeWebhook = async (z, bundle) => {
-    // Members was added in Ghost 3.0
-    await versionCheck('>=3.0.0', 'members', z, bundle);
-
+const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('member.added', z, bundle);
 };
 
-const unsubscribeWebhook = async (z, bundle) => {
-    // Members was added in Ghost 3.0
-    await versionCheck('>=3.0.0', 'members', z, bundle);
-
+const unsubscribeWebhook = (z, bundle) => {
     return webhooks.unsubscribe(z, bundle);
 };
 
@@ -25,10 +19,7 @@ const handleWebhook = (z, bundle) => {
     return [member.current];
 };
 
-const getLatestMember = async (z, bundle) => {
-    // Members was added in Ghost 3.0
-    await versionCheck('>=3.0.0', 'members', z, bundle);
-
+const getLatestMember = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
     return api.members.browse({
@@ -43,7 +34,7 @@ module.exports = {
 
     display: {
         label: 'Member Created',
-        description: 'Triggers when a new member is added (requires Ghost 3.0.0 or later).',
+        description: 'Triggers when a new member is added.',
         important: true // show it at the top of the actions list
     },
 
@@ -73,7 +64,7 @@ module.exports = {
                     created_at: '2019-10-13T18:12:00.000Z',
                     updated_at: '2019-10-13T18:12:00.000Z'
                 }
-            ], // Labels are available only from Ghost >= 3.6
+            ],
             created_at: '2019-10-13T18:12:00.000Z',
             updated_at: '2019-10-13T18:12:00.000Z'
         }
