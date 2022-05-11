@@ -66,7 +66,7 @@ module.exports = {
                 key: 'subscribed',
                 label: 'Subscribed to newsletter',
                 type: 'boolean',
-                helpText: 'If disabled, member will not receive newsletter emails',
+                helpText: 'If false, member will be unsubscribed from all newsletters',
                 required: false
             },
             {
