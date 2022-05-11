@@ -1,3 +1,7 @@
+## 2.5.2
+
+* (Fix) Correct help text for the "subscribed" boolean for members
+
 ## 2.5.1
 
 * (New) User-Agent headers sent to connected Ghost instance
