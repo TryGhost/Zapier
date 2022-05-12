@@ -2,8 +2,8 @@ const _ = require('lodash');
 const {initAdminApi} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-const subscribeWebhook = _.partial(webhooks.newsletter, 'newsletter.added');
-const unsubscribeWebhook = webhooks.newsletter;
+const subscribeWebhook = _.partial(webhooks.subscribe, 'newsletter.added');
+const unsubscribeWebhook = webhooks.unsubscribe;
 
 // triggers on user.added. Formats the API response ready for passing to
 // the zap which expects an array
@@ -19,13 +19,13 @@ const listNewsletters = (z, {authData, meta}) => {
     const api = initAdminApi(z, authData);
 
     if (meta.isFillingDynamicDropdown) {
-        return api.newsletter.browse({
+        return api.newsletters.browse({
             order: 'name DESC',
             limit: 'all'
         });
     }
 
-    return api.newsletter.browse({
+    return api.newsletters.browse({
         order: 'created_at DESC',
         limit: 1
     });
