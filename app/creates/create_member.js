@@ -17,6 +17,10 @@ const createMember = async (z, bundle) => {
         expectedVersion = '>=4.46.0';
         action = 'member newsletters';
         memberData.newsletters = bundle.inputData.newsletters.map(id => ({id}));
+
+        if (bundle.inputData.newsletters.length === 0) {
+            memberData.subscribed = false;
+        }
     }
 
     // Member Labels was added in Ghost 3.6
@@ -72,13 +76,13 @@ module.exports = {
             {
                 key: 'subscription_option',
                 label: 'Subscription type',
-                helpText: 'Multiple newsletters for v5+, or a simple "subscribed" option for previous versions',
+                helpText: 'Multiple newsletters for Ghost v5+, or a subscribed option for previous versions',
                 required: true,
                 choices: {
-                    subscribed: 'Subscriptions',
-                    newsletters: 'Newsletters (v5+)'
+                    newsletters: 'Newsletters',
+                    subscribed: 'Legacy Subscription'
                 },
-                default: 'subscribed',
+                default: 'newsletters',
                 altersDynamicFields: true
             },
             function (z, bundle) {
@@ -90,6 +94,21 @@ module.exports = {
                         helpText: 'If false, member will be unsubscribed from all newsletters',
                         required: false
                     }];
+                } else {
+                    return [{
+                        key: 'newsletters_default',
+                        label: 'Subscribed to default newsletters',
+                        type: 'boolean',
+                        helpText: 'Newsletters with the "subscribe on signup" flag will be subscribed to by default',
+                        required: true,
+                        default: 'true',
+                        altersDynamicFields: true
+                    }];
+                }
+            },
+            function (z, bundle) {
+                if (bundle.inputData.subscription_option === 'subscribed' || bundle.inputData.newsletters_default === true) {
+                    return [];
                 } else {
                     return [{
                         key: 'newsletters',
