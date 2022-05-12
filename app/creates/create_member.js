@@ -13,12 +13,13 @@ const createMember = async (z, bundle) => {
 
     if ('subscribed' in bundle.inputData) {
         memberData.subscribed = bundle.inputData.subscribed;
-    } else if ('newsletters' in bundle.inputData) {
+    } else if ('newsletters' in bundle.inputData && !('newsletters_default' in bundle.inputData && bundle.inputData.newsletters_default === true)) {
         expectedVersion = '>=4.46.0';
         action = 'member newsletters';
         memberData.newsletters = bundle.inputData.newsletters.map(id => ({id}));
 
         if (bundle.inputData.newsletters.length === 0) {
+            // Explicitly overriding newsletters and not including any, should mean unsubscribing the member
             memberData.subscribed = false;
         }
     }
@@ -101,7 +102,7 @@ module.exports = {
                         type: 'boolean',
                         helpText: 'Newsletters with the "subscribe on signup" flag will be subscribed to by default',
                         required: true,
-                        default: 'true',
+                        default: true,
                         altersDynamicFields: true
                     }];
                 }

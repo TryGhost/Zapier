@@ -9,9 +9,21 @@ const updateMember = async (z, bundle) => {
         id: bundle.inputData.id,
         name: bundle.inputData.name,
         email: bundle.inputData.email,
-        note: bundle.inputData.note,
-        subscribed: bundle.inputData.subscribed
+        note: bundle.inputData.note
     };
+
+    if ('subscribed' in bundle.inputData) {
+        memberData.subscribed = bundle.inputData.subscribed;
+    } else if ('newsletters' in bundle.inputData && !('newsletters_keepsame' in bundle.inputData && bundle.inputData.newsletters_keepsame === true)) {
+        expectedVersion = '>=4.46.0';
+        action = 'member newsletters';
+        memberData.newsletters = bundle.inputData.newsletters.map(id => ({id}));
+
+        if (bundle.inputData.newsletters.length === 0) {
+            // Explicitly overriding newsletters and not including any, should mean unsubscribing the member
+            memberData.subscribed = false;
+        }
+    }
 
     // Member Labels was added in Ghost 3.6
     if (bundle.inputData.labels && bundle.inputData.labels.length > 0) {
@@ -59,11 +71,50 @@ module.exports = {
             {key: 'email', required: false},
             {key: 'note', required: false},
             {
-                key: 'subscribed',
-                label: 'Subscribed to newsletter',
-                type: 'boolean',
-                helpText: 'If false, member will be unsubscribed from all newsletters',
-                required: false
+                key: 'subscription_option',
+                label: 'Subscription type',
+                helpText: 'Multiple newsletters for Ghost v5+, or a subscribed option for previous versions',
+                required: true,
+                choices: {
+                    newsletters: 'Newsletters',
+                    subscribed: 'Legacy Subscription'
+                },
+                default: 'newsletters',
+                altersDynamicFields: true
+            },
+            function (z, bundle) {
+                if (bundle.inputData.subscription_option === 'subscribed') {
+                    return [{
+                        key: 'subscribed',
+                        label: 'Subscribed to newsletter',
+                        type: 'boolean',
+                        helpText: 'If false, member will be unsubscribed from all newsletters',
+                        required: false
+                    }];
+                } else {
+                    return [{
+                        key: 'newsletters_keepsame',
+                        label: 'Keep the current set of newsletters for the member',
+                        type: 'boolean',
+                        required: true,
+                        default: true,
+                        altersDynamicFields: true
+                    }];
+                }
+            },
+            function (z, bundle) {
+                if (bundle.inputData.subscription_option === 'subscribed' || bundle.inputData.newsletters_keepsame === true) {
+                    return [];
+                } else {
+                    return [{
+                        key: 'newsletters',
+                        label: 'Newsletter subscriptions',
+                        helpText: 'Choose which newsletters the member will be subscribed to',
+                        required: false,
+                        list: true,
+                        dynamic: 'newsletter_created.id.name'
+                    }];
+                }
             },
             {
                 key: 'labels',
