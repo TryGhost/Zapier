@@ -11,17 +11,21 @@ const createMember = async (z, bundle) => {
         note: bundle.inputData.note
     };
 
-    if ('subscribed' in bundle.inputData) {
+    const countSpecified = 'newsletter_count' in bundle.inputData;
+    if (countSpecified && bundle.inputData.newsletter_count === 'single') {
         memberData.subscribed = bundle.inputData.subscribed;
-    } else if ('newsletters' in bundle.inputData && !('newsletters_default' in bundle.inputData && bundle.inputData.newsletters_default === true)) {
-        expectedVersion = '>=4.46.0';
-        action = 'member newsletters';
-        memberData.newsletters = bundle.inputData.newsletters.map(id => ({id}));
-
-        if (bundle.inputData.newsletters.length === 0) {
-            // Explicitly overriding newsletters and not including any, should mean unsubscribing the member
-            memberData.subscribed = false;
+    } else if (countSpecified && bundle.inputData.newsletter_count === 'multiple') {
+        // Default newsletters is definitely set to false (using !(value !== false) because booleans are sometimes stringified before being set)
+        if (!('newsletters_default' in bundle.inputData && bundle.inputData.newsletters_default !== false)) {
+            expectedVersion = '>=4.46.0';
+            action = 'member newsletters';
+            memberData.newsletters = 'newsletters' in bundle.inputData
+                ? bundle.inputData.newsletters.map(id => ({id}))
+                : [];
         }
+    } else {
+        // Assume single newsletter for older Zaps
+        memberData.subscribed = bundle.inputData.subscribed;
     }
 
     // Member Labels was added in Ghost 3.6
@@ -75,32 +79,31 @@ module.exports = {
             {key: 'email', required: true},
             {key: 'note', required: false},
             {
-                key: 'subscription_option',
-                label: 'Subscription type',
-                helpText: 'Multiple newsletters for Ghost v5+, or a subscribed option for previous versions',
+                key: 'newsletter_count',
+                label: 'Number of newsletters',
                 required: true,
                 choices: {
-                    newsletters: 'Newsletters',
-                    subscribed: 'Legacy Subscription'
+                    single: 'Single newsletter',
+                    multiple: 'Multiple newsletters'
                 },
                 default: 'newsletters',
                 altersDynamicFields: true
             },
             function (z, bundle) {
-                if (bundle.inputData.subscription_option === 'subscribed') {
+                if (bundle.inputData.newsletter_count === 'single') {
                     return [{
                         key: 'subscribed',
-                        label: 'Subscribed to newsletter',
+                        label: 'Subscribe to newsletter',
                         type: 'boolean',
-                        helpText: 'If false, member will be unsubscribed from all newsletters',
+                        helpText: 'If false, member will not be subscribed to emails.',
                         required: false
                     }];
                 } else {
                     return [{
                         key: 'newsletters_default',
-                        label: 'Subscribed to default newsletters',
+                        label: 'Subscribe to default newsletters',
                         type: 'boolean',
-                        helpText: 'Newsletters with the "subscribe on signup" flag will be subscribed to by default',
+                        helpText: 'If false, you can subscribe to specific newsletters.',
                         required: true,
                         default: true,
                         altersDynamicFields: true
@@ -108,7 +111,8 @@ module.exports = {
                 }
             },
             function (z, bundle) {
-                if (bundle.inputData.subscription_option === 'subscribed' || bundle.inputData.newsletters_default === true) {
+                // Using value !== false because booleans in Zapier are occasionally strings
+                if (bundle.inputData.newsletter_count === 'single' || bundle.inputData.newsletters_default !== false) {
                     return [];
                 } else {
                     return [{
