@@ -86,7 +86,8 @@ module.exports = {
                     single: 'Single newsletter',
                     multiple: 'Multiple newsletters'
                 },
-                default: 'newsletters',
+                helpText: 'How many newsletters does your site have? Multiple option for >= Ghost 5.0 only.',
+                default: 'single',
                 altersDynamicFields: true
             },
             function (z, bundle) {
@@ -98,16 +99,19 @@ module.exports = {
                         helpText: 'If false, member will not be subscribed to emails.',
                         required: false
                     }];
-                } else {
+                } else if (bundle.inputData.newsletter_count === 'multiple') {
                     return [{
                         key: 'newsletters_default',
                         label: 'Subscribe to default newsletters',
                         type: 'boolean',
-                        helpText: 'If false, you can subscribe to specific newsletters.',
+                        helpText: 'If false, you can subscribe member to specific newsletters or unsubscribe from all.',
                         required: true,
                         default: true,
                         altersDynamicFields: true
                     }];
+                } else {
+                    // Should never happen, but occasionally will be the case on load
+                    return [];
                 }
             },
             function (z, bundle) {

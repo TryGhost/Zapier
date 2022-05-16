@@ -82,7 +82,8 @@ module.exports = {
                     single: 'Single newsletter',
                     multiple: 'Multiple newsletters'
                 },
-                default: 'newsletters',
+                helpText: 'How many newsletters does your site have? Multiple option for >= Ghost 5.0 only.',
+                default: 'single',
                 altersDynamicFields: true
             },
             function (z, bundle) {
@@ -94,7 +95,7 @@ module.exports = {
                         helpText: 'If false, member will not be subscribed to emails.',
                         required: false
                     }];
-                } else {
+                } else if (bundle.inputData.newsletter_count === 'multiple') {
                     return [{
                         key: 'newsletters_keepsame',
                         label: 'Keep the current set of newsletters for the member',
@@ -103,6 +104,8 @@ module.exports = {
                         default: true,
                         altersDynamicFields: true
                     }];
+                } else {
+                    return [];
                 }
             },
             function (z, bundle) {
