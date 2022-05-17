@@ -1,21 +1,36 @@
-const _ = require('lodash');
-const {initAdminApi} = require('../lib/utils');
+const {initAdminApi, versionCheck} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-const subscribeWebhook = _.partial(webhooks.subscribe, 'newsletter.added');
-const unsubscribeWebhook = webhooks.unsubscribe;
+const subscribeWebhook = async (z, bundle) => {
+    // Newsletters was added in Ghost 5.0
+    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
 
-// triggers on user.added. Formats the API response ready for passing to
+    return webhooks.subscribe('newsletter.added', z, bundle);
+};
+
+const unsubscribeWebhook = async (z, bundle) => {
+    // Newsletters was added in Ghost 5.0
+    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
+
+    return webhooks.unsubscribe(z, bundle);
+};
+
+// triggers on newsletter.added. Formats the API response ready for passing to
 // the zap which expects an array
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {user} = bundle.cleanedRequest;
+    const {newsletter} = bundle.cleanedRequest;
 
-    return [user.current];
+    return [newsletter.current];
 };
 
-const listNewsletters = (z, {authData, meta}) => {
+const listNewsletters = async (z, bundle) => {
+    // Newsletters was added in Ghost 5.0
+    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
+
+    const {authData, meta} = bundle;
+
     const api = initAdminApi(z, authData);
 
     if (meta.isFillingDynamicDropdown) {
