@@ -312,6 +312,112 @@ describe('Creates', function () {
             });
         });
 
+        describe('with supported version >= 5.0.0', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '5.0'}
+                });
+            });
+
+            it('creates a member subscribed to multiple newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'multiple',
+                        newsletters: ['one', 'two']
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: true,
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                        member.email.should.equal('test@example.com');
+                        member.subscribed.should.equal(true);
+                        member.newsletters.length.should.equal(2);
+                    });
+            });
+
+            it('creates a member subscribed ignoring unused input data', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'multiple',
+                        subscribed: false,
+                        newsletters_default: false,
+                        newsletters: ['one', 'two']
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: true,
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                        member.email.should.equal('test@example.com');
+                        member.subscribed.should.equal(true);
+                        member.newsletters.length.should.equal(2);
+                    });
+            });
+        });
+
         describe('with unsupported version', function () {
             beforeEach(function () {
                 apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
@@ -377,6 +483,33 @@ describe('Creates', function () {
                     }, (err) => {
                         err.name.should.eql('HaltedError');
                         err.message.should.match(/3\.0/);
+                    });
+            });
+        });
+
+        describe('with unsupported version < 5.0.0', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '4.46'}
+                });
+            });
+
+            it('has a friendly, halting "unsupported version" error for newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'multiple',
+                        newsletters: []
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then(() => {
+                        true.should.equal(false);
+                    }, (err) => {
+                        err.name.should.eql('HaltedError');
+                        err.message.should.match(/5\.0/);
                     });
             });
         });

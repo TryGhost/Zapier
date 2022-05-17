@@ -18,7 +18,7 @@ const updateMember = async (z, bundle) => {
     } else if (countSpecified && bundle.inputData.newsletter_count === 'multiple') {
         // Default newsletters is definitely set to false (using !(value !== false) because booleans are sometimes stringified before being set)
         if (!('newsletters_keepsame' in bundle.inputData && bundle.inputData.newsletters_keepsame !== false)) {
-            expectedVersion = '>=4.46.0';
+            expectedVersion = '>=5.0.0';
             action = 'member newsletters';
             memberData.newsletters = 'newsletters' in bundle.inputData
                 ? bundle.inputData.newsletters.map(id => ({id}))
