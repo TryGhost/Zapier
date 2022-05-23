@@ -1,3 +1,7 @@
+## 2.6.0
+
+* (New) Allow multiple newsletters to be added to members
+
 ## 2.5.2
 
 * (Fix) Correct help text for the "subscribed" boolean for members
