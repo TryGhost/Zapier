@@ -14,6 +14,7 @@ const testAuth = (z, {authData}) => {
         const version = semver.coerce(config.version);
 
         if (!semver.satisfies(version, SUPPORTED_VERSION)) {
+            // eslint-disable-next-line no-restricted-syntax
             throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
         }
 
@@ -35,14 +36,17 @@ const testAuth = (z, {authData}) => {
                 let v01url = `${authData.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
                 return z.request(v01url, {skipThrowForStatus: true}).then((response) => {
                     if (response.status === 401) {
+                        // eslint-disable-next-line no-restricted-syntax
                         throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);
                     } else {
+                        // eslint-disable-next-line no-restricted-syntax
                         throw new Error('Supplied \'Admin API URL\' does not appear to be valid or does not point to a Ghost site');
                     }
                 });
             }
         }
 
+        // eslint-disable-next-line no-restricted-syntax
         throw new Error(err.message);
     });
 };

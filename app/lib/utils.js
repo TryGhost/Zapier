@@ -12,7 +12,7 @@ class RequestError extends Error {
 }
 
 // Convenience method for creating a GhostAdminAPI instance from the bundle data
-const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) => {
+const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}, _options = {}) => {
     function makeRequest({url, method, data: body, params = {}, headers = {}}) {
         if (headers['User-Agent']) {
             headers['User-Agent'] = `Zapier/${packageVersion} ${headers['User-Agent']}`;
@@ -42,6 +42,7 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
                     throw new z.errors.HaltedError(message);
                 }
 
+                // eslint-disable-next-line no-restricted-syntax
                 throw new RequestError(error.message, response);
             } else if (response.status > 300) {
                 // adapted from `response.throwForStatus()` to expose the response
@@ -50,6 +51,7 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
                     response.request.url
                 }, expected 2xx.`;
 
+                // eslint-disable-next-line no-restricted-syntax
                 throw new RequestError(message, response);
             }
 
@@ -58,7 +60,7 @@ const initAdminApi = (z, {adminApiUrl: url, adminApiKey: key}, _options = {}) =>
     }
 
     const defaultOptions = {
-        url,
+        url: adminUrl,
         key,
         makeRequest,
         version: 'v2'
