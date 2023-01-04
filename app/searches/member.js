@@ -13,6 +13,11 @@ const searchMembers = async (z, bundle) => {
     try {
         const member = await api.members.browse(queryParams);
 
+        // There's a conflict between Zapier's test conditions, nock responses, and not wanting to double wrap arrays. This was the best solution to satisfy these conditions atm.
+        if (Array.isArray(member)) {
+            return member;
+        }
+        
         return [member];
     } catch (err) {
         if (err.name === 'HaltedError' && err.message.match(/404/)) {

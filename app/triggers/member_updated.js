@@ -13,6 +13,7 @@ const SAMPLE_PAYLOAD = {
         email: 'sample@example.com',
         note: 'Updated sample member record.',
         subscribed: false,
+        status: 'paid',
         comped: true,
         labels: [{
             id: '5f212d395422021ebc4b7043',
@@ -35,6 +36,7 @@ const SAMPLE_PAYLOAD = {
         email: 'oldsample@example.com',
         note: 'Old sample member record.',
         subscribed: true,
+        status: 'free',
         comped: false,
         labels: [{
             id: '5f212d395422021ebc4b7043',

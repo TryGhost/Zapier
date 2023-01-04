@@ -1,3 +1,8 @@
+## 2.6.2
+
+* Add `status` property to Member Updated trigger
+* Fix Member Search action to return correct results when no member is found
+
 ## 2.6.0
 
 * (New) Allow multiple newsletters to be added to members

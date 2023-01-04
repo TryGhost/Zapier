@@ -69,9 +69,9 @@ describe('Triggers', function () {
                 return appTester(App.triggers.member_updated.operation.performList, {authData})
                     .then(([member]) => {
                         should.exist(member.current);
-                        Object.keys(member.current).length.should.eql(9);
+                        Object.keys(member.current).length.should.eql(10);
                         should.exist(member.previous);
-                        Object.keys(member.previous).length.should.eql(7);
+                        Object.keys(member.previous).length.should.eql(8);
 
                         member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
 
