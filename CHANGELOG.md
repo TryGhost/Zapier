@@ -1,3 +1,5 @@
+## 2.6.3
+* Add `uuid` to Member Updated trigger
 ## 2.6.2
 
 * Add `status` property to Member Updated trigger

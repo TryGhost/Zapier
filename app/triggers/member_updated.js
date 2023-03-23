@@ -9,6 +9,7 @@ const SUPPORTED_VERSION = '>=3.0.3';
 const SAMPLE_PAYLOAD = {
     current: {
         id: '5a01d3ecc8d50d0e606a7e7c',
+        uuid: '42f50516-9d4f-4062-86fe-dc170d2b391c',
         name: 'New Member Name',
         email: 'sample@example.com',
         note: 'Updated sample member record.',

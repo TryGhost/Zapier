@@ -69,7 +69,7 @@ describe('Triggers', function () {
                 return appTester(App.triggers.member_updated.operation.performList, {authData})
                     .then(([member]) => {
                         should.exist(member.current);
-                        Object.keys(member.current).length.should.eql(10);
+                        Object.keys(member.current).length.should.eql(11);
                         should.exist(member.previous);
                         Object.keys(member.previous).length.should.eql(8);
 
