@@ -71,10 +71,10 @@
     form-data "^4.0.0"
     jsonwebtoken "^8.4.0"
 
-"@types/node@^14.14.35":
-  version "14.17.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.2.tgz#1e94476db57ec93a372c7f7d29aa5707cfb92339"
-  integrity sha512-sld7b/xmFum66AAKuz/rp/CUO8+98fMpyQ3SBfzzBNGMd/1iHBTAg9oyAvcYlAj46bpc74r91jSw2iFdnx29nw==
+"@types/node@^18.11.18":
+  version "18.16.16"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.16.tgz#3b64862856c7874ccf7439e6bab872d245c86d8e"
+  integrity sha512-NpaM49IGQQAUlBhHMF82QH80J08os4ZmyF9MkpCzWAGuOHqE4gTEbhzd7L3l5LmWuZ6E0OiC1FweQ4tsiW35+g==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -86,7 +86,7 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@zapier/secret-scrubber@^1.0.3":
+"@zapier/secret-scrubber@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@zapier/secret-scrubber/-/secret-scrubber-1.0.7.tgz#afb85623a630b297b92ecc6bdc31714869d5c2e9"
   integrity sha512-NfqHsMLhjebSsIXOpn6oumkbj0fdViLPNxaQDicj0RTTUEc6LjCzCIj31imI/gVtXcd5oI1fmDJ/M9SQosuH0w==
@@ -329,12 +329,12 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-content-disposition@0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-0.5.3.tgz#e130caf7e7279087c5616c2007d0485698984fbd"
-  integrity sha512-ExO0774ikEObIAEV9kDo50o+79VCUdEB6n6lzKgGwupcVeRlhrj3qGAfwq8G6uBJjkqLrhT0qEYFcWng8z1z0g==
+content-disposition@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-0.5.4.tgz#8b82b4efac82512a02bb0b1dcec9d2c5e8eb5bfe"
+  integrity sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==
   dependencies:
-    safe-buffer "5.1.2"
+    safe-buffer "5.2.1"
 
 cross-spawn@^7.0.2:
   version "7.0.3"
@@ -402,10 +402,10 @@ dot-case@^3.0.3:
     no-case "^3.0.3"
     tslib "^1.10.0"
 
-dotenv@9.0.2:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-9.0.2.tgz#dacc20160935a37dea6364aa1bef819fb9b6ab05"
-  integrity sha512-I9OvvrHp4pIARv4+x9iuewrWycX6CcZtoAu1XrzPxc5UygMJXJZYmBsynku8IkrJwgypE5DGNjDPmPRhDCptUg==
+"dotenv@12.0.4 ":
+  version "12.0.4"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-12.0.4.tgz#87e302cfddeef475fcaf9a617f7b44f80ac555bc"
+  integrity sha512-oWdqbSywffzH1l4WXKPHWA0TWYpqp7IyLfqjipT4upoIFS0HPMqtNotykQpD4iIg0BqtNmdgPCh2WMvMt7yTiw==
 
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
@@ -1139,17 +1139,17 @@ mime-db@1.40.0:
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.40.0.tgz#a65057e998db090f732a68f6c276d387d4126c32"
   integrity sha512-jYdeOMPy9vnxEqFRRo6ZvTZ8d9oPb+k18PKoYNYUe2stVEBPPwsln/qWzdbmaIvnhZ9v2P+CuecK+fpUfsV2mA==
 
-mime-db@1.51.0:
-  version "1.51.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.51.0.tgz#d9ff62451859b18342d960850dc3cfb77e63fb0c"
-  integrity sha512-5y8A56jg7XVQx2mbv1lu49NR4dokRnhZYTtL+KGfaa27uq4pSTXkwQkFJl4pkRMyNFz/EtYDSkiiEHx3F7UN6g==
+mime-db@1.52.0:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
+  integrity sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==
 
-mime-types@2.1.34:
-  version "2.1.34"
-  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.34.tgz#5a712f9ec1503511a945803640fafe09d3793c24"
-  integrity sha512-6cP692WwGIs9XXdOO4++N+7qjqv0rqxxVvJ3VHPh/Sc9mVZcQP+ZGhkKiTvWMQRr2tbHkJP/Yn7Y0npb3ZBs4A==
+mime-types@2.1.35:
+  version "2.1.35"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
+  integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
   dependencies:
-    mime-db "1.51.0"
+    mime-db "1.52.0"
 
 mime-types@^2.1.12:
   version "2.1.24"
@@ -1249,6 +1249,11 @@ nock@13.2.4:
     json-stringify-safe "^5.0.1"
     lodash.set "^4.3.2"
     propagate "^2.0.0"
+
+node-abort-controller@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-3.0.1.tgz#f91fa50b1dee3f909afabb7e261b1e1d6b0cb74e"
+  integrity sha512-/ujIVxthRs+7q6hsdjHMaj8hRG9NuWmwrz+JdRwZ14jdFoKSkm+vDsCbF9PLpnSqjaWQJuTmVtcWHNLr+vrOFw==
 
 node-fetch@2.6.7:
   version "2.6.7"
@@ -1475,20 +1480,15 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-safe-buffer@5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
-  integrity sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
+safe-buffer@5.2.1, safe-buffer@^5.1.0:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
+  integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
 safe-buffer@^5.0.1:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.0.tgz#b74daec49b1148f88c64b68d49b1e815c1f2f519"
   integrity sha512-fZEwUGbVl7kouZs1jCdMLdt95hdIv0ZeHg6L7qPeciMZhZ+/gdesW4wgTARkrFWEpspjEATAzUGPG8N2jJiwbg==
-
-safe-buffer@^5.1.0:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
-  integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
 safe-regex@^2.1.1:
   version "2.1.1"
@@ -1844,29 +1844,30 @@ yargs@16.2.0:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-zapier-platform-core@12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-12.0.3.tgz#cc78c02a49a4570b3e3fd06c80368ec24c48cd15"
-  integrity sha512-/gnMISXdjBgVjSU2f9h6KEj3/3bwsszLT2ccpOrc37mMqUKBEaBMdHd5zNjol1RJVW4yH3BkEONnm9SV586t/w==
+zapier-platform-core@14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-14.1.1.tgz#e67c62ef9c03f873f3dd8cbea986ac3f94103551"
+  integrity sha512-MHURla2hA8mqIVr7G+tCjc10sMWntIn/rd/vipr2U9CPiRrYHiUTNNgHzksWUKecj4z3uyIn+qR3A90Q792v3w==
   dependencies:
-    "@zapier/secret-scrubber" "^1.0.3"
+    "@zapier/secret-scrubber" "^1.0.7"
     bluebird "3.7.2"
-    content-disposition "0.5.3"
-    dotenv "9.0.2"
+    content-disposition "0.5.4"
+    dotenv "12.0.4 "
     form-data "4.0.0"
     lodash "4.17.21"
-    mime-types "2.1.34"
+    mime-types "2.1.35"
+    node-abort-controller "3.0.1"
     node-fetch "2.6.7"
     oauth-sign "0.9.0"
     semver "7.3.5"
-    zapier-platform-schema "12.0.3"
+    zapier-platform-schema "14.1.1"
   optionalDependencies:
-    "@types/node" "^14.14.35"
+    "@types/node" "^18.11.18"
 
-zapier-platform-schema@12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-12.0.3.tgz#c24878d49a7fa17f7697e285c49a14d5433c4c90"
-  integrity sha512-ldJl9T6wRJDbn0qYDBC58RAsZA31CP1xD58c9b0K3RpEyRIZmo9O2gxxdc8mx4ut6NF2E0Fm3Zg4VMm6rEg30A==
+zapier-platform-schema@14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-14.1.1.tgz#5e4495034480256fddc85e757f678e1b34153657"
+  integrity sha512-yaP+527/soEoGQAJDowNc4BgEyBnI7oLWqj3/wf3w5AUmdPEOe3aQoJ3a2vI4BMtx25hkhKWiOz+OytdWa8XPA==
   dependencies:
     jsonschema "1.2.2"
     lodash "4.17.21"
