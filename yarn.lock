@@ -86,7 +86,7 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
-"@zapier/secret-scrubber@^1.0.3":
+"@zapier/secret-scrubber@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@zapier/secret-scrubber/-/secret-scrubber-1.0.7.tgz#afb85623a630b297b92ecc6bdc31714869d5c2e9"
   integrity sha512-NfqHsMLhjebSsIXOpn6oumkbj0fdViLPNxaQDicj0RTTUEc6LjCzCIj31imI/gVtXcd5oI1fmDJ/M9SQosuH0w==
@@ -1250,6 +1250,11 @@ nock@13.2.4:
     lodash.set "^4.3.2"
     propagate "^2.0.0"
 
+node-abort-controller@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-3.0.1.tgz#f91fa50b1dee3f909afabb7e261b1e1d6b0cb74e"
+  integrity sha512-/ujIVxthRs+7q6hsdjHMaj8hRG9NuWmwrz+JdRwZ14jdFoKSkm+vDsCbF9PLpnSqjaWQJuTmVtcWHNLr+vrOFw==
+
 node-fetch@2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
@@ -1844,29 +1849,30 @@ yargs@16.2.0:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-zapier-platform-core@12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-12.0.3.tgz#cc78c02a49a4570b3e3fd06c80368ec24c48cd15"
-  integrity sha512-/gnMISXdjBgVjSU2f9h6KEj3/3bwsszLT2ccpOrc37mMqUKBEaBMdHd5zNjol1RJVW4yH3BkEONnm9SV586t/w==
+zapier-platform-core@12.2.1:
+  version "12.2.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-core/-/zapier-platform-core-12.2.1.tgz#a19fdfed03e75a65572f8dcf7fb2b6d8011914d4"
+  integrity sha512-HAnAiXYQ+0W524LQ5GIxKyggCU6NB6ielsUZBvmterZXms7WH8VlFait1x2gcfzNezNhRm7yED8lBkwHEh6CcA==
   dependencies:
-    "@zapier/secret-scrubber" "^1.0.3"
+    "@zapier/secret-scrubber" "^1.0.7"
     bluebird "3.7.2"
     content-disposition "0.5.3"
     dotenv "9.0.2"
     form-data "4.0.0"
     lodash "4.17.21"
     mime-types "2.1.34"
+    node-abort-controller "3.0.1"
     node-fetch "2.6.7"
     oauth-sign "0.9.0"
     semver "7.3.5"
-    zapier-platform-schema "12.0.3"
+    zapier-platform-schema "12.2.1"
   optionalDependencies:
     "@types/node" "^14.14.35"
 
-zapier-platform-schema@12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-12.0.3.tgz#c24878d49a7fa17f7697e285c49a14d5433c4c90"
-  integrity sha512-ldJl9T6wRJDbn0qYDBC58RAsZA31CP1xD58c9b0K3RpEyRIZmo9O2gxxdc8mx4ut6NF2E0Fm3Zg4VMm6rEg30A==
+zapier-platform-schema@12.2.1:
+  version "12.2.1"
+  resolved "https://registry.yarnpkg.com/zapier-platform-schema/-/zapier-platform-schema-12.2.1.tgz#30c20c93a7b62e6a5c2e3d0722b292da1bee1580"
+  integrity sha512-8YEG59Jmx2mbhz+wj6+aZkb+fGEX9SxPvEIuEmJ3NMR1bPnOvbbQL0Xrrb5XC0z79q11ZqqT90h0tXxK1NNA9g==
   dependencies:
     jsonschema "1.2.2"
     lodash "4.17.21"
