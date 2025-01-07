@@ -81,4 +81,4 @@ Before releasing a new version a common thing to do is checking if the changes w
 To trigger configured above Zap use your local Ghost instance as usual and the Zaps should start getting triggered as expected. If you don't see any comming through check out Zapier's error dashboard to debug the problem.
 # Copyright & License 
 
-Copyright (c) 2013-2023 Ghost Foundation - Released under the [MIT license](LICENSE).
+Copyright (c) 2013-2025 Ghost Foundation - Released under the [MIT license](LICENSE).
