@@ -5,3 +5,4 @@ node_modules
 .environment
 .env
 .eslintcache
+.DS_Store
