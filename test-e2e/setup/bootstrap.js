@@ -8,12 +8,14 @@
  *
  * The resulting `GHOST_ADMIN_API_URL` and `GHOST_ADMIN_API_KEY` values are
  * appended to `$GITHUB_ENV` when running in GitHub Actions, otherwise they
- * are printed to stdout for local use.
+ * are written to `test-e2e/.env.local` (gitignored) so the key never
+ * appears in logs.
  *
  * Usage: node test-e2e/setup/bootstrap.js
  */
 const http = require('http');
 const fs = require('fs');
+const {join} = require('path');
 
 const GHOST_URL = process.env.GHOST_URL || 'http://localhost:2368';
 
@@ -119,11 +121,14 @@ const exportCredentials = (adminApiKey) => {
         `GHOST_ADMIN_API_KEY=${adminApiKey}`
     ];
 
+    // never print the key itself - it would end up in CI or terminal logs
     if (process.env.GITHUB_ENV) {
         fs.appendFileSync(process.env.GITHUB_ENV, `${lines.join('\n')}\n`);
         console.log(`Ghost Admin API credentials appended to ${process.env.GITHUB_ENV}`);
     } else {
-        console.log(lines.join('\n'));
+        const envFile = join(__dirname, '..', '.env.local');
+        fs.writeFileSync(envFile, `${lines.join('\n')}\n`);
+        console.log(`Ghost Admin API credentials written to ${envFile}`);
     }
 };
 
