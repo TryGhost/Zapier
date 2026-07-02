@@ -42,6 +42,8 @@ describe('Triggers', function () {
         });
 
         it('loads tag from webhook data', function () {
+            // app code reads `user` here — copy-paste from author_created;
+            // this test documents current behaviour (see PR #93)
             let bundle = Object.assign({}, {authData}, {
                 inputData: {},
                 cleanedRequest: {
