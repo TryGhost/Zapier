@@ -35,8 +35,7 @@ module.exports = {
 
     display: {
         label: 'Create Post',
-        description: 'Creates a post.',
-        important: true
+        description: 'Creates a post.'
     },
 
     operation: {

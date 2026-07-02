@@ -1,4 +1,4 @@
-const {initAdminApi, versionCheck} = require('../lib/utils');
+const {initAdminApi, isNotFoundHaltedError, versionCheck} = require('../lib/utils');
 
 const searchSubscribers = async (z, bundle) => {
     // Ghost 3.0 removes all subscriber routes, show an unsupported error
@@ -10,7 +10,7 @@ const searchSubscribers = async (z, bundle) => {
     }).catch((err) => {
         // we throw a HaltedError on a 404 so we return an empty array
         // to satisfy the `search` action return type
-        if (err.name === 'HaltedError' && err.message.match(/404/)) {
+        if (isNotFoundHaltedError(err)) {
             return [];
         }
 

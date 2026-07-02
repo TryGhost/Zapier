@@ -1,4 +1,4 @@
-const {initAdminApi, versionCheck} = require('../lib/utils');
+const {initAdminApi, isNotFoundHaltedError, versionCheck} = require('../lib/utils');
 
 const searchMembers = async (z, bundle) => {
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
@@ -20,7 +20,7 @@ const searchMembers = async (z, bundle) => {
         
         return [member];
     } catch (err) {
-        if (err.name === 'HaltedError' && err.message.match(/404/)) {
+        if (isNotFoundHaltedError(err)) {
             return [];
         }
 

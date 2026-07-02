@@ -39,7 +39,10 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}, _options = {
                         errorCode = `${errorCode}: ${error.code}`;
                     }
                     const message = `${error.context || error.message} (${errorCode})`;
-                    throw new z.errors.HaltedError(message);
+                    const haltedError = new z.errors.HaltedError(message);
+                    // expose the status so searches can turn a 404 into an empty result
+                    haltedError.status = response.status;
+                    throw haltedError;
                 }
 
                 // eslint-disable-next-line no-restricted-syntax
@@ -71,6 +74,18 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}, _options = {
 };
 
 /**
+ * Detects the halting error thrown by `initAdminApi` for a Ghost 404 response.
+ * Searches use this to return an empty result set instead of erroring when
+ * nothing matches the search input.
+ *
+ * @param {Error & {status?: number}} err error caught from an Admin API call
+ * @returns {boolean}
+ */
+const isNotFoundHaltedError = (err) => {
+    return err.name === 'HaltedError' && err.status === 404;
+};
+
+/**
  * Checks if version needed to perform an action satisfies connected Ghost instance.
  * Ghost version is taken from site endpoint (https://ghost.org/docs/api/v3/admin/#the-site-object)
  * "Semver String (major.minor) The current version of the Ghost site. Use this to check the minimum
@@ -97,6 +112,7 @@ const versionCheck = (semverRange, action, z, {authData}) => {
 
 module.exports = {
     initAdminApi,
+    isNotFoundHaltedError,
     versionCheck,
     RequestError
 };

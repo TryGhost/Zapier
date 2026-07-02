@@ -58,8 +58,7 @@ module.exports = {
 
     display: {
         label: 'Update Member',
-        description: 'Updates a member (Only supported by Ghost 3.0.0 and later)',
-        important: true
+        description: 'Updates a member (Only supported by Ghost 3.0.0 and later)'
     },
 
     operation: {

@@ -1,4 +1,4 @@
-const {initAdminApi} = require('../lib/utils');
+const {initAdminApi, isNotFoundHaltedError} = require('../lib/utils');
 
 const searchAuthors = (z, {inputData, authData}) => {
     const api = initAdminApi(z, authData);
@@ -20,7 +20,7 @@ const searchAuthors = (z, {inputData, authData}) => {
     }).catch((err) => {
         // we throw a HaltedError on a 404 so we return an empty array
         // to satisfy the `search` action return type
-        if (err.name === 'HaltedError' && err.message.match(/404/)) {
+        if (isNotFoundHaltedError(err)) {
             return [];
         }
 
