@@ -41,6 +41,20 @@ describe('E2E Deprecated subscriber operations', function () {
         }), VERSION_GATE);
     });
 
+    it('subscriber_created performSubscribe halts with a version-gate error', async function () {
+        await shouldHalt(appTester(App.triggers.subscriber_created.operation.performSubscribe, {
+            authData,
+            targetUrl: 'http://example.com/hook/subscriber_created'
+        }), VERSION_GATE);
+    });
+
+    it('subscriber_created performUnsubscribe halts with a version-gate error', async function () {
+        await shouldHalt(appTester(App.triggers.subscriber_created.operation.performUnsubscribe, {
+            authData,
+            subscribeData: {id: '5c9c9c8d51b5bf974afad2a4'}
+        }), VERSION_GATE);
+    });
+
     it('subscriber_deleted performList halts with a version-gate error', async function () {
         await shouldHalt(appTester(App.triggers.subscriber_deleted.operation.performList, {
             authData

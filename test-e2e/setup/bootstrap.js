@@ -128,6 +128,12 @@ const exportCredentials = (adminApiKey) => {
 };
 
 const bootstrap = async () => {
+    // the request helper uses the core http module, so a https:// (or
+    // otherwise non-http) URL would fail confusingly further down
+    if (!GHOST_URL.startsWith('http://')) {
+        throw new Error(`GHOST_URL must be an http:// URL (got '${GHOST_URL}') - this script only targets local/CI Ghost instances`);
+    }
+
     await createOwner();
     const sessionCookie = await createSession();
     const adminApiKey = await createIntegration(sessionCookie);
