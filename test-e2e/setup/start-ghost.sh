@@ -50,6 +50,18 @@ echo "  db:  ${db_file}"
 
 echo "Ghost started with PID $(cat "${pid_file}") - stop it with: kill \$(cat ${pid_file})"
 
+# on failure or interrupt, don't leave an orphaned Ghost or temp db behind -
+# deliberately NOT on EXIT: a successful start must leave Ghost running for
+# the bootstrap and test steps that follow
+cleanup() {
+    if [ -f "${pid_file}" ]; then
+        kill "$(cat "${pid_file}")" 2>/dev/null || true
+        rm -f "${pid_file}"
+    fi
+    rm -rf "$(dirname "${db_file}")"
+}
+trap cleanup INT TERM
+
 for _ in $(seq 1 90); do
     if curl -sf -o /dev/null http://localhost:2368/ghost/api/admin/site/; then
         echo "Ghost is ready"
@@ -60,4 +72,5 @@ done
 
 echo "Ghost did not become ready within 180s" >&2
 tail -50 "${log_file}" >&2
+cleanup
 exit 1
