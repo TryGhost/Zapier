@@ -25,7 +25,10 @@ describe('E2E Authentication', function () {
             adminApiKey: `${keyId}:${'0'.repeat(64)}`
         };
 
+        // Ghost rejects the mis-signed token with "Invalid token: invalid
+        // signature" - matching on it proves a real credential rejection
+        // rather than any incidental failure (network, wrong URL, ...)
         await appTester(App.authentication.test, {authData: badAuthData})
-            .should.be.rejected();
+            .should.be.rejectedWith(/invalid token/i);
     });
 });
