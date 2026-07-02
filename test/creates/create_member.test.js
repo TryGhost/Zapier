@@ -140,6 +140,42 @@ describe('Creates', function () {
                     });
             });
 
+            it('creates a member subscribed to a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'single',
+                        subscribed: true
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: true
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: true,
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.subscribed.should.equal(true);
+                    });
+            });
+
             it('has a friendly, halting validation error', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
@@ -414,6 +450,79 @@ describe('Creates', function () {
                         member.email.should.equal('test@example.com');
                         member.subscribed.should.equal(true);
                         member.newsletters.length.should.equal(2);
+                    });
+            });
+        });
+
+        describe('dynamic input fields', function () {
+            // indexes of the dynamic field functions within operation.inputFields
+            const SUBSCRIPTION_FIELD = 4;
+            const NEWSLETTERS_FIELD = 5;
+
+            it('shows the subscribed field for a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'single'
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('subscribed');
+                        field.type.should.eql('boolean');
+                    });
+            });
+
+            it('shows the default newsletters field for multiple newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'multiple'
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('newsletters_default');
+                        field.required.should.eql(true);
+                    });
+            });
+
+            it('shows no subscription field before a newsletter count is chosen', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {}
+                });
+
+                return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then((fields) => {
+                        fields.length.should.eql(0);
+                    });
+            });
+
+            it('shows the newsletters field when default newsletters are disabled', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'multiple',
+                        newsletters_default: false
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('newsletters');
+                        field.list.should.eql(true);
+                    });
+            });
+
+            it('hides the newsletters field for a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'single'
+                    }
+                });
+
+                return appTester(App.creates.create_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
+                    .then((fields) => {
+                        fields.length.should.eql(0);
                     });
             });
         });
