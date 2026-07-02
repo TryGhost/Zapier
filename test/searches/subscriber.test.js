@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Searches', function () {
@@ -60,13 +60,13 @@ describe('Searches', function () {
 
                 return appTester(App.searches.subscriber.operation.perform, bundle)
                     .then((results) => {
-                        apiMock.isDone().should.be.true;
-                        results.length.should.eql(1);
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(results.length).toEqual(1);
 
                         let [firstSubscriber] = results;
-                        firstSubscriber.id.should.eql('5c9cd98a51b5bf974afad2a6');
-                        firstSubscriber.name.should.eql('Test Subscriber');
-                        firstSubscriber.email.should.eql('test@example.com');
+                        expect(firstSubscriber.id).toEqual('5c9cd98a51b5bf974afad2a6');
+                        expect(firstSubscriber.name).toEqual('Test Subscriber');
+                        expect(firstSubscriber.email).toEqual('test@example.com');
                     });
             });
 
@@ -93,8 +93,8 @@ describe('Searches', function () {
 
                 return appTester(App.searches.subscriber.operation.perform, bundle)
                     .then((results) => {
-                        apiMock.isDone().should.be.true;
-                        results.length.should.eql(0);
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(results.length).toEqual(0);
                     });
             });
 
@@ -121,10 +121,10 @@ describe('Searches', function () {
 
                 return appTester(App.searches.subscriber.operation.perform, bundle)
                     .then(() => {
-                        true.should.eql(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/Validation \(isEmail\)/i);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/Validation \(isEmail\)/i);
                     });
             });
         });
@@ -145,10 +145,10 @@ describe('Searches', function () {
 
                 return appTester(App.searches.subscriber.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
                     });
             });
         });

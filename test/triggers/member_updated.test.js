@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', function () {
@@ -58,41 +58,41 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.perform, bundle)
                     .then(([member]) => {
-                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
-                        member.current.name.should.eql('New Member Name');
-                        member.current.email.should.eql('sample@example.com');
-                        member.previous.name.should.eql('Old Member Name');
+                        expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
+                        expect(member.current.name).toEqual('New Member Name');
+                        expect(member.current.email).toEqual('sample@example.com');
+                        expect(member.previous.name).toEqual('Old Member Name');
                     });
             });
 
             it('loads member from list', function () {
                 return appTester(App.triggers.member_updated.operation.performList, {authData})
                     .then(([member]) => {
-                        should.exist(member.current);
-                        Object.keys(member.current).length.should.eql(11);
-                        should.exist(member.previous);
-                        Object.keys(member.previous).length.should.eql(8);
+                        expect(member.current).toBeTruthy();
+                        expect(Object.keys(member.current).length).toEqual(11);
+                        expect(member.previous).toBeTruthy();
+                        expect(Object.keys(member.previous).length).toEqual(8);
 
-                        member.current.id.should.eql('5a01d3ecc8d50d0e606a7e7c');
+                        expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
 
-                        member.current.name.should.eql('New Member Name');
-                        member.previous.name.should.eql('Old Member Name');
+                        expect(member.current.name).toEqual('New Member Name');
+                        expect(member.previous.name).toEqual('Old Member Name');
 
-                        member.current.email.should.eql('sample@example.com');
-                        member.previous.email.should.eql('oldsample@example.com');
+                        expect(member.current.email).toEqual('sample@example.com');
+                        expect(member.previous.email).toEqual('oldsample@example.com');
 
-                        member.current.note.should.eql('Updated sample member record.');
-                        member.previous.note.should.eql('Old sample member record.');
+                        expect(member.current.note).toEqual('Updated sample member record.');
+                        expect(member.previous.note).toEqual('Old sample member record.');
 
-                        should.exist(member.current.labels);
-                        member.current.labels.length.should.equal(2);
-                        member.current.labels[0].name.should.eql('Old label 1');
-                        member.current.labels[1].name.should.eql('New label');
+                        expect(member.current.labels).toBeTruthy();
+                        expect(member.current.labels.length).toBe(2);
+                        expect(member.current.labels[0].name).toEqual('Old label 1');
+                        expect(member.current.labels[1].name).toEqual('New label');
 
-                        should.exist(member.previous.labels);
-                        member.previous.labels.length.should.eql(2);
-                        member.previous.labels[0].name.should.eql('Old label 1');
-                        member.previous.labels[1].name.should.eql('Old label 2');
+                        expect(member.previous.labels).toBeTruthy();
+                        expect(member.previous.labels.length).toEqual(2);
+                        expect(member.previous.labels[0].name).toEqual('Old label 1');
+                        expect(member.previous.labels[1].name).toEqual('Old label 2');
                     });
             });
 
@@ -117,7 +117,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
 
@@ -135,7 +135,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
         });
@@ -152,10 +152,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.performList, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -166,10 +166,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -184,10 +184,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
         });

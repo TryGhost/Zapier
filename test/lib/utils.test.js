@@ -1,5 +1,12 @@
-const should = require('should');
+import {createRequire} from 'node:module';
 
+import {describe, it, expect} from 'vitest';
+
+// load via require so this file shares the module instance (and therefore
+// the coverage entry) with the tests that reach utils through the app's own
+// CommonJS require chain - a direct ESM import would create a second,
+// vite-transformed copy and split the coverage between the two
+const require = createRequire(import.meta.url);
 const {initAdminApi, isNotFoundHaltedError, versionCheck} = require('../../app/lib/utils');
 const packageVersion = require('../../package.json').version;
 
@@ -39,8 +46,8 @@ describe('Utils', function () {
             const api = initAdminApi(z, authData, {userAgent: false});
 
             return api.site.read().then((site) => {
-                site.version.should.eql('5.0');
-                z.requestOptions.headers['User-Agent'].should.eql(`Zapier/${packageVersion}`);
+                expect(site.version).toEqual('5.0');
+                expect(z.requestOptions.headers['User-Agent']).toEqual(`Zapier/${packageVersion}`);
             });
         });
 
@@ -53,7 +60,7 @@ describe('Utils', function () {
             const api = initAdminApi(z, authData);
 
             return api.site.read().then(() => {
-                z.requestOptions.headers['User-Agent'].should.match(new RegExp(`^Zapier/${packageVersion} GhostAdminSDK/\\d+\\.\\d+\\.\\d+$`));
+                expect(z.requestOptions.headers['User-Agent']).toMatch(new RegExp(`^Zapier/${packageVersion} GhostAdminSDK/\\d+\\.\\d+\\.\\d+$`));
             });
         });
 
@@ -73,10 +80,10 @@ describe('Utils', function () {
             const api = initAdminApi(z, authData);
 
             return api.site.read().then(() => {
-                true.should.eql(false);
+                expect.unreachable('expected the call to be rejected');
             }, (err) => {
-                err.name.should.eql('HaltedError');
-                err.message.should.eql('Resource not found error, cannot read member. (NotFoundError)');
+                expect(err.name).toEqual('HaltedError');
+                expect(err.message).toEqual('Resource not found error, cannot read member. (NotFoundError)');
             });
         });
 
@@ -96,11 +103,11 @@ describe('Utils', function () {
             const api = initAdminApi(z, authData);
 
             return api.site.read().then(() => {
-                true.should.eql(false);
+                expect.unreachable('expected the call to be rejected');
             }, (err) => {
-                err.name.should.eql('HaltedError');
-                err.status.should.eql(404);
-                isNotFoundHaltedError(err).should.be.true();
+                expect(err.name).toEqual('HaltedError');
+                expect(err.status).toEqual(404);
+                expect(isNotFoundHaltedError(err)).toBe(true);
             });
         });
 
@@ -120,10 +127,10 @@ describe('Utils', function () {
             const api = initAdminApi(z, authData);
 
             return api.site.read().then(() => {
-                true.should.eql(false);
+                expect.unreachable('expected the call to be rejected');
             }, (err) => {
-                err.name.should.eql('HaltedError');
-                err.message.should.eql('Validation failed for email (ValidationError: UNIQUE_EMAIL)');
+                expect(err.name).toEqual('HaltedError');
+                expect(err.message).toEqual('Validation failed for email (ValidationError: UNIQUE_EMAIL)');
             });
         });
     });
@@ -136,11 +143,11 @@ describe('Utils', function () {
             });
 
             return versionCheck('>=3.0.0', 'member search', z, {authData}).then(() => {
-                true.should.eql(false);
+                expect.unreachable('expected the call to be rejected');
             }, (err) => {
-                err.name.should.eql('HaltedError');
-                should.equal(err.status, undefined);
-                isNotFoundHaltedError(err).should.be.false();
+                expect(err.name).toEqual('HaltedError');
+                expect(err.status).toBe(undefined);
+                expect(isNotFoundHaltedError(err)).toBe(false);
             });
         });
     });

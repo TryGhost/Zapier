@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 // indexes of the dynamic field functions within operation.inputFields
@@ -65,11 +65,11 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.perform, bundle)
                 .then((post) => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
 
-                    post.id.should.eql('5c34ce2370401002b874c585');
-                    post.title.should.eql('Test Post');
-                    post.slug.should.eql('test-post');
+                    expect(post.id).toEqual('5c34ce2370401002b874c585');
+                    expect(post.title).toEqual('Test Post');
+                    expect(post.slug).toEqual('test-post');
                 });
         });
 
@@ -103,10 +103,10 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.perform, bundle)
                 .then((post) => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
 
-                    post.id.should.eql('5c34ce2370401002b874c585');
-                    post.status.should.eql('published');
+                    expect(post.id).toEqual('5c34ce2370401002b874c585');
+                    expect(post.status).toEqual('published');
                 });
         });
 
@@ -119,9 +119,9 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.inputFields[PUBLISHED_AT_FIELD], bundle)
                 .then(([field]) => {
-                    field.key.should.eql('published_at');
-                    field.required.should.eql(true);
-                    field.type.should.eql('datetime');
+                    expect(field.key).toEqual('published_at');
+                    expect(field.required).toEqual(true);
+                    expect(field.type).toEqual('datetime');
                 });
         });
 
@@ -134,8 +134,8 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.inputFields[PUBLISHED_AT_FIELD], bundle)
                 .then(([field]) => {
-                    field.key.should.eql('published_at');
-                    field.required.should.eql(false);
+                    expect(field.key).toEqual('published_at');
+                    expect(field.required).toEqual(false);
                 });
         });
 
@@ -148,8 +148,8 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.inputFields[CONTENT_FIELD], bundle)
                 .then(([field]) => {
-                    field.key.should.eql('html');
-                    field.type.should.eql('text');
+                    expect(field.key).toEqual('html');
+                    expect(field.type).toEqual('text');
                 });
         });
 
@@ -162,8 +162,8 @@ describe('Creates', function () {
 
             return appTester(App.creates.create_post.operation.inputFields[CONTENT_FIELD], bundle)
                 .then(([field]) => {
-                    field.key.should.eql('mobiledoc');
-                    field.type.should.eql('text');
+                    expect(field.key).toEqual('mobiledoc');
+                    expect(field.type).toEqual('text');
                 });
         });
     });

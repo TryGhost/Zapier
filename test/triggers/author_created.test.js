@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 const sampleAuthor = {
@@ -63,9 +63,9 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.author_created.operation.perform, bundle)
                 .then(([author]) => {
-                    author.id.should.eql('5951f5fca366002ebd5dbef7');
-                    author.name.should.eql('Ghost');
-                    author.slug.should.eql('ghost');
+                    expect(author.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(author.name).toEqual('Ghost');
+                    expect(author.slug).toEqual('ghost');
                 });
         });
 
@@ -98,12 +98,12 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.author_created.operation.performList, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [firstAuthor] = results;
-                    firstAuthor.id.should.eql('5951f5fca366002ebd5dbef7');
-                    firstAuthor.name.should.eql('Ghost');
+                    expect(firstAuthor.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(firstAuthor.name).toEqual('Ghost');
                 });
         });
 
@@ -140,8 +140,8 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.author_created.operation.performList, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(2);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(2);
                 });
         });
 
@@ -166,7 +166,7 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.author_created.operation.performSubscribe, bundle)
                 .then(() => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
                 });
         });
 
@@ -184,7 +184,7 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.author_created.operation.performUnsubscribe, bundle)
                 .then(() => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
                 });
         });
     });

@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Creates', function () {
@@ -60,7 +60,7 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
 
@@ -94,12 +94,12 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.subscribed.should.equal(false);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.subscribed).toBe(false);
                     });
             });
 
@@ -131,12 +131,12 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.subscribed.should.equal(false);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.subscribed).toBe(false);
                     });
             });
 
@@ -169,10 +169,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.subscribed.should.equal(true);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.subscribed).toBe(true);
                     });
             });
 
@@ -202,10 +202,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/Validation \(isEmail\) failed for email/);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/Validation \(isEmail\) failed for email/);
                     });
             });
 
@@ -233,10 +233,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.eql(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('RequestError');
-                        err.message.should.match(/Authorization failed/);
+                        expect(err.name).toEqual('RequestError');
+                        expect(err.message).toMatch(/Authorization failed/);
                     });
             });
         });
@@ -249,9 +249,6 @@ describe('Creates', function () {
             });
 
             it('creates a member with label', function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.6'}
-                });
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
                         name: 'Test Member',
@@ -289,12 +286,12 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.labels.should.have.lengthOf(1);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.labels).toHaveLength(1);
                     });
             });
         });
@@ -307,9 +304,6 @@ describe('Creates', function () {
             });
 
             it('creates a member with comped flag', function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.36'}
-                });
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
                         name: 'Test Member',
@@ -338,12 +332,12 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.comped.should.equal(true);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.comped).toBe(true);
                     });
             });
         });
@@ -393,13 +387,13 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.subscribed.should.equal(true);
-                        member.newsletters.length.should.equal(2);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.subscribed).toBe(true);
+                        expect(member.newsletters.length).toBe(2);
                     });
             });
 
@@ -432,10 +426,48 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.newsletters.length.should.equal(0);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.newsletters.length).toBe(0);
+                    });
+            });
+
+            it('creates a member with default newsletters when the default flag is set', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'multiple',
+                        newsletters_default: true,
+                        newsletters: ['one', 'two']
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com'
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: [{
+                            id: 'default'
+                        }]
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        expect(apiMock.isDone()).toBe(true);
+
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
                     });
             });
 
@@ -479,13 +511,13 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then((member) => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
 
-                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
-                        member.name.should.equal('Test Member');
-                        member.email.should.equal('test@example.com');
-                        member.subscribed.should.equal(true);
-                        member.newsletters.length.should.equal(2);
+                        expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                        expect(member.name).toBe('Test Member');
+                        expect(member.email).toBe('test@example.com');
+                        expect(member.subscribed).toBe(true);
+                        expect(member.newsletters.length).toBe(2);
                     });
             });
         });
@@ -504,8 +536,8 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
                     .then(([field]) => {
-                        field.key.should.eql('subscribed');
-                        field.type.should.eql('boolean');
+                        expect(field.key).toEqual('subscribed');
+                        expect(field.type).toEqual('boolean');
                     });
             });
 
@@ -518,8 +550,8 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
                     .then(([field]) => {
-                        field.key.should.eql('newsletters_default');
-                        field.required.should.eql(true);
+                        expect(field.key).toEqual('newsletters_default');
+                        expect(field.required).toEqual(true);
                     });
             });
 
@@ -530,7 +562,7 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
                     .then((fields) => {
-                        fields.length.should.eql(0);
+                        expect(fields.length).toEqual(0);
                     });
             });
 
@@ -544,8 +576,8 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
                     .then(([field]) => {
-                        field.key.should.eql('newsletters');
-                        field.list.should.eql(true);
+                        expect(field.key).toEqual('newsletters');
+                        expect(field.list).toEqual(true);
                     });
             });
 
@@ -558,7 +590,7 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
                     .then((fields) => {
-                        fields.length.should.eql(0);
+                        expect(fields.length).toEqual(0);
                     });
             });
         });
@@ -580,10 +612,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/2\.34/);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/2\.34/);
                     });
             });
         });
@@ -606,10 +638,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/3\.0/);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/3\.0/);
                     });
             });
 
@@ -624,10 +656,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/3\.0/);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/3\.0/);
                     });
             });
         });
@@ -651,10 +683,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.create_member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/5\.0/);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/5\.0/);
                     });
             });
         });
