@@ -24,7 +24,7 @@
     "zapier-platform-core": "19.0.0"
   },
   "devDependencies": {
-    "c8": "7.14.0",
+    "c8": "11.0.0",
     "eslint": "8.57.1",
     "eslint-plugin-ghost": "2.14.0",
     "mocha": "10.8.2",
