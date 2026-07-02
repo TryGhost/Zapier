@@ -57,6 +57,29 @@ describe('Utils', function () {
             });
         });
 
+        it('falls back to the error message when a halted error has no context', function () {
+            const z = buildZ({
+                status: 404,
+                json: {
+                    errors: [{
+                        message: 'Resource not found error, cannot read member.',
+                        context: null,
+                        type: 'NotFoundError',
+                        code: null
+                    }]
+                }
+            });
+
+            const api = initAdminApi(z, authData);
+
+            return api.site.read().then(() => {
+                true.should.eql(false);
+            }, (err) => {
+                err.name.should.eql('HaltedError');
+                err.message.should.eql('Resource not found error, cannot read member. (NotFoundError)');
+            });
+        });
+
         it('includes the error code in halted validation errors', function () {
             const z = buildZ({
                 status: 422,

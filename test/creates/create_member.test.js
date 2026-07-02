@@ -403,6 +403,42 @@ describe('Creates', function () {
                     });
             });
 
+            it('creates a member unsubscribed from all newsletters when none are selected', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletter_count: 'multiple',
+                        newsletters_default: false
+                    }
+                });
+
+                apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+                    members: [{
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        newsletters: []
+                    }]
+                }).reply(201, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: []
+                    }]
+                });
+
+                return appTester(App.creates.create_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.newsletters.length.should.equal(0);
+                    });
+            });
+
             it('creates a member subscribed ignoring unused input data', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
