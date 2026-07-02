@@ -8,7 +8,7 @@ const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
 describe('Searches', function () {
-    describe('Subscriber', function () {
+    describe('Author', function () {
         let apiMock, authData;
 
         beforeEach(function () {
@@ -148,6 +148,39 @@ describe('Searches', function () {
                     apiMock.isDone().should.be.true;
                     results.length.should.eql(0);
                 });
+        });
+
+        describe('dynamic input fields', function () {
+            // index of the dynamic field function within operation.inputFields
+            const SEARCH_TERM_FIELD = 1;
+
+            it('shows the email field when searching by email', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        search_by: 'email'
+                    }
+                });
+
+                return appTester(App.searches.author.operation.inputFields[SEARCH_TERM_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('email');
+                        field.required.should.eql(true);
+                    });
+            });
+
+            it('shows the slug field when searching by slug', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        search_by: 'slug'
+                    }
+                });
+
+                return appTester(App.searches.author.operation.inputFields[SEARCH_TERM_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('slug');
+                        field.required.should.eql(true);
+                    });
+            });
         });
 
         it('handles a validation error', function () {
