@@ -168,8 +168,8 @@ describe('Triggers', function () {
             return appTester(App.triggers.page_published.operation.perform, bundle)
                 .then(([page]) => {
                     expect(page.id).toEqual('5c936c15eac9f256dec0bb96');
-                    expect(page.authors.length).toEqual(1, 'no of authors');
-                    expect(page.tags.length).toEqual(1, 'no of tags');
+                    expect(page.authors.length, 'no of authors').toEqual(1);
+                    expect(page.tags.length, 'no of tags').toEqual(1);
                 });
         });
 
@@ -209,8 +209,8 @@ describe('Triggers', function () {
 
                     let [firstPage] = results;
                     expect(firstPage.id).toEqual('5c936c15eac9f256dec0bb96');
-                    expect(firstPage.authors.length).toEqual(1, 'no of authors');
-                    expect(firstPage.tags.length).toEqual(1, 'no of tags');
+                    expect(firstPage.authors.length, 'no of authors').toEqual(1);
+                    expect(firstPage.tags.length, 'no of tags').toEqual(1);
                 });
         });
 
