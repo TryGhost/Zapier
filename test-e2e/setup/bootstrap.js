@@ -11,7 +11,13 @@
  * are written to `test-e2e/.env.local` (gitignored) so the key never
  * appears in logs.
  *
- * Usage: node test-e2e/setup/bootstrap.js
+ * Running the e2e suite locally:
+ * 1. boot a fresh Ghost on http://localhost:2368 - either point
+ *    GHOST_CORE_PATH at a TryGhost/Ghost checkout and run
+ *    `test-e2e/setup/start-ghost.sh`, or start any Ghost yourself and set
+ *    GHOST_URL if it lives elsewhere
+ * 2. `node test-e2e/setup/bootstrap.js`
+ * 3. export the values from test-e2e/.env.local and run `yarn test:e2e`
  */
 const http = require('http');
 const fs = require('fs');
@@ -62,6 +68,11 @@ const request = (method, path, {body, headers = {}} = {}) => {
 
         req.on('error', reject);
 
+        // fail fast on a hung Ghost instead of eating the job timeout
+        req.setTimeout(15000, () => {
+            req.destroy(new Error(`${method} ${path} timed out after 15s`));
+        });
+
         if (payload) {
             req.write(payload);
         }
@@ -110,7 +121,7 @@ const createIntegration = async (sessionCookie) => {
         throw new Error('Integration creation did not return an admin API key');
     }
 
-    // Ghost 5 returns admin key secrets already in `id:secret` form, older
+    // Ghost 5+ returns admin key secrets already in `id:secret` form, older
     // versions return the secret on its own
     return adminKey.secret.includes(':') ? adminKey.secret : `${adminKey.id}:${adminKey.secret}`;
 };
