@@ -79,8 +79,8 @@ jobs:
         if: failure()
         run: cat "${{ runner.temp }}/ghost-boot.log"
 
-  all-tests-pass:
-    name: All tests pass
+  required-checks-pass:
+    name: Required checks pass
     if: always()
     needs: [build, e2e]
     runs-on: ubuntu-latest
