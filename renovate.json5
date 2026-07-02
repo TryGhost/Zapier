@@ -1,0 +1,19 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    extends: [
+        'local>TryGhost/renovate-config',
+    ],
+    packageRules: [
+        {
+            description: 'Keep zapier-platform-core below v15: the app is deployed on the Zapier Node 14 Lambda runtime with core 12, and core v15+ requires Node 16+. Platform-core majors also change the deployed Zapier runtime and need a coordinated `zapier push`/promote, so they must never ride an automated Renovate merge. Revisit with the planned manual core 12 -> 19 upgrade.',
+            matchPackageNames: ['zapier-platform-core'],
+            allowedVersions: '<15',
+        },
+        {
+            description: "Keep the e2e job's setup-node on Node 22: it boots Ghost from source and follows Ghost's engines (^22.18.0). The shared preset automerges uses-with bumps, so without this rule a major bump to Node 24 would silently drift e2e off Ghost's supported runtime. Patch/minor bumps within 22 stay in range and may automerge.",
+            matchManagers: ['github-actions'],
+            matchPackageNames: ['node'],
+            allowedVersions: '<23',
+        },
+    ],
+}
