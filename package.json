@@ -21,7 +21,7 @@
     "@tryghost/admin-api": "1.14.10",
     "lodash": "4.18.1",
     "semver": "7.5.2",
-    "zapier-platform-core": "12.0.3"
+    "zapier-platform-core": "12.2.1"
   },
   "devDependencies": {
     "c8": "7.14.0",
