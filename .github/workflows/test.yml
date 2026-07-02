@@ -17,6 +17,8 @@ jobs:
     name: Node ${{ matrix.node }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node }}
@@ -27,41 +29,55 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     name: E2E (real Ghost)
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: TryGhost/Ghost
+          ref: main
+          path: Ghost
+          # the default theme lives in a submodule and Ghost needs it to boot
+          submodules: true
+          persist-credentials: false
+      # Node version follows Ghost's engines (^22.18.0); the Zapier app
+      # itself is tested on its full matrix in the build job
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '20'
+          node-version: '22.18.0'
           cache: yarn
+      - name: Install Corepack
+        run: npm install --global corepack@0.34.6
+      - name: Enable corepack
+        run: corepack enable
+      - name: Get pnpm store directory
+        id: pnpm-store
+        working-directory: Ghost
+        run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('Ghost/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      - name: Install Ghost dependencies
+        working-directory: Ghost
+        run: pnpm install --frozen-lockfile --filter ghost...
       - run: yarn
-      # if a future ghost:6 bump hard-blocks sqlite, switch to a mysql:8 service
-      - name: Start Ghost
-        run: >
-          docker run -d --name ghost -p 2368:2368
-          -e url=http://localhost:2368
-          -e database__client=sqlite3
-          -e database__connection__filename=/var/lib/ghost/content/data/ghost-test.db
-          -e database__useNullAsDefault=true
-          ghost:5
-      - name: Wait for Ghost
-        run: |
-          for i in $(seq 1 60); do
-            if curl -sf -o /dev/null http://localhost:2368/ghost/api/admin/site/; then
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "Ghost did not become ready within 120s"
-          docker logs ghost
-          exit 1
+      - name: Start Ghost from source
+        run: ./test-e2e/setup/start-ghost.sh
+        env:
+          GHOST_CORE_PATH: ${{ github.workspace }}/Ghost
+          GHOST_LOG_FILE: ${{ runner.temp }}/ghost-boot.log
       - name: Bootstrap Ghost owner and integration
         run: node test-e2e/setup/bootstrap.js
       - run: yarn test:e2e
       - name: Dump Ghost logs
         if: failure()
-        run: docker logs ghost
+        run: cat "${{ runner.temp }}/ghost-boot.log"
 
   all-tests-pass:
     name: All tests pass
