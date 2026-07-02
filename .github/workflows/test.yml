@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - 'renovate/*'
+permissions:
+  contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,3 +26,43 @@ jobs:
       - run: yarn
       - run: yarn lint
       - run: yarn test
+
+  e2e:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'renovate/'))
+    timeout-minutes: 15
+    name: E2E (real Ghost)
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: yarn
+      - run: yarn
+      # if a future ghost:6 bump hard-blocks sqlite, switch to a mysql:8 service
+      - name: Start Ghost
+        run: >
+          docker run -d --name ghost -p 2368:2368
+          -e url=http://localhost:2368
+          -e database__client=sqlite3
+          -e database__connection__filename=/var/lib/ghost/content/data/ghost-test.db
+          -e database__useNullAsDefault=true
+          ghost:5
+      - name: Wait for Ghost
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:2368/ghost/api/admin/site/; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Ghost did not become ready within 120s"
+          docker logs ghost
+          exit 1
+      - name: Bootstrap Ghost owner and integration
+        run: node test-e2e/setup/bootstrap.js
+      - run: yarn test:e2e
+      - name: Dump Ghost logs
+        if: failure()
+        run: docker logs ghost
+
