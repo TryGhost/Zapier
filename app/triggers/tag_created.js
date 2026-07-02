@@ -5,14 +5,14 @@ const webhooks = require('../lib/webhooks');
 const subscribeWebhook = _.partial(webhooks.subscribe, 'tag.added');
 const unsubscribeWebhook = webhooks.unsubscribe;
 
-// triggers on user.added. Formats the API response ready for passing to
+// triggers on tag.added. Formats the API response ready for passing to
 // the zap which expects an array
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {user} = bundle.cleanedRequest;
+    const {tag} = bundle.cleanedRequest;
 
-    return [user.current];
+    return [tag.current];
 };
 
 const listTags = (z, {authData, meta}) => {
@@ -38,7 +38,7 @@ module.exports = {
     display: {
         label: 'Tag Created',
         description: 'Triggers when a new tag is added.',
-        hidden: true // only used by authors dynamic dropdown
+        hidden: true // only used by tags dynamic dropdown
     },
 
     operation: {
