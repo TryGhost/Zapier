@@ -165,7 +165,7 @@ describe('Triggers', function () {
                 }
             });
 
-            return appTester(App.triggers.post_published.operation.perform, bundle)
+            return appTester(App.triggers.post_scheduled.operation.perform, bundle)
                 .then(([post]) => {
                     post.id.should.eql('5c936c15eac9f256dec0bb96');
                     post.authors.length.should.eql(1, 'no of authors');

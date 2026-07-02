@@ -106,6 +106,57 @@ describe('Triggers', function () {
                     });
             });
 
+            it('loads all newsletters when filling dynamic dropdown', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {},
+                    meta: {
+                        isFillingDynamicDropdown: true
+                    }
+                });
+
+                apiMock.get('/ghost/api/v2/admin/newsletters/')
+                    .query({
+                        order: 'name DESC',
+                        limit: 'all'
+                    })
+                    .reply(200, {
+                        newsletters: [{
+                            id: '627be9e49278a3c9b09f8883',
+                            name: 'Default newsletter',
+                            description: 'Thoughts, stories and ideas.',
+                            slug: 'default-newsletter',
+                            created_at: '2019-03-22T08:39:02.890Z',
+                            updated_at: '2019-03-22T08:39:02.890Z'
+                        }, {
+                            id: '627be9e49278a3c9b09f8884',
+                            name: 'Weekly newsletter',
+                            description: 'A weekly roundup.',
+                            slug: 'weekly-newsletter',
+                            created_at: '2019-03-22T08:39:02.890Z',
+                            updated_at: '2019-03-22T08:39:02.890Z'
+                        }],
+                        meta: {
+                            pagination: {
+                                page: 1,
+                                limit: 'all',
+                                pages: 1,
+                                total: 2,
+                                next: null,
+                                prev: null
+                            }
+                        }
+                    });
+
+                return appTester(App.triggers.newsletter_created.operation.performList, bundle)
+                    .then((results) => {
+                        apiMock.isDone().should.be.true;
+                        results.length.should.eql(2);
+
+                        let [firstNewsletter] = results;
+                        firstNewsletter.name.should.eql('Default newsletter');
+                    });
+            });
+
             it('subscribes to webhook', function () {
                 let bundle = Object.assign({}, {authData}, {
                     targetUrl: 'https://webooks.zapier.com/ghost/newsletter'
