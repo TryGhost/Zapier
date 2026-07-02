@@ -5,21 +5,21 @@ The app is built using "Zapier Platform CLI". An introductory guide into buildin
 
 Quick command reference to get started with development:
 ```
-# install the CLI globally
-yarn global add zapier-platform-cli
+# install the CLI globally (the binary is called `zapier-platform` since v19)
+npm install --global zapier-platform-cli
 
 # setup auth to Zapier's platform with a deploy key
-zapier login
+zapier-platform login
 
 # setup dependencies
 yarn
 
-zapier test
+zapier-platform test
 ```
 
 ## Node version support
 
-All Zapier CLI apps are run using Node.js >=14.x. More details are available in the [requirements doc](https://zapier.github.io/zapier-platform-cli/index.html#requirements).
+This app is built on `zapier-platform-core` v19, which runs on Zapier's Node.js 22 Lambda runtime — use Node 22 locally. More details are available in the [requirements doc](https://docs.zapier.com/platform/reference/cli-docs#requirements).
 
 Notes:
 - there is a `.nvmrc` file in this project if you have `nvm` auto-switching enabled
@@ -37,8 +37,8 @@ When a new major version of Ghost is released the [supported version string](htt
 
 ## Local Testing
 
-- `zapier test` will run the tests
-- `zapier test --debug` will test and output request and response logs
+- `zapier-platform test` will run the tests
+- `zapier-platform test --debug` will test and output request and response logs
 
 ## Deploying
 
@@ -49,10 +49,10 @@ There are couple usecases where you would need to do a deploy:
 
 #### To deploy a "private" version:
 1. bump the version in `package.json` (do not commit)
-2. `zapier push`
+2. `zapier-platform push`
 
 Tips:
-- to test if the private version works in "close-to-live" environment you can migrate a single user account's Zaps to the new version by running: `zapier migrate 2.4.0 2.4.1 --user=user@example.com`. Check if the migrations completed through `zapier history`.
+- to test if the private version works in "close-to-live" environment you can migrate a single user account's Zaps to the new version by running: `zapier-platform migrate 2.4.0 2.4.1 --user=user@example.com`. Check if the migrations completed through `zapier-platform history`.
 
 #### To deploy a "public" version:
 1. bump the version in `package.json`
@@ -60,14 +60,14 @@ Tips:
 3. commit above changes with a message matching a new version, e.g. `git commit -m "2.4.0"`
 4. add a tag with a new version, e.g. `git tag 2.4.0`
 5. push out new commit and a tag upstream e.g. `git push upstream main --tags`
-6. `zapier push`
-7. `zapier promote {newVersion}` - only new integrations will use this version
+6. `zapier-platform push`
+7. `zapier-platform promote {newVersion}` - only new integrations will use this version
 
 #### To migrate existing users to a new version
-1. `zapier migrate {oldVersion} {newVersion} {percentage}`, eg: `zapier migrate 2.3.1 2.4.0 10`, move 10% of users between versions (recommended to do gradual rollout and monitor for errors before migrating 100% to a new version)
-2. `zapier history` to check migration status, continue once 100% complete
+1. `zapier-platform migrate {oldVersion} {newVersion} {percentage}`, eg: `zapier-platform migrate 2.3.1 2.4.0 10`, move 10% of users between versions (recommended to do gradual rollout and monitor for errors before migrating 100% to a new version). Note that since 2026-02-26 Zapier blocks migrating users across integration major versions, so new pushed versions must stay within the current major.
+2. `zapier-platform history` to check migration status, continue once 100% complete
 
-Full [Zapier reference](https://platform.zapier.com/cli_docs/docs#deploying-an-app-version) for deploying a new version.
+Full [Zapier reference](https://docs.zapier.com/platform/reference/cli-docs#deploying-an-app-version) for deploying a new version.
 
 ## Testing Zaps locally
 Before releasing a new version a common thing to do is checking if the changes work in production-like environment. Follow these steps to debug Zapier requests on a local Ghost instance:

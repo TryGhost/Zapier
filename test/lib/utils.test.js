@@ -1,6 +1,6 @@
-require('should');
+const should = require('should');
 
-const {initAdminApi} = require('../../app/lib/utils');
+const {initAdminApi, isNotFoundHaltedError, versionCheck} = require('../../app/lib/utils');
 const packageVersion = require('../../package.json').version;
 
 class FakeHaltedError extends Error {
@@ -80,6 +80,30 @@ describe('Utils', function () {
             });
         });
 
+        it('marks not-found halted errors with the response status', function () {
+            const z = buildZ({
+                status: 404,
+                json: {
+                    errors: [{
+                        message: 'Resource not found error, cannot read member.',
+                        context: 'Member not found.',
+                        type: 'NotFoundError',
+                        code: null
+                    }]
+                }
+            });
+
+            const api = initAdminApi(z, authData);
+
+            return api.site.read().then(() => {
+                true.should.eql(false);
+            }, (err) => {
+                err.name.should.eql('HaltedError');
+                err.status.should.eql(404);
+                isNotFoundHaltedError(err).should.be.true();
+            });
+        });
+
         it('includes the error code in halted validation errors', function () {
             const z = buildZ({
                 status: 422,
@@ -100,6 +124,23 @@ describe('Utils', function () {
             }, (err) => {
                 err.name.should.eql('HaltedError');
                 err.message.should.eql('Validation failed for email (ValidationError: UNIQUE_EMAIL)');
+            });
+        });
+    });
+
+    describe('versionCheck', function () {
+        it('halts without a status when the Ghost version is unsupported', function () {
+            const z = buildZ({
+                status: 200,
+                json: {site: {version: '2.20'}}
+            });
+
+            return versionCheck('>=3.0.0', 'member search', z, {authData}).then(() => {
+                true.should.eql(false);
+            }, (err) => {
+                err.name.should.eql('HaltedError');
+                should.equal(err.status, undefined);
+                isNotFoundHaltedError(err).should.be.false();
             });
         });
     });

@@ -27,8 +27,7 @@ module.exports = {
 
     display: {
         label: 'Page Published',
-        description: 'Triggers when a page is published.',
-        important: true // show it at the top of the actions list
+        description: 'Triggers when a page is published.'
     },
 
     operation: {
