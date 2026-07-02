@@ -6,3 +6,4 @@ node_modules
 .env
 .eslintcache
 coverage
+test-e2e/.env.local

@@ -20,8 +20,9 @@ const getAuthData = () => {
     if (!adminApiUrl || !adminApiKey) {
         throw new Error(
             'GHOST_ADMIN_API_URL and GHOST_ADMIN_API_KEY must be set. ' +
-            'Start a Ghost instance on http://localhost:2368 and run ' +
-            '`node test-e2e/setup/bootstrap.js` first.'
+            'Start a Ghost instance on http://localhost:2368, run ' +
+            '`node test-e2e/setup/bootstrap.js` and export the values it ' +
+            'writes to test-e2e/.env.local.'
         );
     }
 
