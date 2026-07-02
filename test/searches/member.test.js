@@ -59,6 +59,49 @@ describe('Searches', function () {
                 });
         });
 
+        it('fetches a member from a paginated response', function () {
+            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                site: {version: '3.18.0'}
+            });
+
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    email: 'ghost-member@example.com'
+                }
+            });
+
+            // when the response includes pagination meta the admin-api SDK
+            // returns an array which must not get double-wrapped
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'ghost-member%40example.com'`)
+                .reply(200, {
+                    members: [{
+                        id: '5951f5fca366002ebd5dbef7',
+                        name: 'Ghost',
+                        email: 'ghost-member@example.com'
+                    }],
+                    meta: {
+                        pagination: {
+                            page: 1,
+                            limit: 15,
+                            pages: 1,
+                            total: 1,
+                            next: null,
+                            prev: null
+                        }
+                    }
+                });
+
+            return appTester(App.searches.member.operation.perform, bundle)
+                .then((results) => {
+                    apiMock.isDone().should.be.true;
+                    results.length.should.eql(1);
+
+                    let [member] = results;
+                    member.id.should.eql('5951f5fca366002ebd5dbef7');
+                    member.email.should.eql('ghost-member@example.com');
+                });
+        });
+
         it('handles a 404', function () {
             apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
                 site: {version: '3.18.0'}
@@ -88,6 +131,40 @@ describe('Searches', function () {
                 .then((results) => {
                     apiMock.isDone().should.be.true;
                     results.length.should.eql(0);
+                });
+        });
+
+        it('rethrows errors that are not a 404', function () {
+            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                site: {version: '3.18.0'}
+            });
+
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {
+                    email: 'ghost-member@example.com'
+                }
+            });
+
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'ghost-member@example.com'`)
+                .reply(500, {
+                    errors: [{
+                        message: 'Authorization failed',
+                        context: 'Unable to determine the authenticated user or integration. Check that cookies are being passed through if using session authentication.',
+                        type: 'NoPermissionError',
+                        details: null,
+                        property: null,
+                        help: null,
+                        code: null,
+                        id: '34950f70-5148-11e9-9864-f79cf99013d0'
+                    }]
+                });
+
+            return appTester(App.searches.member.operation.perform, bundle)
+                .then(() => {
+                    true.should.eql(false);
+                }, (err) => {
+                    err.name.should.eql('RequestError');
+                    err.message.should.match(/Authorization failed/);
                 });
         });
 
