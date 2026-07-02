@@ -70,6 +70,41 @@ describe('Creates', function () {
                     });
             });
 
+            it('updates a member subscribed to a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'single',
+                        subscribed: true
+                    }
+                });
+
+                apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{
+                        name: 'Test Member',
+                        subscribed: true
+                    }]
+                }).reply(200, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        subscribed: true,
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.update_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.subscribed.should.equal(true);
+                    });
+            });
+
             it('has a friendly, halting validation error', function () {
                 let bundle = Object.assign({}, {authData}, {
                     inputData: {
@@ -232,6 +267,225 @@ describe('Creates', function () {
                         member.name.should.equal('Test Member');
                         member.email.should.equal('test@example.com');
                         member.comped.should.equal(true);
+                    });
+            });
+        });
+
+        describe('with supported version >= 5.0.0', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '5.0'}
+                });
+            });
+
+            it('updates a member subscribed to multiple newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false,
+                        newsletters: ['one', 'two']
+                    }
+                });
+
+                apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{
+                        name: 'Test Member',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                }).reply(200, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: [{
+                            id: 'one'
+                        }, {
+                            id: 'two'
+                        }]
+                    }]
+                });
+
+                return appTester(App.creates.update_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.newsletters.length.should.equal(2);
+                    });
+            });
+
+            it('unsubscribes a member from all newsletters when none are selected', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false
+                    }
+                });
+
+                apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{
+                        newsletters: []
+                    }]
+                }).reply(200, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z',
+                        newsletters: []
+                    }]
+                });
+
+                return appTester(App.creates.update_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.newsletters.length.should.equal(0);
+                    });
+            });
+
+            it('keeps existing newsletters when keepsame flag is set', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: true,
+                        newsletters: ['one', 'two']
+                    }
+                });
+
+                apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{
+                        name: 'Test Member'
+                    }]
+                }).reply(200, {
+                    members: [{
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        created_at: '2019-10-03T11:54:10.123Z',
+                        updated_at: '2019-10-03T11:54:10.123Z'
+                    }]
+                });
+
+                return appTester(App.creates.update_member.operation.perform, bundle)
+                    .then((member) => {
+                        apiMock.isDone().should.be.true;
+
+                        member.id.should.equal('5c9c9c8d51b5bf974afad2a4');
+                        member.name.should.equal('Test Member');
+                    });
+            });
+        });
+
+        describe('with unsupported version < 5.0.0', function () {
+            beforeEach(function () {
+                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
+                    site: {version: '4.46'}
+                });
+            });
+
+            it('has a friendly, halting "unsupported version" error for newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false,
+                        newsletters: []
+                    }
+                });
+
+                return appTester(App.creates.update_member.operation.perform, bundle)
+                    .then(() => {
+                        true.should.equal(false);
+                    }, (err) => {
+                        err.name.should.eql('HaltedError');
+                        err.message.should.match(/5\.0/);
+                    });
+            });
+        });
+
+        describe('dynamic input fields', function () {
+            // indexes of the dynamic field functions within operation.inputFields
+            const SUBSCRIPTION_FIELD = 5;
+            const NEWSLETTERS_FIELD = 6;
+
+            it('shows the subscribed field for a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'single'
+                    }
+                });
+
+                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('subscribed');
+                        field.type.should.eql('boolean');
+                    });
+            });
+
+            it('shows the keepsame field for multiple newsletters', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'multiple'
+                    }
+                });
+
+                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('newsletters_keepsame');
+                        field.required.should.eql(true);
+                    });
+            });
+
+            it('shows no subscription field before a newsletter count is chosen', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {}
+                });
+
+                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
+                    .then((fields) => {
+                        fields.length.should.eql(0);
+                    });
+            });
+
+            it('shows the newsletters field when keepsame is disabled', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false
+                    }
+                });
+
+                return appTester(App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
+                    .then(([field]) => {
+                        field.key.should.eql('newsletters');
+                        field.list.should.eql(true);
+                    });
+            });
+
+            it('hides the newsletters field for a single newsletter', function () {
+                let bundle = Object.assign({}, {authData}, {
+                    inputData: {
+                        newsletter_count: 'single'
+                    }
+                });
+
+                return appTester(App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
+                    .then((fields) => {
+                        fields.length.should.eql(0);
                     });
             });
         });
