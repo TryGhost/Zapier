@@ -4,13 +4,11 @@ on:
   push:
     branches:
       - main
-      - 'renovate/*'
 permissions:
   contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'renovate/'))
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -29,7 +27,6 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !startsWith(github.head_ref, 'renovate/'))
     timeout-minutes: 15
     name: E2E (real Ghost)
     steps:
@@ -73,5 +70,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify all required jobs succeeded
-        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
         run: exit 1
