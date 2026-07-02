@@ -10,7 +10,8 @@
   "scripts": {
     "lint": "eslint . --ext .js --cache",
     "test": "c8 mocha --recursive",
-    "test:e2e": "mocha test-e2e --recursive --timeout 30000"
+    "test:e2e": "./test-e2e/run.sh",
+    "test:e2e:bare": "mocha test-e2e --recursive --timeout 30000"
   },
   "engines": {
     "node": ">=14.x",

@@ -11,14 +11,15 @@
  * are written to `test-e2e/.env.local` (gitignored) so the key never
  * appears in logs.
  *
- * Running the e2e suite locally:
- * 1. boot a fresh Ghost on http://localhost:2368 - either point
- *    GHOST_CORE_PATH at a TryGhost/Ghost checkout and run
- *    `test-e2e/setup/start-ghost.sh`, or start any Ghost yourself and set
- *    GHOST_URL if it lives elsewhere
- * 2. `node test-e2e/setup/bootstrap.js`
- * 3. `yarn test:e2e` - the suite picks the credentials up from
- *    test-e2e/.env.local automatically (already-set env vars win)
+ * Running the e2e suite locally: just `yarn test:e2e` - with docker
+ * running it provisions a throwaway ghost:6 container, runs this
+ * bootstrap and tears everything down again (see test-e2e/run.sh).
+ * Overrides:
+ * - GHOST_CORE_PATH=/path/to/Ghost boots Ghost from a source checkout
+ *   instead of docker (dependencies must be installed)
+ * - to manage Ghost yourself: start a fresh instance, run this script
+ *   directly (set GHOST_URL if it is not on http://localhost:2368), then
+ *   `yarn test:e2e` picks the credentials up from test-e2e/.env.local
  */
 const http = require('http');
 const fs = require('fs');
