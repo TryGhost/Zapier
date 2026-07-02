@@ -17,7 +17,8 @@
  *    `test-e2e/setup/start-ghost.sh`, or start any Ghost yourself and set
  *    GHOST_URL if it lives elsewhere
  * 2. `node test-e2e/setup/bootstrap.js`
- * 3. export the values from test-e2e/.env.local and run `yarn test:e2e`
+ * 3. `yarn test:e2e` - the suite picks the credentials up from
+ *    test-e2e/.env.local automatically (already-set env vars win)
  */
 const http = require('http');
 const fs = require('fs');
