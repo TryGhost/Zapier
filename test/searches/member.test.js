@@ -113,7 +113,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'do-not-exist@example.com'`)
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'do-not-exist%40example.com'`)
                 .reply(404, {
                     errors: [{
                         message: 'Resource not found error, cannot read member.',
@@ -145,7 +145,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'ghost-member@example.com'`)
+            apiMock.get(`/ghost/api/v3/admin/members/?filter=email:'ghost-member%40example.com'`)
                 .reply(500, {
                     errors: [{
                         message: 'Authorization failed',
