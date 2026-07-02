@@ -10,3 +10,4 @@ test-e2e/.env.local
 # local Ghost checkout + runtime files used by the e2e suite
 /Ghost
 ghost.pid
+ghost-e2e.db

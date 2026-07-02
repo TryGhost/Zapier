@@ -45,11 +45,11 @@ const getAuthData = () => {
     if (!adminApiUrl || !adminApiKey) {
         throw new Error(
             'GHOST_ADMIN_API_URL and GHOST_ADMIN_API_KEY must be set. ' +
-            'Start a Ghost instance on http://localhost:2368 (e.g. via ' +
-            '`test-e2e/setup/start-ghost.sh` with GHOST_CORE_PATH pointing ' +
-            'at a Ghost checkout) and run `node test-e2e/setup/bootstrap.js` ' +
-            'first - after that a plain `yarn test:e2e` picks the ' +
-            'credentials up from test-e2e/.env.local automatically.'
+            'Run the suite via `yarn test:e2e` - with docker running (or ' +
+            'GHOST_CORE_PATH pointing at a Ghost checkout) it provisions a ' +
+            'fresh Ghost and bootstraps credentials automatically. To ' +
+            'manage Ghost yourself, start one and run ' +
+            '`node test-e2e/setup/bootstrap.js` first.'
         );
     }
 
@@ -74,8 +74,8 @@ const shouldHalt = async (promise, messagePattern) => {
 
 // data seeded by 02-creates.test.js and asserted on by the search and
 // trigger specs - mocha loads the spec files in alphabetical order.
-// The suite assumes a freshly bootstrapped Ghost install (as in CI), so
-// restart the container before re-running locally.
+// The suite assumes a freshly bootstrapped Ghost install; `yarn test:e2e`
+// provisions (and tears down) one per run automatically.
 const fixtures = {
     member: {
         name: 'E2E Member',
