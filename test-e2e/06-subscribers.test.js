@@ -1,16 +1,16 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
 // Subscribers were removed in Ghost 3.0, so against a modern Ghost every
 // deprecated subscriber operation must halt with a version-gate error.
-require('should');
+import {describe, it, beforeAll} from 'vitest';
 
-const {App, appTester, getAuthData, shouldHalt, fixtures} = require('./helpers');
+import {App, appTester, getAuthData, shouldHalt, fixtures} from './helpers';
 
 const VERSION_GATE = /does not support subscribers/;
 
 describe('E2E Deprecated subscriber operations', function () {
     let authData;
 
-    before(function () {
+    beforeAll(function () {
         authData = getAuthData();
     });
 

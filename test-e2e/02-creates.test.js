@@ -1,13 +1,13 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-require('should');
+import {describe, it, expect, beforeAll} from 'vitest';
 
-const {App, appTester, getAuthData, fixtures} = require('./helpers');
-const {OWNER} = require('./setup/bootstrap');
+import {App, appTester, getAuthData, fixtures} from './helpers';
+import {OWNER} from './setup/bootstrap';
 
 describe('E2E Creates', function () {
     let authData;
 
-    before(function () {
+    beforeAll(function () {
         authData = getAuthData();
     });
 
@@ -26,9 +26,9 @@ describe('E2E Creates', function () {
                 }
             });
 
-            member.id.should.be.a.String();
-            member.email.should.equal(fixtures.member.email);
-            member.name.should.equal(fixtures.member.name);
+            expect(member.id).toBeTypeOf('string');
+            expect(member.email).toBe(fixtures.member.email);
+            expect(member.name).toBe(fixtures.member.name);
         });
     });
 
@@ -39,7 +39,7 @@ describe('E2E Creates', function () {
                 authData,
                 meta: {}
             });
-            newsletter.id.should.be.a.String();
+            expect(newsletter.id).toBeTypeOf('string');
 
             const [member] = await appTester(App.searches.member.operation.perform, {
                 authData,
@@ -57,17 +57,17 @@ describe('E2E Creates', function () {
                 }
             });
 
-            updated.id.should.equal(member.id);
-            updated.name.should.equal(`${fixtures.member.name} Updated`);
-            updated.newsletters.should.have.length(1);
-            updated.newsletters[0].id.should.equal(newsletter.id);
+            expect(updated.id).toBe(member.id);
+            expect(updated.name).toBe(`${fixtures.member.name} Updated`);
+            expect(updated.newsletters).toHaveLength(1);
+            expect(updated.newsletters[0].id).toBe(newsletter.id);
         });
     });
 
     describe('Create Post', function () {
         let ownerSlug;
 
-        before(async function () {
+        beforeAll(async function () {
             // the author input takes slugs - resolve the owner's real slug
             // rather than guessing what Ghost generated from the name
             const [owner] = await appTester(App.searches.author.operation.perform, {
@@ -90,12 +90,12 @@ describe('E2E Creates', function () {
                 }
             });
 
-            post.id.should.be.a.String();
-            post.title.should.equal(fixtures.publishedPost.title);
-            post.status.should.equal('published');
-            post.tags.should.have.length(1);
-            post.tags[0].slug.should.equal(fixtures.tagSlug);
-            post.primary_author.slug.should.equal(ownerSlug);
+            expect(post.id).toBeTypeOf('string');
+            expect(post.title).toBe(fixtures.publishedPost.title);
+            expect(post.status).toBe('published');
+            expect(post.tags).toHaveLength(1);
+            expect(post.tags[0].slug).toBe(fixtures.tagSlug);
+            expect(post.primary_author.slug).toBe(ownerSlug);
         });
 
         it('creates a scheduled post with a future publish date', async function () {
@@ -113,8 +113,8 @@ describe('E2E Creates', function () {
                 }
             });
 
-            post.status.should.equal('scheduled');
-            post.title.should.equal(fixtures.scheduledPost.title);
+            expect(post.status).toBe('scheduled');
+            expect(post.title).toBe(fixtures.scheduledPost.title);
         });
     });
 });
