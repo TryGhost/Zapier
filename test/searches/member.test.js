@@ -98,6 +98,7 @@ describe('Searches', function () {
 
                     let [member] = results;
                     expect(member.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(member.name).toEqual('Ghost');
                     expect(member.email).toEqual('ghost-member@example.com');
                 });
         });

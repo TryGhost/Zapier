@@ -7,11 +7,13 @@ module.exports = defineConfig({
             provider: 'v8',
             include: ['app/**/*.js', 'index.js'],
             reporter: ['text', 'lcov'],
+            // the suite genuinely covers everything; keep the gates at the
+            // actual level so coverage can only stay put or improve
             thresholds: {
-                lines: 80,
-                statements: 80,
-                branches: 80,
-                functions: 80
+                lines: 100,
+                statements: 100,
+                branches: 100,
+                functions: 100
             }
         }
     }
