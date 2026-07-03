@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.9",
-    "eslint": "8.57.1",
+    "eslint": "10.6.0",
     "eslint-plugin-ghost": "2.14.0",
     "nock": "14.0.16",
     "vitest": "4.1.9"
