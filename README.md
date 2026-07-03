@@ -1,86 +1,90 @@
 # Ghost-Zapier
 
-## Getting started
-The app is built using "Zapier Platform CLI". An introductory guide into building and maintaining such apps is available [here](https://platform.zapier.com/cli_tutorials/getting-started).
+The official [Ghost integration on Zapier](https://zapier.com/apps/ghost) — a
+Zapier Platform CLI app that provides Ghost triggers, creates, and searches
+backed by the Ghost Admin API.
 
-Quick command reference to get started with development:
-```
-# install the CLI globally (the binary is called `zapier-platform` since v19)
-npm install --global zapier-platform-cli
+## What it does
 
-# setup auth to Zapier's platform with a deploy key
-zapier-platform login
+Zapier users connect their Ghost site with an Admin API key and URL (from
+Ghost Admin under `Integrations » Zapier`) and build Zaps from:
 
-# setup dependencies
-pnpm install
+- **Triggers** — instant REST hooks fed by Ghost webhooks: post/page
+  published, post scheduled, member created/updated/deleted, tag, author, and
+  newsletter created
+- **Creates** — create a post, create or update a member
+- **Searches** — find a member or an author
 
-zapier-platform test
-```
-
-## Node version support
-
-This app is built on `zapier-platform-core` v19, which runs on Zapier's Node.js 22 Lambda runtime — use Node 22 locally. More details are available in the [requirements doc](https://docs.zapier.com/platform/reference/cli-docs#requirements).
-
-Notes:
-- there is a `.nvmrc` file in this project if you have `nvm` auto-switching enabled
+All requests target the unversioned Admin API (`/ghost/api/admin/`) and
+declare their compatibility version via the `Accept-Version` header.
 
 ## Ghost version support
 
-New Zap connections require **Ghost 6.0 or later**. Zapier checks the version of Ghost when authenticating by fetching the `/ghost/api/admin/site/` endpoint, and all requests declare their compatibility version via the `Accept-Version` header.
+New Zap connections require **Ghost 6.0 or later**. Authentication reads
+`/ghost/api/admin/site/` and checks the reported version against the
+supported range — single-sourced as `SUPPORTED_GHOST_VERSION` in
+[`app/lib/utils.js`](app/lib/utils.js), alongside the `Accept-Version` value.
+Review it when a new major version of Ghost is released.
 
-Sites on older Ghost versions keep working: existing Zaps stay pinned to the previously published integration versions they were created with (Zapier does not migrate Zaps across integration major versions), they just cannot connect through the current version.
+Sites on older Ghost versions keep working: existing Zaps stay pinned to the
+previously published integration versions they were created with (Zapier does
+not migrate Zaps across integration major versions) — they just cannot make
+new connections through the current version.
 
-When a new major version of Ghost is released the supported version string (`SUPPORTED_VERSION` in `app/authentication.js`) must be reviewed!
+## Getting started
+
+The app runs on `zapier-platform-core` v19, which uses Zapier's Node.js 22
+Lambda runtime — use Node 22 locally (there is a `.nvmrc` if you have `nvm`
+auto-switching enabled). See Zapier's
+[CLI requirements](https://docs.zapier.com/integrations/reference/cli-docs#requirements)
+for details.
+
+```sh
+# install the Zapier CLI globally (the binary is called `zapier-platform` since v19)
+npm install --global zapier-platform-cli
+
+# authenticate against Zapier's platform with a deploy key
+zapier-platform login
+
+# install dependencies
+pnpm install
+```
+
+## Testing
+
+```sh
+pnpm lint       # oxlint + oxfmt
+pnpm test       # unit tests (vitest, 100% coverage enforced)
+pnpm test:e2e   # end-to-end suite against a real Ghost
+```
+
+`pnpm test:e2e` is self-contained: with Docker running it boots a throwaway
+`ghost:6` container, provisions an owner user and integration, runs the
+suite, and tears everything down again. Alternatives:
+
+- `GHOST_CORE_PATH=/path/to/Ghost pnpm test:e2e` boots Ghost from a source
+  checkout instead (install its dependencies first with
+  `pnpm install --frozen-lockfile --filter ghost...`)
+- run any **fresh** Ghost install yourself, then
+  `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
+  `http://localhost:2368`) followed by `pnpm test:e2e`
+
+## Deployment
+
+The integration is deployed to Zapier's platform (app `1566`) with the
+`zapier-platform` CLI; versions are pushed, promoted, and migrated by hand.
+The full runbook — private and public releases, staged user migration, and
+testing a private version against a local Ghost — lives in
+[docs/deployment.md](docs/deployment.md).
 
 ## Useful resources
 
-- [Integration review guidelines](https://platform.zapier.com/partners/integration-review-guidelines) - guidelines on best practices when publishing a new integration. Useful to keep in mind when developing new features
-- [A guideline](https://zapier.com/developer/documentation/v2/planning-guide-v1/#update-actions) about how to best approach feature design in Zapier integration.
+- [Zapier Platform CLI overview](https://docs.zapier.com/integrations/build-cli/overview)
+- [Zapier Platform CLI reference](https://docs.zapier.com/integrations/reference/cli-docs)
+- [Integration checks reference](https://docs.zapier.com/integrations/publish/integration-checks-reference)
+  — Zapier's best practices, useful to keep in mind when developing new
+  features
 
-## Local Testing
+# Copyright & License
 
-- `zapier-platform test` will run the tests
-- `zapier-platform test --debug` will test and output request and response logs
-
-## Deploying
-
-There are couple usecases where you would need to do a deploy:
-1. When releasing a new "private" version for testing by invited users
-2. When releasing a "public" version into the wild
-3. Migrate existing integration users to a newly released version
-
-#### To deploy a "private" version:
-1. bump the version in `package.json` (do not commit)
-2. `zapier-platform push`
-
-Tips:
-- to test if the private version works in "close-to-live" environment you can migrate a single user account's Zaps to the new version by running: `zapier-platform migrate 2.4.0 2.4.1 --user=user@example.com`. Check if the migrations completed through `zapier-platform history`.
-
-#### To deploy a "public" version:
-1. bump the version in `package.json`
-2. update `CHANGELOG.md`
-3. commit above changes with a message matching a new version, e.g. `git commit -m "2.4.0"`
-4. add a tag with a new version, e.g. `git tag 2.4.0`
-5. push out new commit and a tag upstream e.g. `git push upstream main --tags`
-6. `zapier-platform push`
-7. `zapier-platform promote {newVersion}` - only new integrations will use this version
-
-#### To migrate existing users to a new version
-1. `zapier-platform migrate {oldVersion} {newVersion} {percentage}`, eg: `zapier-platform migrate 2.3.1 2.4.0 10`, move 10% of users between versions (recommended to do gradual rollout and monitor for errors before migrating 100% to a new version). Note that since 2026-02-26 Zapier blocks migrating users across integration major versions, so new pushed versions must stay within the current major.
-2. `zapier-platform history` to check migration status, continue once 100% complete
-
-Full [Zapier reference](https://docs.zapier.com/platform/reference/cli-docs#deploying-an-app-version) for deploying a new version.
-
-## Testing Zaps locally
-Before releasing a new version a common thing to do is checking if the changes work in production-like environment. Follow these steps to debug Zapier requests on a local Ghost instance:
-1. Deploy a "private" version descrived in the #Deploying section. Make sure to follow the migration instruction to add yourself to the private version users pool.
-2. Expose your local Ghost instance to the world to be able to reach it from Zapier side. As a one-liner can use `ngrok` to do so by running: `ngrok http http://localhost:2368` 
-3. Go to you Zapier account (regular user account) and create a new Zap
-4. When choosing the trigger search for `Ghost` and select the private version under test.
-5. Connect Zapier to your local instance, which is reachable through a URL like `https://8a4e-101-128-86-58.ngrok.io` if ngrok was used.
-6. Create Zap as usual. And test requests will start coming in to your local Ghost instance.
-
-To trigger configured above Zap use your local Ghost instance as usual and the Zaps should start getting triggered as expected. If you don't see any comming through check out Zapier's error dashboard to debug the problem.
-# Copyright & License 
-
-Copyright (c) 2013-2026 Ghost Foundation - Released under the [MIT license](LICENSE).
+Copyright (c) 2013-2026 Ghost Foundation - Released under the [MIT license](LICENSE). Ghost and the Ghost Logo are trademarks of Ghost Foundation Ltd. Please see our [trademark policy](https://ghost.org/trademark/) for info on acceptable usage.
