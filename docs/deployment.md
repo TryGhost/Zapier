@@ -64,11 +64,13 @@ Zapier's own reference:
 To check changes against a production-like setup before promoting:
 
 1. Release a private version and migrate your own account to it (see above).
-2. Expose your local Ghost instance so Zapier can reach it, e.g.
-   `ngrok http http://localhost:2368`.
+2. Expose your local Ghost instance so Zapier can reach it — we use
+   [Tailscale Funnel](https://tailscale.com/kb/1223/funnel):
+   `tailscale funnel 2368`. (Any tunnel that gives you a public HTTPS URL
+   works, e.g. `ngrok http http://localhost:2368`.)
 3. In your regular Zapier account, create a new Zap and select the Ghost
    private version under test.
-4. Connect it to your local instance via the public URL ngrok printed.
+4. Connect it to your local instance via the public URL the tunnel printed.
 5. Use your local Ghost as usual — webhook deliveries and API requests from
    Zapier now hit it. If nothing comes through, check Zapier's error
    dashboard.
