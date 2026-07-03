@@ -38,7 +38,7 @@ describe('Creates', function () {
             // TODO: check on the status of https://github.com/zapier/zapier-platform/issues/73
             //       and stop using preventative code introduced with current changeset
             const expectedQueryString = 'send_email=true';
-            const mockedUrl = `/ghost/api/v3/admin/members/?${expectedQueryString}`;
+            const mockedUrl = `/ghost/api/admin/members/?${expectedQueryString}`;
 
             apiMock.post(mockedUrl, {
                 members: [{
@@ -68,7 +68,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true&email_type=signup', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true&email_type=signup', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -105,7 +105,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -143,7 +143,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -176,7 +176,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member'
                 }]
@@ -210,7 +210,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true')
+            apiMock.post('/ghost/api/admin/members/?send_email=true')
                 .reply(500, {
                     errors: [{
                         message: 'Authorization failed',
@@ -244,7 +244,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=false&email_type=signup', {
+            apiMock.post('/ghost/api/admin/members/?send_email=false&email_type=signup', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -289,7 +289,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -328,7 +328,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -376,7 +376,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',
@@ -413,7 +413,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com'
@@ -452,7 +452,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v3/admin/members/?send_email=true', {
+            apiMock.post('/ghost/api/admin/members/?send_email=true', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com',

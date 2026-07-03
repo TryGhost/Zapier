@@ -35,7 +35,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/email/ghost-author@example.com/')
+            apiMock.get('/ghost/api/admin/users/email/ghost-author@example.com/')
                 .reply(200, {
                     users: [{
                         slug: 'ghost',
@@ -82,7 +82,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/slug/ghost/')
+            apiMock.get('/ghost/api/admin/users/slug/ghost/')
                 .reply(200, {
                     users: [{
                         slug: 'ghost',
@@ -129,7 +129,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/email/unknown@example.com/')
+            apiMock.get('/ghost/api/admin/users/email/unknown@example.com/')
                 .reply(404, {
                     errors: [{
                         message: 'Resource not found error, cannot read user.',
@@ -191,7 +191,7 @@ describe('Searches', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/email/unknown/')
+            apiMock.get('/ghost/api/admin/users/email/unknown/')
                 .reply(422, {
                     errors: [{
                         message: 'Validation error, cannot read user.',

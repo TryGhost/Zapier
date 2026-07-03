@@ -37,24 +37,25 @@ const buildZ = (response) => {
 
 describe('Utils', function () {
     describe('initAdminApi', function () {
-        it('sets a plain Zapier User-Agent when the SDK sends none', function () {
+        it('requests unversioned admin paths with an Accept-Version header', function () {
             const z = buildZ({
                 status: 200,
-                json: {site: {version: '5.0'}}
+                json: {site: {version: '6.0'}}
             });
 
-            const api = initAdminApi(z, authData, {userAgent: false});
+            const api = initAdminApi(z, authData);
 
             return api.site.read().then((site) => {
-                expect(site.version).toEqual('5.0');
-                expect(z.requestOptions.headers['User-Agent']).toEqual(`Zapier/${packageVersion}`);
+                expect(site.version).toEqual('6.0');
+                expect(z.requestOptions.url).toEqual('http://zapier-test.ghost.io/ghost/api/admin/site/');
+                expect(z.requestOptions.headers['Accept-Version']).toEqual('v6.0');
             });
         });
 
         it('prefixes the SDK User-Agent with the Zapier version', function () {
             const z = buildZ({
                 status: 200,
-                json: {site: {version: '5.0'}}
+                json: {site: {version: '6.0'}}
             });
 
             const api = initAdminApi(z, authData);

@@ -77,7 +77,7 @@ describe('Triggers', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/')
+            apiMock.get('/ghost/api/admin/users/')
                 .query({
                     order: 'created_at DESC',
                     limit: 1
@@ -115,7 +115,7 @@ describe('Triggers', function () {
                 }
             });
 
-            apiMock.get('/ghost/api/v2/admin/users/')
+            apiMock.get('/ghost/api/admin/users/')
                 .query({
                     order: 'name DESC',
                     limit: 'all'
@@ -150,7 +150,7 @@ describe('Triggers', function () {
                 targetUrl: 'https://webooks.zapier.com/ghost/author_created'
             });
 
-            apiMock.post('/ghost/api/v2/admin/webhooks/', {
+            apiMock.post('/ghost/api/admin/webhooks/', {
                 webhooks: [{
                     integration_id: '5c3e1182e79eace7f58c9c3b',
                     target_url: 'https://webooks.zapier.com/ghost/author_created',
@@ -179,7 +179,7 @@ describe('Triggers', function () {
                 }
             });
 
-            apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
+            apiMock.delete('/ghost/api/admin/webhooks/12345/')
                 .reply(204);
 
             return appTester(App.triggers.author_created.operation.performUnsubscribe, bundle)

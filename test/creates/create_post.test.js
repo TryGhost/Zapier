@@ -46,7 +46,7 @@ describe('Creates', function () {
 
             // html input is converted server-side, so the `source=html` query
             // param must be present and the unused mobiledoc content dropped
-            apiMock.post('/ghost/api/v2/admin/posts/?source=html', {
+            apiMock.post('/ghost/api/admin/posts/?source=html', {
                 posts: [{
                     title: 'Test Post',
                     status: 'draft',
@@ -84,7 +84,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.post('/ghost/api/v2/admin/posts/', {
+            apiMock.post('/ghost/api/admin/posts/', {
                 posts: [{
                     title: 'Test Post',
                     status: 'published',

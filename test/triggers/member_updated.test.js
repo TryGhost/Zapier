@@ -94,7 +94,7 @@ describe('Triggers', function () {
                 targetUrl: 'https://webooks.zapier.com/ghost/member'
             });
 
-            apiMock.post('/ghost/api/v2/admin/webhooks/', {
+            apiMock.post('/ghost/api/admin/webhooks/', {
                 webhooks: [{
                     integration_id: '5c3e1182e79eace7f58c9c3b',
                     target_url: 'https://webooks.zapier.com/ghost/member',
@@ -123,7 +123,7 @@ describe('Triggers', function () {
                 }
             });
 
-            apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
+            apiMock.delete('/ghost/api/admin/webhooks/12345/')
                 .reply(204);
 
             return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)

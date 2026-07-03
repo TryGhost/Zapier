@@ -11,13 +11,10 @@ class RequestError extends Error {
 }
 
 // Convenience method for creating a GhostAdminAPI instance from the bundle data
-const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}, _options = {}) => {
+const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}) => {
     function makeRequest({url, method, data: body, params = {}, headers = {}}) {
-        if (headers['User-Agent']) {
-            headers['User-Agent'] = `Zapier/${packageVersion} ${headers['User-Agent']}`;
-        } else {
-            headers['User-Agent'] = `Zapier/${packageVersion}`;
-        }
+        // the SDK always sends its own User-Agent - prefix it with ours
+        headers['User-Agent'] = `Zapier/${packageVersion} ${headers['User-Agent']}`;
 
         return z.request({
             url,
@@ -61,15 +58,14 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}, _options = {
         });
     }
 
-    const defaultOptions = {
+    return new GhostAdminApi({
         url: adminUrl,
         key,
         makeRequest,
-        version: 'v2'
-    };
-    const options = Object.assign({}, defaultOptions, _options);
-
-    return new GhostAdminApi(options);
+        // 'v{major}.{minor}' targets the unversioned /ghost/api/admin/
+        // endpoints and is sent as the Accept-Version request header
+        version: 'v6.0'
+    });
 };
 
 /**

@@ -1,7 +1,7 @@
 const {initAdminApi, isNotFoundHaltedError} = require('../lib/utils');
 
 const searchMembers = async (z, bundle) => {
-    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
+    const api = initAdminApi(z, bundle.authData);
 
     const queryParams = {
         filter: `email:'${bundle.inputData.email}'`

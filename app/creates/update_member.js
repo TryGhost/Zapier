@@ -31,7 +31,7 @@ const updateMember = async (z, bundle) => {
         memberData.comped = bundle.inputData.comped;
     }
 
-    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
+    const api = initAdminApi(z, bundle.authData);
 
     const queryParams = {};
 

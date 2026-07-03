@@ -38,7 +38,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     name: 'Test Member',
                     email: 'test@example.com'
@@ -73,7 +73,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     name: 'Test Member',
                     subscribed: true
@@ -106,7 +106,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     email: 'not_valid'
                 }]
@@ -141,7 +141,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/')
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/')
                 .reply(500, {
                     errors: [{
                         message: 'Authorization failed',
@@ -172,7 +172,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     labels: ['Zapier']
                 }]
@@ -214,7 +214,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     comped: true
                 }]
@@ -252,7 +252,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     name: 'Test Member',
                     newsletters: [{
@@ -294,7 +294,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     newsletters: []
                 }]
@@ -329,7 +329,7 @@ describe('Creates', function () {
                 }
             });
 
-            apiMock.put('/ghost/api/v3/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
                 members: [{
                     name: 'Test Member'
                 }]
