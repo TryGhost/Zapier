@@ -53,6 +53,7 @@ module.exports = {
                 key: 'id',
                 required: true,
                 label: 'Member',
+                helpText: 'Select the member to update, or map the Member ID from a previous step. Note this must be a Member ID, not a Label ID.',
                 dynamic: 'member_created.id.name',
                 search: 'member.id'
             },
