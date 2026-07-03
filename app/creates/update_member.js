@@ -33,7 +33,29 @@ const updateMember = async (z, bundle) => {
         memberData.labels = bundle.inputData.labels;
     }
 
-    if (bundle.inputData.comped !== undefined) {
+    // the three complimentary inputs are mutually exclusive - error rather
+    // than guess which one was meant. `comped` counts as used when it is set
+    // at all because `false` actively removes a comp via the deprecated path
+    if (bundle.inputData.comped_tier && bundle.inputData.comped_remove) {
+        throw new z.errors.HaltedError(
+            'Use either "Complimentary tier" or "Remove complimentary subscriptions", not both.',
+        );
+    }
+    if (
+        (bundle.inputData.comped_tier || bundle.inputData.comped_remove) &&
+        bundle.inputData.comped !== undefined
+    ) {
+        throw new z.errors.HaltedError(
+            'The deprecated "Complimentary premium plan" field cannot be combined with "Complimentary tier" or "Remove complimentary subscriptions" - leave it blank.',
+        );
+    }
+
+    if (bundle.inputData.comped_tier) {
+        memberData.tiers = [{ id: bundle.inputData.comped_tier }];
+    } else if (bundle.inputData.comped_remove) {
+        // an empty tiers array removes all complimentary subscriptions
+        memberData.tiers = [];
+    } else if (bundle.inputData.comped !== undefined) {
         memberData.comped = bundle.inputData.comped;
     }
 
@@ -133,11 +155,26 @@ module.exports = {
                 helpText: 'Provide a list of labels to attach to the member',
             },
             {
+                key: 'comped_tier',
+                label: 'Complimentary tier',
+                required: false,
+                dynamic: 'tier_created.id.name',
+                helpText:
+                    'Give the member a free of charge subscription to a specific paid tier. Cannot be combined with the other complimentary fields.',
+            },
+            {
+                key: 'comped_remove',
+                label: 'Remove complimentary subscriptions',
+                type: 'boolean',
+                helpText:
+                    'If enabled, all complimentary subscriptions are removed from the member. Cannot be combined with the other complimentary fields.',
+            },
+            {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
                 helpText:
-                    'If enabled, member will be placed onto a free of charge premium subscription',
+                    'Deprecated - use "Complimentary tier" or "Remove complimentary subscriptions" instead. If enabled, member will be placed onto a free of charge premium subscription to the default tier; if disabled, an existing one is removed. Requires a connected Stripe account.',
             },
         ],
 
