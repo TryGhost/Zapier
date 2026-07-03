@@ -8,4 +8,5 @@ module.exports = {
     post_scheduled: require('./post_scheduled'),
     tag_created: require('./tag_created'),
     newsletter_created: require('./newsletter_created'),
+    tier_created: require('./tier_created'),
 };
