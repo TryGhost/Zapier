@@ -28,10 +28,6 @@ describe('Searches', function () {
         });
 
         it('fetches a member by email', function () {
-            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                site: {version: '3.18.0'}
-            });
-
             let bundle = Object.assign({}, {authData}, {
                 inputData: {
                     email: 'ghost-member@example.com'
@@ -60,10 +56,6 @@ describe('Searches', function () {
         });
 
         it('fetches a member from a paginated response', function () {
-            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                site: {version: '3.18.0'}
-            });
-
             let bundle = Object.assign({}, {authData}, {
                 inputData: {
                     email: 'ghost-member@example.com'
@@ -104,10 +96,6 @@ describe('Searches', function () {
         });
 
         it('handles a 404', function () {
-            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                site: {version: '3.18.0'}
-            });
-
             let bundle = Object.assign({}, {authData}, {
                 inputData: {
                     email: 'do-not-exist@example.com'
@@ -136,10 +124,6 @@ describe('Searches', function () {
         });
 
         it('rethrows errors that are not a 404', function () {
-            apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                site: {version: '3.18.0'}
-            });
-
             let bundle = Object.assign({}, {authData}, {
                 inputData: {
                     email: 'ghost-member@example.com'
@@ -167,26 +151,6 @@ describe('Searches', function () {
                     expect(err.name).toEqual('RequestError');
                     expect(err.message).toMatch(/Authorization failed/);
                 });
-        });
-
-        describe('with unsupported version', function () {
-            beforeEach(function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '2.34'}
-                });
-            });
-
-            it('shows unsupported error for list', function () {
-                let bundle = Object.assign({}, {authData});
-
-                return appTester(App.searches.member.operation.perform, bundle)
-                    .then(() => {
-                        expect.unreachable('expected the call to be rejected');
-                    }, (err) => {
-                        expect(err.name).toBe('HaltedError');
-                        expect(err.message).toMatch(/does not support member search. Supported version range is >=3.0.0, you are using 2.34/);
-                    });
-            });
         });
     });
 });

@@ -1,10 +1,6 @@
-const {initAdminApi, versionCheck} = require('../lib/utils');
+const {initAdminApi} = require('../lib/utils');
 
 const updateMember = async (z, bundle) => {
-    // Members was added in Ghost 3.0
-    let expectedVersion = '>=3.0.0';
-    let action = 'members';
-
     const memberData = {
         id: bundle.inputData.id,
         name: bundle.inputData.name,
@@ -18,8 +14,6 @@ const updateMember = async (z, bundle) => {
     } else if (countSpecified && bundle.inputData.newsletter_count === 'multiple') {
         // Default newsletters is definitely set to false (using !(value !== false) because booleans are sometimes stringified before being set)
         if (!('newsletters_keepsame' in bundle.inputData && bundle.inputData.newsletters_keepsame !== false)) {
-            expectedVersion = '>=5.0.0';
-            action = 'member newsletters';
             memberData.newsletters = 'newsletters' in bundle.inputData
                 ? bundle.inputData.newsletters.map(id => ({id}))
                 : [];
@@ -29,21 +23,13 @@ const updateMember = async (z, bundle) => {
         memberData.subscribed = bundle.inputData.subscribed;
     }
 
-    // Member Labels was added in Ghost 3.6
     if (bundle.inputData.labels && bundle.inputData.labels.length > 0) {
-        expectedVersion = '>=3.6.0';
-        action = 'member labels';
         memberData.labels = bundle.inputData.labels;
     }
 
-    // Member Complimentary plan was in Ghost 3.36
     if (bundle.inputData.comped !== undefined) {
-        expectedVersion = '>=3.36.0';
-        action = 'member complimentary plan';
         memberData.comped = bundle.inputData.comped;
     }
-
-    await versionCheck(expectedVersion, action, z, bundle);
 
     const api = initAdminApi(z, bundle.authData, {version: 'v3'});
 
@@ -58,7 +44,7 @@ module.exports = {
 
     display: {
         label: 'Update Member',
-        description: 'Updates a member (Only supported by Ghost 3.0.0 and later)'
+        description: 'Updates a member.'
     },
 
     operation: {
@@ -81,7 +67,7 @@ module.exports = {
                     single: 'Single newsletter',
                     multiple: 'Multiple newsletters'
                 },
-                helpText: 'How many newsletters does your site have? Multiple option for >= Ghost 5.0 only.',
+                helpText: 'How many newsletters does your site have?',
                 default: 'single',
                 altersDynamicFields: true
             },
@@ -126,13 +112,13 @@ module.exports = {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member ( >= Ghost 3.6)'
+                helpText: 'Provide a list of labels to attach to the member'
             },
             {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
-                helpText: 'If enabled, member will be placed onto a free of charge premium subscription ( >= Ghost 3.36)'
+                helpText: 'If enabled, member will be placed onto a free of charge premium subscription'
             }
         ],
 

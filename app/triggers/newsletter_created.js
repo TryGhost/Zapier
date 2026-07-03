@@ -1,17 +1,11 @@
-const {initAdminApi, versionCheck} = require('../lib/utils');
+const {initAdminApi} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
-const subscribeWebhook = async (z, bundle) => {
-    // Newsletters was added in Ghost 5.0
-    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
-
+const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('newsletter.added', z, bundle);
 };
 
-const unsubscribeWebhook = async (z, bundle) => {
-    // Newsletters was added in Ghost 5.0
-    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
-
+const unsubscribeWebhook = (z, bundle) => {
     return webhooks.unsubscribe(z, bundle);
 };
 
@@ -25,10 +19,7 @@ const handleWebhook = (z, bundle) => {
     return [newsletter.current];
 };
 
-const listNewsletters = async (z, bundle) => {
-    // Newsletters was added in Ghost 5.0
-    await versionCheck('>=5.0.0', 'newsletters', z, bundle);
-
+const listNewsletters = (z, bundle) => {
     const {authData, meta} = bundle;
 
     const api = initAdminApi(z, authData);

@@ -7,7 +7,7 @@ import {describe, it, expect} from 'vitest';
 // CommonJS require chain - a direct ESM import would create a second,
 // vite-transformed copy and split the coverage between the two
 const require = createRequire(import.meta.url);
-const {initAdminApi, isNotFoundHaltedError, versionCheck} = require('../../app/lib/utils');
+const {initAdminApi, isNotFoundHaltedError} = require('../../app/lib/utils');
 const packageVersion = require('../../package.json').version;
 
 class FakeHaltedError extends Error {
@@ -131,22 +131,6 @@ describe('Utils', function () {
             }, (err) => {
                 expect(err.name).toEqual('HaltedError');
                 expect(err.message).toEqual('Validation failed for email (ValidationError: UNIQUE_EMAIL)');
-            });
-        });
-    });
-
-    describe('versionCheck', function () {
-        it('halts without a status when the Ghost version is unsupported', function () {
-            const z = buildZ({
-                status: 200,
-                json: {site: {version: '2.20'}}
-            });
-
-            return versionCheck('>=3.0.0', 'member search', z, {authData}).then(() => {
-                expect.unreachable('expected the call to be rejected');
-            }, (err) => {
-                expect(err.name).toEqual('HaltedError');
-                expect(err.status).toBe(undefined);
                 expect(isNotFoundHaltedError(err)).toBe(false);
             });
         });
