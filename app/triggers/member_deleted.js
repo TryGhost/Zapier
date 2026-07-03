@@ -20,7 +20,7 @@ const handleWebhook = (z, bundle) => {
 };
 
 const getLatestMember = (z, bundle) => {
-    const api = initAdminApi(z, bundle.authData, {version: 'v3'});
+    const api = initAdminApi(z, bundle.authData);
 
     return api.members
         .browse({order: 'created_at DESC', limit: 1});
