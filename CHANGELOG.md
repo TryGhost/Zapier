@@ -1,3 +1,37 @@
+## Unreleased (next major)
+
+Breaking changes:
+
+* (Breaking) Requires Ghost 6.0 or later to connect. Zaps created on earlier
+  integration versions keep working against older Ghost sites; maintenance
+  releases for those users ship from the `2.x` branch.
+* (Breaking) Removed the deprecated "subscriber" triggers, search, and actions
+  (Create/Delete Subscriber, Subscriber Created/Deleted). The underlying API
+  was removed in Ghost 3.0 — these operations were hidden and only ever
+  returned an error.
+* (Breaking) The integration now runs on Zapier's Node 22 runtime via
+  zapier-platform-core 19 (previously Node 14 / core 12).
+* (Breaking) All requests target the unversioned Admin API
+  (`/ghost/api/admin/`) with an `Accept-Version: v6.0` header instead of the
+  legacy `/v2/`/`/v3/` paths.
+
+New:
+
+* (New) Comp members into a specific tier: "Complimentary tier" dropdown on
+  Create Member and Update Member (sends `tiers`), plus a "Remove
+  complimentary subscription" option on Update Member. The legacy
+  "Complimentary premium plan" boolean keeps working (default tier only).
+* (New) Clearer Member field help on Update Member and realistic Ghost 6
+  sample data (including `status` and `newsletters`) for member operations.
+
+Fixes:
+
+* (Fix) Tag Created trigger read the wrong webhook payload key and returned
+  no tag data when fired.
+* (Fix) Member and Author searches detect "not found" by response status
+  instead of error-message text, so empty search results are returned
+  reliably on current Ghost versions.
+
 ## 2.6.3
 
 * Add `uuid` to Member Updated trigger
