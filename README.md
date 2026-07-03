@@ -26,9 +26,11 @@ Notes:
 
 ## Ghost version support
 
-Zapier checks the version of Ghost when authenticating to ensure that the API supports the required webhooks endpoints and other features. This is done by fetching the `/ghost/api/v2/admin/site/` endpoint.
+New Zap connections require **Ghost 6.0 or later**. Zapier checks the version of Ghost when authenticating by fetching the `/ghost/api/admin/site/` endpoint, and all requests declare their compatibility version via the `Accept-Version` header.
 
-When a new major version of Ghost is released the [supported version string](https://github.com/TryGhost/Ghost-Zapier/blob/4739696c1dde5a197ea89531536deebfab8f57ab/app/authentication.js#L4) must be updated!
+Sites on older Ghost versions keep working: existing Zaps stay pinned to the previously published integration versions they were created with (Zapier does not migrate Zaps across integration major versions), they just cannot connect through the current version.
+
+When a new major version of Ghost is released the supported version string (`SUPPORTED_VERSION` in `app/authentication.js`) must be reviewed!
 
 ## Useful resources
 
