@@ -28,8 +28,8 @@
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.9",
     "nock": "14.0.16",
-    "oxfmt": "^0.57.0",
-    "oxlint": "^1.72.0",
+    "oxfmt": "0.57.0",
+    "oxlint": "1.72.0",
     "vitest": "4.1.9"
   }
 }
