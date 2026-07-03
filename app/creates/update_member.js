@@ -1,4 +1,4 @@
-const { initAdminApi } = require('../lib/utils');
+const { initAdminApi, isEnabled } = require('../lib/utils');
 
 const updateMember = async (z, bundle) => {
     const memberData = {
@@ -33,18 +33,18 @@ const updateMember = async (z, bundle) => {
         memberData.labels = bundle.inputData.labels;
     }
 
+    // isEnabled keeps a stringified 'false' from removing comps by accident
+    const removeComped = isEnabled(bundle.inputData.comped_remove);
+
     // the three complimentary inputs are mutually exclusive - error rather
     // than guess which one was meant. `comped` counts as used when it is set
     // at all because `false` actively removes a comp via the deprecated path
-    if (bundle.inputData.comped_tier && bundle.inputData.comped_remove) {
+    if (bundle.inputData.comped_tier && removeComped) {
         throw new z.errors.HaltedError(
             'Use either "Complimentary tier" or "Remove complimentary subscriptions", not both.',
         );
     }
-    if (
-        (bundle.inputData.comped_tier || bundle.inputData.comped_remove) &&
-        bundle.inputData.comped !== undefined
-    ) {
+    if ((bundle.inputData.comped_tier || removeComped) && bundle.inputData.comped !== undefined) {
         throw new z.errors.HaltedError(
             'The deprecated "Complimentary premium plan" field cannot be combined with "Complimentary tier" or "Remove complimentary subscriptions" - leave it blank.',
         );
@@ -52,7 +52,7 @@ const updateMember = async (z, bundle) => {
 
     if (bundle.inputData.comped_tier) {
         memberData.tiers = [{ id: bundle.inputData.comped_tier }];
-    } else if (bundle.inputData.comped_remove) {
+    } else if (removeComped) {
         // an empty tiers array removes all complimentary subscriptions
         memberData.tiers = [];
     } else if (bundle.inputData.comped !== undefined) {

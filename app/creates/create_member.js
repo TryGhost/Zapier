@@ -1,4 +1,4 @@
-const { initAdminApi } = require('../lib/utils');
+const { initAdminApi, isEnabled } = require('../lib/utils');
 
 const createMember = async (z, bundle) => {
     const memberData = {
@@ -33,8 +33,9 @@ const createMember = async (z, bundle) => {
     }
 
     // a specific complimentary tier and the deprecated default-tier boolean
-    // are mutually exclusive - error rather than guess which one was meant
-    if (bundle.inputData.comped_tier && bundle.inputData.comped) {
+    // are mutually exclusive - error rather than guess which one was meant.
+    // isEnabled keeps a stringified 'false' from tripping the error
+    if (bundle.inputData.comped_tier && isEnabled(bundle.inputData.comped)) {
         throw new z.errors.HaltedError(
             'Use either "Complimentary tier" or the deprecated "Complimentary premium plan", not both.',
         );

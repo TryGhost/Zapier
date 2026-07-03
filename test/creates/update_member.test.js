@@ -384,6 +384,96 @@ describe('Creates', function () {
             });
         });
 
+        it('removes complimentary subscriptions when the remove flag arrives stringified', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        // Zapier boolean inputs occasionally arrive stringified
+                        comped_remove: 'true',
+                    },
+                },
+            );
+
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            tiers: [],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            status: 'free',
+                            comped: false,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
+                });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.status).toBe('free');
+            });
+        });
+
+        it('ignores a stringified false remove flag next to a complimentary tier', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped_tier: '6220aa04dd8021001c50e6e2',
+                        // a stringified 'false' must neither remove comps nor
+                        // trip the mutual-exclusion error
+                        comped_remove: 'false',
+                    },
+                },
+            );
+
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            tiers: [{ id: '6220aa04dd8021001c50e6e2' }],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            status: 'comped',
+                            comped: true,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
+                });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.status).toBe('comped');
+            });
+        });
+
         it('rejects combining a complimentary tier with the remove flag', function () {
             let bundle = Object.assign(
                 {},
