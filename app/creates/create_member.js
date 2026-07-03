@@ -148,11 +148,31 @@ module.exports = {
 
         sample: {
             id: '5c9c9c8d51b5bf974afad2a4',
-            name: 'Test Member',
+            uuid: '0f5b95a5-a08b-4e29-b0a0-8dcbc4b7e83f',
             email: 'test@example.com',
+            name: 'Test Member',
+            note: 'Just a sample member record.',
             subscribed: true,
+            status: 'free',
             comped: false,
-            labels: ['Zapier'],
+            avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+            labels: [
+                {
+                    id: '5f212d395422021ebc4b7043',
+                    name: 'Zapier',
+                    slug: 'zapier',
+                    created_at: '2019-03-28T10:06:05.862Z',
+                    updated_at: '2019-03-28T10:06:05.862Z'
+                }
+            ],
+            newsletters: [
+                {
+                    id: '62e12664bbd0f0cb56f6f7d1',
+                    name: 'Sample Newsletter',
+                    description: null,
+                    status: 'active'
+                }
+            ],
             created_at: '2019-03-28T10:06:05.862Z',
             updated_at: '2019-03-28T10:06:05.862Z'
         }

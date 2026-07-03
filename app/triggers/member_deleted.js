@@ -49,11 +49,32 @@ module.exports = {
         perform: handleWebhook,
         performList: getLatestMember,
 
+        // matches the `member.previous` webhook payload, which omits the
+        // subscription flags included by other member events
         sample: {
             id: '5a01d3ecc8d50d0e606a7e7c',
-            name: 'Sample Member',
+            uuid: '42f50516-9d4f-4062-86fe-dc170d2b391c',
             email: 'sample@example.com',
+            name: 'Sample Member',
             note: 'Just a sample member record.',
+            status: 'free',
+            labels: [
+                {
+                    id: '5f212d395422021ebc4b7043',
+                    name: 'Zapier',
+                    slug: 'zapier',
+                    created_at: '2019-10-13T18:12:00.000Z',
+                    updated_at: '2019-10-13T18:12:00.000Z'
+                }
+            ],
+            newsletters: [
+                {
+                    id: '62e12664bbd0f0cb56f6f7d1',
+                    name: 'Sample Newsletter',
+                    description: null,
+                    status: 'active'
+                }
+            ],
             created_at: '2019-10-13T18:12:00.000Z',
             updated_at: '2019-10-13T18:12:00.000Z'
         }

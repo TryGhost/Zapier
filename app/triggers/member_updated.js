@@ -6,12 +6,13 @@ const SAMPLE_PAYLOAD = {
     current: {
         id: '5a01d3ecc8d50d0e606a7e7c',
         uuid: '42f50516-9d4f-4062-86fe-dc170d2b391c',
-        name: 'New Member Name',
         email: 'sample@example.com',
+        name: 'New Member Name',
         note: 'Updated sample member record.',
         subscribed: false,
         status: 'paid',
         comped: true,
+        avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
         labels: [{
             id: '5f212d395422021ebc4b7043',
             name: 'Old label 1',
@@ -19,15 +20,23 @@ const SAMPLE_PAYLOAD = {
             created_at: '2020-10-13T18:12:00.000Z',
             updated_at: '2020-10-13T18:12:00.000Z'
         }, {
-            id: '5f212d395422021ebc4b7043',
+            id: '5f212d395422021ebc4b7044',
             name: 'New label',
             slug: 'new-label',
             created_at: '2020-10-13T18:12:00.000Z',
             updated_at: '2020-10-13T18:12:00.000Z'
         }],
+        newsletters: [{
+            id: '62e12664bbd0f0cb56f6f7d1',
+            name: 'Sample Newsletter',
+            description: null,
+            status: 'active'
+        }],
         created_at: '2019-10-13T18:12:00.000Z',
         updated_at: '2019-10-31T19:58:00.000Z'
     },
+    // the real webhook's `previous` object only contains the attributes
+    // that changed with this edit
     previous: {
         name: 'Old Member Name',
         email: 'oldsample@example.com',
@@ -42,9 +51,9 @@ const SAMPLE_PAYLOAD = {
             created_at: '2020-10-13T18:12:00.000Z',
             updated_at: '2020-10-13T18:12:00.000Z'
         }, {
-            id: '5f212d395422021ebc4b7043',
+            id: '5f212d395422021ebc4b7045',
             name: 'Old label 2',
-            slug: 'old-label 2',
+            slug: 'old-label-2',
             created_at: '2020-10-13T18:12:00.000Z',
             updated_at: '2020-10-13T18:12:00.000Z'
         }],

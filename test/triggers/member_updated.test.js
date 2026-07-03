@@ -62,7 +62,7 @@ describe('Triggers', function () {
             return appTester(App.triggers.member_updated.operation.performList, {authData})
                 .then(([member]) => {
                     expect(member.current).toBeTruthy();
-                    expect(Object.keys(member.current).length).toEqual(11);
+                    expect(Object.keys(member.current).length).toEqual(13);
                     expect(member.previous).toBeTruthy();
                     expect(Object.keys(member.previous).length).toEqual(8);
 
