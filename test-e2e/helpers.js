@@ -2,7 +2,6 @@ import fs from 'fs';
 import {join} from 'path';
 import {fileURLToPath} from 'url';
 
-import {expect} from 'vitest';
 import zapier from 'zapier-platform-core';
 
 import App from '../index';
@@ -59,22 +58,6 @@ const getAuthData = () => {
     return {adminApiUrl, adminApiKey};
 };
 
-/**
- * Asserts that a promise rejects with a HaltedError whose message matches.
- *
- * @param {Promise} promise the in-flight appTester call
- * @param {RegExp} messagePattern expected error message
- */
-const shouldHalt = async (promise, messagePattern) => {
-    const error = await promise.then(
-        () => expect.unreachable('expected a HaltedError but the call succeeded'),
-        err => err
-    );
-
-    expect(error.name).toBe('HaltedError');
-    expect(error.message).toMatch(messagePattern);
-};
-
 // data seeded by 02-creates.test.js and asserted on by the search and
 // trigger specs - the e2e vitest config runs the spec files one at a time
 // in filename order. The suite assumes a freshly bootstrapped Ghost
@@ -103,6 +86,5 @@ export {
     App,
     appTester,
     getAuthData,
-    shouldHalt,
     fixtures
 };
