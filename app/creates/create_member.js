@@ -32,7 +32,17 @@ const createMember = async (z, bundle) => {
         memberData.labels = bundle.inputData.labels;
     }
 
-    if (bundle.inputData.comped) {
+    // a specific complimentary tier and the deprecated default-tier boolean
+    // are mutually exclusive - error rather than guess which one was meant
+    if (bundle.inputData.comped_tier && bundle.inputData.comped) {
+        throw new z.errors.HaltedError(
+            'Use either "Complimentary tier" or the deprecated "Complimentary premium plan", not both.',
+        );
+    }
+
+    if (bundle.inputData.comped_tier) {
+        memberData.tiers = [{ id: bundle.inputData.comped_tier }];
+    } else if (bundle.inputData.comped) {
         memberData.comped = bundle.inputData.comped;
     }
 
@@ -161,11 +171,19 @@ module.exports = {
                 ],
             },
             {
+                key: 'comped_tier',
+                label: 'Complimentary tier',
+                required: false,
+                dynamic: 'tier_created.id.name',
+                helpText:
+                    'Give the member a free of charge subscription to a specific paid tier. Cannot be combined with "Complimentary premium plan".',
+            },
+            {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
                 helpText:
-                    'If enabled, member will be placed onto a free of charge premium subscription',
+                    'Deprecated - use "Complimentary tier" instead. If enabled, member will be placed onto a free of charge premium subscription to the default tier. Requires a connected Stripe account.',
             },
         ],
 
