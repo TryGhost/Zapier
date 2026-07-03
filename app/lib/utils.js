@@ -48,7 +48,6 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}) => {
                     throw haltedError;
                 }
 
-                // eslint-disable-next-line no-restricted-syntax
                 throw new RequestError(error.message, response);
             } else if (response.status > 300) {
                 // adapted from `response.throwForStatus()` to expose the response
@@ -57,7 +56,6 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}) => {
                     response.request.url
                 }, expected 2xx.`;
 
-                // eslint-disable-next-line no-restricted-syntax
                 throw new RequestError(message, response);
             }
 

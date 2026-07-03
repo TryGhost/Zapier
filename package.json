@@ -9,7 +9,9 @@
   "main": "index.js",
   "packageManager": "pnpm@10.34.4",
   "scripts": {
-    "lint": "eslint . --ext .js --cache",
+    "lint": "oxlint --quiet && oxfmt --check .",
+    "lint:fix": "oxlint --fix && oxfmt .",
+    "format": "oxfmt .",
     "test": "vitest run --coverage",
     "test:e2e": "./test-e2e/run.sh",
     "test:e2e:bare": "vitest run --config vitest.e2e.config.js"
@@ -25,9 +27,9 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.9",
-    "eslint": "8.57.1",
-    "eslint-plugin-ghost": "2.14.0",
     "nock": "14.0.16",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
     "vitest": "4.1.9"
   }
 }

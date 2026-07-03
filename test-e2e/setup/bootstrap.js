@@ -61,7 +61,7 @@ const request = (method, path, {body, headers = {}} = {}) => {
                 let json = null;
                 try {
                     json = raw ? JSON.parse(raw) : null;
-                } catch (err) {
+                } catch {
                     // non-JSON body (e.g. empty 201 responses) - leave json as null
                 }
                 resolve({status: res.statusCode, headers: res.headers, json});
