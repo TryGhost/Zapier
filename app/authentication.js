@@ -1,7 +1,7 @@
 const semver = require('semver');
 const {initAdminApi, RequestError} = require('./lib/utils');
 
-const SUPPORTED_VERSION = '>=2.19';
+const SUPPORTED_VERSION = '>=6.0';
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
@@ -29,21 +29,11 @@ const testAuth = (z, {authData}) => {
             };
         });
     }).catch((err) => {
-        if (err instanceof RequestError) {
-            // 404 suggests this may be a Ghost blog without v2 or a non-Ghost site
-            if (err.res.status === 404) {
-                // try fetching a Ghost v0.1 endpoint
-                let v01url = `${authData.adminApiUrl}/ghost/api/v0.1/configuration/about/`;
-                return z.request(v01url, {skipThrowForStatus: true}).then((response) => {
-                    if (response.status === 401) {
-                        // eslint-disable-next-line no-restricted-syntax
-                        throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using an earlier version`);
-                    } else {
-                        // eslint-disable-next-line no-restricted-syntax
-                        throw new Error('Supplied \'Admin API URL\' does not appear to be valid or does not point to a Ghost site');
-                    }
-                });
-            }
+        // the unversioned Admin API exists from Ghost 5.0, so a 404 means
+        // this is not a Ghost site or a Ghost too old to be supported
+        if (err instanceof RequestError && err.res.status === 404) {
+            // eslint-disable-next-line no-restricted-syntax
+            throw new Error(`Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_VERSION})`);
         }
 
         // eslint-disable-next-line no-restricted-syntax
