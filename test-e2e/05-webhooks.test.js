@@ -3,8 +3,7 @@ import {describe, it, expect, beforeAll} from 'vitest';
 
 import {App, appTester, getAuthData} from './helpers';
 
-// every hook trigger that can subscribe against a modern Ghost - the
-// deprecated subscriber_* triggers are covered in 06-subscribers.test.js
+// every hook trigger the app exposes
 const HOOK_TRIGGERS = [
     'post_published',
     'post_scheduled',
