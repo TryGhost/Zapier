@@ -18,6 +18,31 @@ Ghost Admin under `Integrations » Zapier`) and build Zaps from:
 All requests target the unversioned Admin API (`/ghost/api/admin/`) and
 declare their compatibility version via the `Accept-Version` header.
 
+## How it works
+
+Triggers are instant: on Zap activation the app registers a webhook in Ghost,
+and Ghost pushes event payloads to Zapier from then on. Creates and searches
+call the Admin API directly.
+
+```mermaid
+flowchart LR
+    subgraph zapier["Zapier platform (this app)"]
+        auth["Authentication<br/>(Admin API key)"]
+        triggers["Triggers<br/>(REST hooks)"]
+        actions["Creates & Searches"]
+    end
+
+    subgraph ghost["Ghost site"]
+        admin["Admin API<br/>/ghost/api/admin/ + Accept-Version"]
+        webhooks["Webhooks"]
+    end
+
+    auth -- "site version & config check" --> admin
+    triggers -- "subscribe / unsubscribe" --> admin
+    actions -- "posts, members, authors" --> admin
+    webhooks -- "event payloads (instant triggers)" --> triggers
+```
+
 ## Ghost version support
 
 New Zap connections require **Ghost 6.0 or later**. Authentication reads
