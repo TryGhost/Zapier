@@ -31,5 +31,10 @@
     "oxfmt": "0.57.0",
     "oxlint": "1.72.0",
     "vitest": "4.1.9"
+  },
+  "pnpm": {
+    "overrides": {
+      "form-data@<4.0.6": ">=4.0.6"
+    }
   }
 }
