@@ -298,6 +298,141 @@ describe('Creates', function () {
             });
         });
 
+        it('updates a member with a complimentary tier', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped_tier: '6220aa04dd8021001c50e6e2',
+                    },
+                },
+            );
+
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            tiers: [{ id: '6220aa04dd8021001c50e6e2' }],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            status: 'comped',
+                            comped: true,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
+                });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.status).toBe('comped');
+            });
+        });
+
+        it('removes complimentary subscriptions with an empty tiers array', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped_remove: true,
+                    },
+                },
+            );
+
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            tiers: [],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            status: 'free',
+                            comped: false,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
+                });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.status).toBe('free');
+            });
+        });
+
+        it('rejects combining a complimentary tier with the remove flag', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped_tier: '6220aa04dd8021001c50e6e2',
+                        comped_remove: true,
+                    },
+                },
+            );
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then(
+                () => {
+                    expect.unreachable('expected the call to be rejected');
+                },
+                (err) => {
+                    expect(err.name).toEqual('HaltedError');
+                    expect(err.message).toMatch(/not both/);
+                },
+            );
+        });
+
+        it('rejects combining the deprecated comped flag with the new complimentary fields', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        // even an agreeing value is rejected - one mechanism at a time
+                        comped: false,
+                        comped_remove: true,
+                    },
+                },
+            );
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then(
+                () => {
+                    expect.unreachable('expected the call to be rejected');
+                },
+                (err) => {
+                    expect(err.name).toEqual('HaltedError');
+                    expect(err.message).toMatch(/leave it blank/);
+                },
+            );
+        });
+
         it('updates a member subscribed to multiple newsletters', function () {
             let bundle = Object.assign(
                 {},
