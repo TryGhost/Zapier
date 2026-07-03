@@ -53,7 +53,9 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
 
 - The e2e specs share state (02-creates seeds fixtures the later specs assert
   on) and run one file at a time in filename order — `vitest.e2e.config.js`
-  enforces this. Don't parallelise them or renumber the files.
+  enforces this. Don't parallelise them or renumber the files. Order matters
+  within 02-creates too: `fixtures.member` must be created last so it stays
+  the newest member for the member trigger performList assertions.
 - The `sample` objects in `app/` triggers/creates/searches mirror real
   Ghost 6 API shapes and are shown to users in the Zap editor — don't trim
   or invent fields.

@@ -69,6 +69,17 @@ const fixtures = {
         email: 'e2e-member@example.com',
         note: 'Created by the Zapier e2e suite',
     },
+    // members used by the complimentary tier specs - created before `member`
+    // so that `member` stays the newest member (member_created/member_deleted
+    // performLists assert on the latest member)
+    compedMember: {
+        name: 'E2E Comped Member',
+        email: 'e2e-comped-member@example.com',
+    },
+    tieredMember: {
+        name: 'E2E Tiered Member',
+        email: 'e2e-tiered-member@example.com',
+    },
     publishedPost: {
         title: 'E2E Published Post',
         html: '<p>Published by the Zapier e2e suite.</p>',
