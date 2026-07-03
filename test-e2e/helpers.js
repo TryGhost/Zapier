@@ -1,6 +1,6 @@
 import fs from 'fs';
-import {join} from 'path';
-import {fileURLToPath} from 'url';
+import { join } from 'path';
+import { fileURLToPath } from 'url';
 
 import zapier from 'zapier-platform-core';
 
@@ -47,15 +47,15 @@ const getAuthData = () => {
     if (!adminApiUrl || !adminApiKey) {
         throw new Error(
             'GHOST_ADMIN_API_URL and GHOST_ADMIN_API_KEY must be set. ' +
-            'Run the suite via `pnpm test:e2e` - with docker running (or ' +
-            'GHOST_CORE_PATH pointing at a Ghost checkout) it provisions a ' +
-            'fresh Ghost and bootstraps credentials automatically. To ' +
-            'manage Ghost yourself, start one and run ' +
-            '`node test-e2e/setup/bootstrap.js` first.'
+                'Run the suite via `pnpm test:e2e` - with docker running (or ' +
+                'GHOST_CORE_PATH pointing at a Ghost checkout) it provisions a ' +
+                'fresh Ghost and bootstraps credentials automatically. To ' +
+                'manage Ghost yourself, start one and run ' +
+                '`node test-e2e/setup/bootstrap.js` first.',
         );
     }
 
-    return {adminApiUrl, adminApiKey};
+    return { adminApiUrl, adminApiKey };
 };
 
 // data seeded by 02-creates.test.js and asserted on by the search and
@@ -67,24 +67,19 @@ const fixtures = {
     member: {
         name: 'E2E Member',
         email: 'e2e-member@example.com',
-        note: 'Created by the Zapier e2e suite'
+        note: 'Created by the Zapier e2e suite',
     },
     publishedPost: {
         title: 'E2E Published Post',
-        html: '<p>Published by the Zapier e2e suite.</p>'
+        html: '<p>Published by the Zapier e2e suite.</p>',
     },
     scheduledPost: {
         title: 'E2E Scheduled Post',
-        html: '<p>Scheduled by the Zapier e2e suite.</p>'
+        html: '<p>Scheduled by the Zapier e2e suite.</p>',
     },
     tagSlug: 'e2e-zapier',
     missingEmail: 'e2e-does-not-exist@example.com',
-    missingSlug: 'e2e-does-not-exist'
+    missingSlug: 'e2e-does-not-exist',
 };
 
-export {
-    App,
-    appTester,
-    getAuthData,
-    fixtures
-};
+export { App, appTester, getAuthData, fixtures };

@@ -1,39 +1,46 @@
 const semver = require('semver');
-const {initAdminApi, RequestError, SUPPORTED_GHOST_VERSION} = require('./lib/utils');
+const { initAdminApi, RequestError, SUPPORTED_GHOST_VERSION } = require('./lib/utils');
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
 // Throwing an error shows the error message to the user
-const testAuth = (z, {authData}) => {
+const testAuth = (z, { authData }) => {
     const api = initAdminApi(z, authData);
 
     // ensure that we can grab the about config (requires auth, will error if invalid)
-    return api.site.read().then((config) => {
-        const version = semver.coerce(config.version);
+    return api.site
+        .read()
+        .then((config) => {
+            const version = semver.coerce(config.version);
 
-        if (!semver.satisfies(version, SUPPORTED_GHOST_VERSION)) {
-            throw new Error(`Supported Ghost version range is ${SUPPORTED_GHOST_VERSION}, you are using ${config.version}`);
-        }
+            if (!semver.satisfies(version, SUPPORTED_GHOST_VERSION)) {
+                throw new Error(
+                    `Supported Ghost version range is ${SUPPORTED_GHOST_VERSION}, you are using ${config.version}`,
+                );
+            }
 
-        // make an authenticated request to ensure the API key is valid
-        // (some versions of Ghost do not error when an invalid key is used
-        //  to access non-authenticated endpoints)
-        return api.config.read().then(() => {
-            // anything returned here gets added to `bundle.authData`
-            return {
-                blogTitle: config.title,
-                blogUrl: config.url
-            };
+            // make an authenticated request to ensure the API key is valid
+            // (some versions of Ghost do not error when an invalid key is used
+            //  to access non-authenticated endpoints)
+            return api.config.read().then(() => {
+                // anything returned here gets added to `bundle.authData`
+                return {
+                    blogTitle: config.title,
+                    blogUrl: config.url,
+                };
+            });
+        })
+        .catch((err) => {
+            // the unversioned Admin API exists from Ghost 5.0, so a 404 means
+            // this is not a Ghost site or a Ghost too old to be supported
+            if (err instanceof RequestError && err.res.status === 404) {
+                throw new Error(
+                    `Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_GHOST_VERSION})`,
+                );
+            }
+
+            throw new Error(err.message);
         });
-    }).catch((err) => {
-        // the unversioned Admin API exists from Ghost 5.0, so a 404 means
-        // this is not a Ghost site or a Ghost too old to be supported
-        if (err instanceof RequestError && err.res.status === 404) {
-            throw new Error(`Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_GHOST_VERSION})`);
-        }
-
-        throw new Error(err.message);
-    });
 };
 
 module.exports = {
@@ -51,9 +58,10 @@ module.exports = {
             key: 'adminApiKey',
             label: 'Admin API Key',
             helpText: 'Find these details in Ghost Admin under `Integrations » Zapier`',
-            placeholder: '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1',
+            placeholder:
+                '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1',
             required: true,
-            type: 'string'
+            type: 'string',
         },
         {
             key: 'adminApiUrl',
@@ -61,7 +69,7 @@ module.exports = {
             helpText: 'Find these details in Ghost Admin under `Integrations » Zapier`',
             placeholder: 'https://yoursite.com',
             required: true,
-            type: 'string'
-        }
-    ]
+            type: 'string',
+        },
+    ],
 };

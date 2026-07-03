@@ -1,4 +1,4 @@
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
 const subscribeWebhook = (z, bundle) => {
@@ -14,7 +14,7 @@ const unsubscribeWebhook = (z, bundle) => {
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {member} = bundle.cleanedRequest;
+    const { member } = bundle.cleanedRequest;
 
     return [member.previous];
 };
@@ -22,8 +22,7 @@ const handleWebhook = (z, bundle) => {
 const getLatestMember = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
-    return api.members
-        .browse({order: 'created_at DESC', limit: 1});
+    return api.members.browse({ order: 'created_at DESC', limit: 1 });
 };
 
 module.exports = {
@@ -32,13 +31,12 @@ module.exports = {
 
     display: {
         label: 'Member Deleted',
-        description: 'Triggers when a member is deleted.'
+        description: 'Triggers when a member is deleted.',
     },
 
     operation: {
         // we don't need any input from the user for this trigger
-        inputFields: [
-        ],
+        inputFields: [],
 
         // use resthooks rather than polling
         type: 'hook',
@@ -64,19 +62,19 @@ module.exports = {
                     name: 'Zapier',
                     slug: 'zapier',
                     created_at: '2019-10-13T18:12:00.000Z',
-                    updated_at: '2019-10-13T18:12:00.000Z'
-                }
+                    updated_at: '2019-10-13T18:12:00.000Z',
+                },
             ],
             newsletters: [
                 {
                     id: '62e12664bbd0f0cb56f6f7d1',
                     name: 'Sample Newsletter',
                     description: null,
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             ],
             created_at: '2019-10-13T18:12:00.000Z',
-            updated_at: '2019-10-13T18:12:00.000Z'
-        }
-    }
+            updated_at: '2019-10-13T18:12:00.000Z',
+        },
+    },
 };

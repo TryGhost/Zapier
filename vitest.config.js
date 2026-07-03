@@ -1,4 +1,4 @@
-const {defineConfig} = require('vitest/config');
+const { defineConfig } = require('vitest/config');
 
 module.exports = defineConfig({
     test: {
@@ -13,8 +13,8 @@ module.exports = defineConfig({
                 lines: 100,
                 statements: 100,
                 branches: 100,
-                functions: 100
-            }
-        }
-    }
+                functions: 100,
+            },
+        },
+    },
 });

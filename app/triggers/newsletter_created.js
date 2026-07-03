@@ -1,4 +1,4 @@
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
 const subscribeWebhook = (z, bundle) => {
@@ -14,26 +14,26 @@ const unsubscribeWebhook = (z, bundle) => {
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {newsletter} = bundle.cleanedRequest;
+    const { newsletter } = bundle.cleanedRequest;
 
     return [newsletter.current];
 };
 
 const listNewsletters = (z, bundle) => {
-    const {authData, meta} = bundle;
+    const { authData, meta } = bundle;
 
     const api = initAdminApi(z, authData);
 
     if (meta.isFillingDynamicDropdown) {
         return api.newsletters.browse({
             order: 'name DESC',
-            limit: 'all'
+            limit: 'all',
         });
     }
 
     return api.newsletters.browse({
         order: 'created_at DESC',
-        limit: 1
+        limit: 1,
     });
 };
 
@@ -44,7 +44,7 @@ module.exports = {
     display: {
         label: 'Newsletter Created',
         description: 'Triggers when a new newsletter is added.',
-        hidden: true // only used by newsletter dynamic dropdown
+        hidden: true, // only used by newsletter dynamic dropdown
     },
 
     operation: {
@@ -82,7 +82,7 @@ module.exports = {
             created_at: '2022-05-11T16:52:52.000Z',
             updated_at: null,
             show_header_name: false,
-            uuid: 'c9e80472-8017-4abc-8bb0-6393f1b39596'
-        }
-    }
+            uuid: 'c9e80472-8017-4abc-8bb0-6393f1b39596',
+        },
+    },
 };

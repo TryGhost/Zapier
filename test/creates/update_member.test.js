@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import nock from 'nock';
 
 import zapier from 'zapier-platform-core';
@@ -14,12 +14,13 @@ describe('Creates', function () {
         beforeEach(function () {
             apiMock = nock('http://zapier-test.ghost.io', {
                 reqheaders: {
-                    'User-Agent': new RegExp(`Zapier/${App.version} GhostAdminSDK/\\d+.\\d+.\\d+`)
-                }
+                    'User-Agent': new RegExp(`Zapier/${App.version} GhostAdminSDK/\\d+.\\d+.\\d+`),
+                },
             });
             authData = {
                 adminApiUrl: 'http://zapier-test.ghost.io',
-                adminApiKey: '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1'
+                adminApiKey:
+                    '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1',
             };
         });
 
@@ -28,328 +29,417 @@ describe('Creates', function () {
         });
 
         it('updates a member', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    send_email: 'no',
-                    email_type: 'signup'
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        send_email: 'no',
+                        email_type: 'signup',
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    name: 'Test Member',
-                    email: 'test@example.com'
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z'
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.name).toBe('Test Member');
-                    expect(member.email).toBe('test@example.com');
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.name).toBe('Test Member');
+                expect(member.email).toBe('test@example.com');
+            });
         });
 
         it('updates a member subscribed to a single newsletter', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    newsletter_count: 'single',
-                    subscribed: true
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'single',
+                        subscribed: true,
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    name: 'Test Member',
-                    subscribed: true
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    subscribed: true,
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z'
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.subscribed).toBe(true);
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            name: 'Test Member',
+                            subscribed: true,
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            subscribed: true,
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.subscribed).toBe(true);
+            });
         });
 
         it('has a friendly, halting validation error', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    email: 'not_valid'
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        email: 'not_valid',
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    email: 'not_valid'
-                }]
-            }).reply(422, {
-                errors: [{
-                    message: 'Validation error, cannot save subscriber.',
-                    context: 'Validation (isEmail) failed for email',
-                    type: 'ValidationError',
-                    details: null,
-                    property: null,
-                    help: null,
-                    code: null,
-                    id: '2749ebe0-5145-11e9-9864-f79cf99013d0'
-                }]
-            });
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            email: 'not_valid',
+                        },
+                    ],
+                })
+                .reply(422, {
+                    errors: [
+                        {
+                            message: 'Validation error, cannot save subscriber.',
+                            context: 'Validation (isEmail) failed for email',
+                            type: 'ValidationError',
+                            details: null,
+                            property: null,
+                            help: null,
+                            code: null,
+                            id: '2749ebe0-5145-11e9-9864-f79cf99013d0',
+                        },
+                    ],
+                });
 
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then(() => {
+            return appTester(App.creates.update_member.operation.perform, bundle).then(
+                () => {
                     expect.unreachable('expected the call to be rejected');
-                }, (err) => {
+                },
+                (err) => {
                     expect(err.name).toEqual('HaltedError');
                     expect(err.message).toMatch(/Validation \(isEmail\) failed for email/);
-                });
+                },
+            );
         });
 
         it('handles 500 errors with JSON error body', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com'
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/')
-                .reply(500, {
-                    errors: [{
+            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/').reply(500, {
+                errors: [
+                    {
                         message: 'Authorization failed',
-                        context: 'Unable to determine the authenticated user or integration. Check that cookies are being passed through if using session authentication.',
+                        context:
+                            'Unable to determine the authenticated user or integration. Check that cookies are being passed through if using session authentication.',
                         type: 'NoPermissionError',
                         details: null,
                         property: null,
                         help: null,
                         code: null,
-                        id: '34950f70-5148-11e9-9864-f79cf99013d0'
-                    }]
-                });
+                        id: '34950f70-5148-11e9-9864-f79cf99013d0',
+                    },
+                ],
+            });
 
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then(() => {
+            return appTester(App.creates.update_member.operation.perform, bundle).then(
+                () => {
                     expect.unreachable('expected the call to be rejected');
-                }, (err) => {
+                },
+                (err) => {
                     expect(err.name).toEqual('RequestError');
                     expect(err.message).toMatch(/Authorization failed/);
-                });
+                },
+            );
         });
 
         it('updates member label', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    labels: ['Zapier']
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        labels: ['Zapier'],
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    labels: ['Zapier']
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    labels: [
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
                         {
-                            id: '5e425659230484605f002c57',
-                            name: 'Zapier',
-                            created_at: '2020-02-11T07:23:05.520Z',
-                            updated_at: '2020-02-11T07:23:05.520Z',
-                            slug: 'zapier'
-                        }
+                            labels: ['Zapier'],
+                        },
                     ],
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z'
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.name).toBe('Test Member');
-                    expect(member.email).toBe('test@example.com');
-                    expect(member.labels).toHaveLength(1);
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            labels: [
+                                {
+                                    id: '5e425659230484605f002c57',
+                                    name: 'Zapier',
+                                    created_at: '2020-02-11T07:23:05.520Z',
+                                    updated_at: '2020-02-11T07:23:05.520Z',
+                                    slug: 'zapier',
+                                },
+                            ],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.name).toBe('Test Member');
+                expect(member.email).toBe('test@example.com');
+                expect(member.labels).toHaveLength(1);
+            });
         });
 
         it('updates member comped flag', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    comped: true
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped: true,
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    comped: true
-                }]
-            }).reply(201, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    comped: true,
-                    labels: [],
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z'
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.name).toBe('Test Member');
-                    expect(member.email).toBe('test@example.com');
-                    expect(member.comped).toBe(true);
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            comped: true,
+                        },
+                    ],
+                })
+                .reply(201, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            comped: true,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.name).toBe('Test Member');
+                expect(member.email).toBe('test@example.com');
+                expect(member.comped).toBe(true);
+            });
         });
 
         it('updates a member subscribed to multiple newsletters', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    newsletter_count: 'multiple',
-                    newsletters_keepsame: false,
-                    newsletters: ['one', 'two']
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false,
+                        newsletters: ['one', 'two'],
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    name: 'Test Member',
-                    newsletters: [{
-                        id: 'one'
-                    }, {
-                        id: 'two'
-                    }]
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z',
-                    newsletters: [{
-                        id: 'one'
-                    }, {
-                        id: 'two'
-                    }]
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.newsletters.length).toBe(2);
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            name: 'Test Member',
+                            newsletters: [
+                                {
+                                    id: 'one',
+                                },
+                                {
+                                    id: 'two',
+                                },
+                            ],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                            newsletters: [
+                                {
+                                    id: 'one',
+                                },
+                                {
+                                    id: 'two',
+                                },
+                            ],
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.newsletters.length).toBe(2);
+            });
         });
 
         it('unsubscribes a member from all newsletters when none are selected', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    newsletter_count: 'multiple',
-                    newsletters_keepsame: false
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: false,
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    newsletters: []
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z',
-                    newsletters: []
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.newsletters.length).toBe(0);
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            newsletters: [],
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                            newsletters: [],
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.newsletters.length).toBe(0);
+            });
         });
 
         it('keeps existing newsletters when keepsame flag is set', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    newsletter_count: 'multiple',
-                    newsletters_keepsame: true,
-                    newsletters: ['one', 'two']
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        name: 'Test Member',
+                        newsletter_count: 'multiple',
+                        newsletters_keepsame: true,
+                        newsletters: ['one', 'two'],
+                    },
+                },
+            );
 
-            apiMock.put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                members: [{
-                    name: 'Test Member'
-                }]
-            }).reply(200, {
-                members: [{
-                    id: '5c9c9c8d51b5bf974afad2a4',
-                    name: 'Test Member',
-                    email: 'test@example.com',
-                    created_at: '2019-10-03T11:54:10.123Z',
-                    updated_at: '2019-10-03T11:54:10.123Z'
-                }]
-            });
-
-            return appTester(App.creates.update_member.operation.perform, bundle)
-                .then((member) => {
-                    expect(apiMock.isDone()).toBe(true);
-
-                    expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                    expect(member.name).toBe('Test Member');
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [
+                        {
+                            name: 'Test Member',
+                        },
+                    ],
+                })
+                .reply(200, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
                 });
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.name).toBe('Test Member');
+            });
         });
 
         describe('dynamic input fields', function () {
@@ -358,70 +448,100 @@ describe('Creates', function () {
             const NEWSLETTERS_FIELD = 6;
 
             it('shows the subscribed field for a single newsletter', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {
-                        newsletter_count: 'single'
-                    }
-                });
+                let bundle = Object.assign(
+                    {},
+                    { authData },
+                    {
+                        inputData: {
+                            newsletter_count: 'single',
+                        },
+                    },
+                );
 
-                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
-                    .then(([field]) => {
-                        expect(field.key).toEqual('subscribed');
-                        expect(field.type).toEqual('boolean');
-                    });
+                return appTester(
+                    App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD],
+                    bundle,
+                ).then(([field]) => {
+                    expect(field.key).toEqual('subscribed');
+                    expect(field.type).toEqual('boolean');
+                });
             });
 
             it('shows the keepsame field for multiple newsletters', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {
-                        newsletter_count: 'multiple'
-                    }
-                });
+                let bundle = Object.assign(
+                    {},
+                    { authData },
+                    {
+                        inputData: {
+                            newsletter_count: 'multiple',
+                        },
+                    },
+                );
 
-                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
-                    .then(([field]) => {
-                        expect(field.key).toEqual('newsletters_keepsame');
-                        expect(field.required).toEqual(true);
-                    });
+                return appTester(
+                    App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD],
+                    bundle,
+                ).then(([field]) => {
+                    expect(field.key).toEqual('newsletters_keepsame');
+                    expect(field.required).toEqual(true);
+                });
             });
 
             it('shows no subscription field before a newsletter count is chosen', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {}
-                });
+                let bundle = Object.assign(
+                    {},
+                    { authData },
+                    {
+                        inputData: {},
+                    },
+                );
 
-                return appTester(App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD], bundle)
-                    .then((fields) => {
-                        expect(fields.length).toEqual(0);
-                    });
+                return appTester(
+                    App.creates.update_member.operation.inputFields[SUBSCRIPTION_FIELD],
+                    bundle,
+                ).then((fields) => {
+                    expect(fields.length).toEqual(0);
+                });
             });
 
             it('shows the newsletters field when keepsame is disabled', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {
-                        newsletter_count: 'multiple',
-                        newsletters_keepsame: false
-                    }
-                });
+                let bundle = Object.assign(
+                    {},
+                    { authData },
+                    {
+                        inputData: {
+                            newsletter_count: 'multiple',
+                            newsletters_keepsame: false,
+                        },
+                    },
+                );
 
-                return appTester(App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
-                    .then(([field]) => {
-                        expect(field.key).toEqual('newsletters');
-                        expect(field.list).toEqual(true);
-                    });
+                return appTester(
+                    App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD],
+                    bundle,
+                ).then(([field]) => {
+                    expect(field.key).toEqual('newsletters');
+                    expect(field.list).toEqual(true);
+                });
             });
 
             it('hides the newsletters field for a single newsletter', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {
-                        newsletter_count: 'single'
-                    }
-                });
+                let bundle = Object.assign(
+                    {},
+                    { authData },
+                    {
+                        inputData: {
+                            newsletter_count: 'single',
+                        },
+                    },
+                );
 
-                return appTester(App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD], bundle)
-                    .then((fields) => {
-                        expect(fields.length).toEqual(0);
-                    });
+                return appTester(
+                    App.creates.update_member.operation.inputFields[NEWSLETTERS_FIELD],
+                    bundle,
+                ).then((fields) => {
+                    expect(fields.length).toEqual(0);
+                });
             });
         });
     });

@@ -1,7 +1,7 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-import {describe, it, expect, beforeAll} from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import {App, appTester, getAuthData} from './helpers';
+import { App, appTester, getAuthData } from './helpers';
 
 // every hook trigger the app exposes
 const HOOK_TRIGGERS = [
@@ -13,7 +13,7 @@ const HOOK_TRIGGERS = [
     'member_created',
     'member_updated',
     'member_deleted',
-    'newsletter_created'
+    'newsletter_created',
 ];
 
 HOOK_TRIGGERS.forEach(function (triggerKey) {
@@ -25,11 +25,11 @@ HOOK_TRIGGERS.forEach(function (triggerKey) {
         });
 
         it('completes a subscribe/unsubscribe round-trip', async function () {
-            const {operation} = App.triggers[triggerKey];
+            const { operation } = App.triggers[triggerKey];
 
             const subscribeData = await appTester(operation.performSubscribe, {
                 authData,
-                targetUrl: `http://example.com/hook/${triggerKey}`
+                targetUrl: `http://example.com/hook/${triggerKey}`,
             });
 
             expect(subscribeData.id).toBeTypeOf('string');
@@ -37,7 +37,7 @@ HOOK_TRIGGERS.forEach(function (triggerKey) {
             // a failed DELETE would reject and fail the test
             await appTester(operation.performUnsubscribe, {
                 authData,
-                subscribeData
+                subscribeData,
             });
         });
     });

@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
 const subscribeWebhook = _.partial(webhooks.subscribe, 'tag.added');
@@ -10,24 +10,24 @@ const unsubscribeWebhook = webhooks.unsubscribe;
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {tag} = bundle.cleanedRequest;
+    const { tag } = bundle.cleanedRequest;
 
     return [tag.current];
 };
 
-const listTags = (z, {authData, meta}) => {
+const listTags = (z, { authData, meta }) => {
     const api = initAdminApi(z, authData);
 
     if (meta.isFillingDynamicDropdown) {
         return api.tags.browse({
             order: 'name DESC',
-            limit: 'all'
+            limit: 'all',
         });
     }
 
     return api.tags.browse({
         order: 'created_at DESC',
-        limit: 1
+        limit: 1,
     });
 };
 
@@ -38,7 +38,7 @@ module.exports = {
     display: {
         label: 'Tag Created',
         description: 'Triggers when a new tag is added.',
-        hidden: true // only used by tags dynamic dropdown
+        hidden: true, // only used by tags dynamic dropdown
     },
 
     operation: {
@@ -63,7 +63,7 @@ module.exports = {
             meta_description: null,
             created_at: '2019-01-08T14:49:40.000Z',
             updated_at: '2019-01-08T14:49:40.000Z',
-            url: 'http://localhost:2368/tag/getting-started/'
-        }
-    }
+            url: 'http://localhost:2368/tag/getting-started/',
+        },
+    },
 };

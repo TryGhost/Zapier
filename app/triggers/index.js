@@ -7,5 +7,5 @@ module.exports = {
     post_published: require('./post_published'),
     post_scheduled: require('./post_scheduled'),
     tag_created: require('./tag_created'),
-    newsletter_created: require('./newsletter_created')
+    newsletter_created: require('./newsletter_created'),
 };

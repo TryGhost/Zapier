@@ -1,8 +1,8 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-import {describe, it, expect, beforeAll} from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import {App, appTester, getAuthData, fixtures} from './helpers';
-import {OWNER} from './setup/bootstrap';
+import { App, appTester, getAuthData, fixtures } from './helpers';
+import { OWNER } from './setup/bootstrap';
 
 describe('E2E Creates', function () {
     let authData;
@@ -22,8 +22,8 @@ describe('E2E Creates', function () {
                     newsletter_count: 'single',
                     subscribed: true,
                     // no mail transport is configured in CI, sending must stay off
-                    send_email: false
-                }
+                    send_email: false,
+                },
             });
 
             expect(member.id).toBeTypeOf('string');
@@ -35,15 +35,18 @@ describe('E2E Creates', function () {
     describe('Update Member', function () {
         it('updates the member with explicit newsletter subscriptions', async function () {
             // the default newsletter every Ghost 5 site ships with
-            const [newsletter] = await appTester(App.triggers.newsletter_created.operation.performList, {
-                authData,
-                meta: {}
-            });
+            const [newsletter] = await appTester(
+                App.triggers.newsletter_created.operation.performList,
+                {
+                    authData,
+                    meta: {},
+                },
+            );
             expect(newsletter.id).toBeTypeOf('string');
 
             const [member] = await appTester(App.searches.member.operation.perform, {
                 authData,
-                inputData: {email: fixtures.member.email}
+                inputData: { email: fixtures.member.email },
             });
 
             const updated = await appTester(App.creates.update_member.operation.perform, {
@@ -53,8 +56,8 @@ describe('E2E Creates', function () {
                     name: `${fixtures.member.name} Updated`,
                     newsletter_count: 'multiple',
                     newsletters_keepsame: false,
-                    newsletters: [newsletter.id]
-                }
+                    newsletters: [newsletter.id],
+                },
             });
 
             expect(updated.id).toBe(member.id);
@@ -72,7 +75,7 @@ describe('E2E Creates', function () {
             // rather than guessing what Ghost generated from the name
             const [owner] = await appTester(App.searches.author.operation.perform, {
                 authData,
-                inputData: {search_by: 'email', email: OWNER.email}
+                inputData: { search_by: 'email', email: OWNER.email },
             });
             ownerSlug = owner.slug;
         });
@@ -86,8 +89,8 @@ describe('E2E Creates', function () {
                     content_format: 'html',
                     html: fixtures.publishedPost.html,
                     tags: [fixtures.tagSlug],
-                    authors: [ownerSlug]
-                }
+                    authors: [ownerSlug],
+                },
             });
 
             expect(post.id).toBeTypeOf('string');
@@ -99,7 +102,7 @@ describe('E2E Creates', function () {
         });
 
         it('creates a scheduled post with a future publish date', async function () {
-            const oneHourAhead = new Date(Date.now() + (60 * 60 * 1000)).toISOString();
+            const oneHourAhead = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
             const post = await appTester(App.creates.create_post.operation.perform, {
                 authData,
@@ -109,8 +112,8 @@ describe('E2E Creates', function () {
                     published_at: oneHourAhead,
                     content_format: 'html',
                     html: fixtures.scheduledPost.html,
-                    authors: [ownerSlug]
-                }
+                    authors: [ownerSlug],
+                },
             });
 
             expect(post.status).toBe('scheduled');

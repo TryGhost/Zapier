@@ -1,14 +1,14 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-import {describe, it, expect, beforeAll} from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
-import {App, appTester, getAuthData, fixtures} from './helpers';
-import {OWNER} from './setup/bootstrap';
+import { App, appTester, getAuthData, fixtures } from './helpers';
+import { OWNER } from './setup/bootstrap';
 
 describe('E2E Trigger performLists', function () {
     let authData;
 
     const performList = (triggerKey) => {
-        return appTester(App.triggers[triggerKey].operation.performList, {authData, meta: {}});
+        return appTester(App.triggers[triggerKey].operation.performList, { authData, meta: {} });
     };
 
     beforeAll(function () {

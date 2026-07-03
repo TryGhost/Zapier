@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import nock from 'nock';
 
 import zapier from 'zapier-platform-core';
@@ -14,12 +14,13 @@ describe('Triggers', function () {
         beforeEach(function () {
             apiMock = nock('http://zapier-test.ghost.io', {
                 reqheaders: {
-                    'User-Agent': new RegExp(`Zapier/${App.version} GhostAdminSDK/\\d+.\\d+.\\d+`)
-                }
+                    'User-Agent': new RegExp(`Zapier/${App.version} GhostAdminSDK/\\d+.\\d+.\\d+`),
+                },
             });
             authData = {
                 adminApiUrl: 'http://zapier-test.ghost.io',
-                adminApiKey: '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1'
+                adminApiKey:
+                    '5c3e1182e79eace7f58c9c3b:7202e874ccae6f1ee6688bb700f356b672fb078d8465860852652037f7c7459ddbd2f2a6e9aa05a40b499ae20027d9f9ba2e5004aa9ab6510b90a5dac674cbc1',
             };
         });
 
@@ -28,39 +29,44 @@ describe('Triggers', function () {
         });
 
         it('loads sample member data', function () {
-            let bundle = Object.assign({}, {authData}, {
-                inputData: {},
-                cleanedRequest: {
-                    member: {
-                        current: {
-                            id: '5a01d3ecc8d50d0e606a7e7c',
-                            name: 'New Member Name',
-                            email: 'sample@example.com',
-                            note: 'Updated sample member record.',
-                            created_at: '2019-10-13T18:12:00.000Z',
-                            updated_at: '2019-10-31T14:58:00.000Z'
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {},
+                    cleanedRequest: {
+                        member: {
+                            current: {
+                                id: '5a01d3ecc8d50d0e606a7e7c',
+                                name: 'New Member Name',
+                                email: 'sample@example.com',
+                                note: 'Updated sample member record.',
+                                created_at: '2019-10-13T18:12:00.000Z',
+                                updated_at: '2019-10-31T14:58:00.000Z',
+                            },
+                            previous: {
+                                name: 'Old Member Name',
+                                note: 'Just a sample member record.',
+                                updated_at: '2019-10-13T18:12:00.000Z',
+                            },
                         },
-                        previous: {
-                            name: 'Old Member Name',
-                            note: 'Just a sample member record.',
-                            updated_at: '2019-10-13T18:12:00.000Z'
-                        }
-                    }
-                }
-            });
+                    },
+                },
+            );
 
-            return appTester(App.triggers.member_updated.operation.perform, bundle)
-                .then(([member]) => {
+            return appTester(App.triggers.member_updated.operation.perform, bundle).then(
+                ([member]) => {
                     expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
                     expect(member.current.name).toEqual('New Member Name');
                     expect(member.current.email).toEqual('sample@example.com');
                     expect(member.previous.name).toEqual('Old Member Name');
-                });
+                },
+            );
         });
 
         it('loads member from list', function () {
-            return appTester(App.triggers.member_updated.operation.performList, {authData})
-                .then(([member]) => {
+            return appTester(App.triggers.member_updated.operation.performList, { authData }).then(
+                ([member]) => {
                     expect(member.current).toBeTruthy();
                     expect(Object.keys(member.current).length).toEqual(13);
                     expect(member.previous).toBeTruthy();
@@ -86,50 +92,66 @@ describe('Triggers', function () {
                     expect(member.previous.labels.length).toEqual(2);
                     expect(member.previous.labels[0].name).toEqual('Old label 1');
                     expect(member.previous.labels[1].name).toEqual('Old label 2');
-                });
+                },
+            );
         });
 
         it('subscribes to webhook', function () {
-            let bundle = Object.assign({}, {authData}, {
-                targetUrl: 'https://webooks.zapier.com/ghost/member'
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    targetUrl: 'https://webooks.zapier.com/ghost/member',
+                },
+            );
 
-            apiMock.post('/ghost/api/admin/webhooks/', {
-                webhooks: [{
-                    integration_id: '5c3e1182e79eace7f58c9c3b',
-                    target_url: 'https://webooks.zapier.com/ghost/member',
-                    event: 'member.edited'
-                }]
-            }).reply(201, {
-                webhooks: [{
-                    id: '12345',
-                    target_url: 'https://webooks.zapier.com/ghost/member',
-                    event: 'member.edited'
-                }]
-            });
-
-            return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
-                .then(() => {
-                    expect(apiMock.isDone()).toBe(true);
+            apiMock
+                .post('/ghost/api/admin/webhooks/', {
+                    webhooks: [
+                        {
+                            integration_id: '5c3e1182e79eace7f58c9c3b',
+                            target_url: 'https://webooks.zapier.com/ghost/member',
+                            event: 'member.edited',
+                        },
+                    ],
+                })
+                .reply(201, {
+                    webhooks: [
+                        {
+                            id: '12345',
+                            target_url: 'https://webooks.zapier.com/ghost/member',
+                            event: 'member.edited',
+                        },
+                    ],
                 });
+
+            return appTester(App.triggers.member_updated.operation.performSubscribe, bundle).then(
+                () => {
+                    expect(apiMock.isDone()).toBe(true);
+                },
+            );
         });
 
         it('unsubscribes from webhook', function () {
-            let bundle = Object.assign({}, {authData}, {
-                subscribeData: {
-                    id: '12345',
-                    target_url: 'https://webooks.zapier.com/ghost/member',
-                    event: 'member.edited'
-                }
-            });
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    subscribeData: {
+                        id: '12345',
+                        target_url: 'https://webooks.zapier.com/ghost/member',
+                        event: 'member.edited',
+                    },
+                },
+            );
 
-            apiMock.delete('/ghost/api/admin/webhooks/12345/')
-                .reply(204);
+            apiMock.delete('/ghost/api/admin/webhooks/12345/').reply(204);
 
-            return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
-                .then(() => {
+            return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle).then(
+                () => {
                     expect(apiMock.isDone()).toBe(true);
-                });
+                },
+            );
         });
     });
 });

@@ -23,7 +23,7 @@
  */
 const http = require('http');
 const fs = require('fs');
-const {join} = require('path');
+const { join } = require('path');
 
 const GHOST_URL = process.env.GHOST_URL || 'http://localhost:2368';
 
@@ -33,7 +33,7 @@ const OWNER = {
     // Ghost requires passwords to be at least 10 characters long and rejects
     // "insecure" ones (e.g. anything containing the word "password")
     password: 'zapier-e2e-Gh0st',
-    blogTitle: 'Zapier E2E'
+    blogTitle: 'Zapier E2E',
 };
 
 /**
@@ -44,29 +44,36 @@ const OWNER = {
  * @param {object} [options.headers] additional request headers
  * @returns {Promise<{status: number, headers: object, json: object}>}
  */
-const request = (method, path, {body, headers = {}} = {}) => {
+const request = (method, path, { body, headers = {} } = {}) => {
     return new Promise((resolve, reject) => {
         const payload = body ? JSON.stringify(body) : null;
-        const req = http.request(`${GHOST_URL}${path}`, {
-            method,
-            headers: Object.assign({
-                'Content-Type': 'application/json',
-                // Ghost's session API requires a matching Origin header
-                Origin: GHOST_URL
-            }, headers)
-        }, (res) => {
-            let raw = '';
-            res.on('data', chunk => (raw += chunk));
-            res.on('end', () => {
-                let json = null;
-                try {
-                    json = raw ? JSON.parse(raw) : null;
-                } catch {
-                    // non-JSON body (e.g. empty 201 responses) - leave json as null
-                }
-                resolve({status: res.statusCode, headers: res.headers, json});
-            });
-        });
+        const req = http.request(
+            `${GHOST_URL}${path}`,
+            {
+                method,
+                headers: Object.assign(
+                    {
+                        'Content-Type': 'application/json',
+                        // Ghost's session API requires a matching Origin header
+                        Origin: GHOST_URL,
+                    },
+                    headers,
+                ),
+            },
+            (res) => {
+                let raw = '';
+                res.on('data', (chunk) => (raw += chunk));
+                res.on('end', () => {
+                    let json = null;
+                    try {
+                        json = raw ? JSON.parse(raw) : null;
+                    } catch {
+                        // non-JSON body (e.g. empty 201 responses) - leave json as null
+                    }
+                    resolve({ status: res.statusCode, headers: res.headers, json });
+                });
+            },
+        );
 
         req.on('error', reject);
 
@@ -85,20 +92,22 @@ const request = (method, path, {body, headers = {}} = {}) => {
 const assertStatus = (step, response, expected) => {
     if (response.status !== expected) {
         const detail = response.json ? JSON.stringify(response.json) : '(no body)';
-        throw new Error(`${step} failed: expected HTTP ${expected}, got ${response.status} - ${detail}`);
+        throw new Error(
+            `${step} failed: expected HTTP ${expected}, got ${response.status} - ${detail}`,
+        );
     }
 };
 
 const createOwner = async () => {
     const response = await request('POST', '/ghost/api/admin/authentication/setup/', {
-        body: {setup: [OWNER]}
+        body: { setup: [OWNER] },
     });
     assertStatus('Owner setup', response, 201);
 };
 
 const createSession = async () => {
     const response = await request('POST', '/ghost/api/admin/session/', {
-        body: {username: OWNER.email, password: OWNER.password}
+        body: { username: OWNER.email, password: OWNER.password },
     });
     assertStatus('Session login', response, 201);
 
@@ -107,18 +116,18 @@ const createSession = async () => {
         throw new Error('Session login did not return a session cookie');
     }
 
-    return cookies.map(cookie => cookie.split(';')[0]).join('; ');
+    return cookies.map((cookie) => cookie.split(';')[0]).join('; ');
 };
 
 const createIntegration = async (sessionCookie) => {
     const response = await request('POST', '/ghost/api/admin/integrations/?include=api_keys', {
-        body: {integrations: [{name: 'Zapier E2E'}]},
-        headers: {Cookie: sessionCookie}
+        body: { integrations: [{ name: 'Zapier E2E' }] },
+        headers: { Cookie: sessionCookie },
     });
     assertStatus('Integration creation', response, 201);
 
     const [integration] = response.json.integrations;
-    const adminKey = integration.api_keys.find(key => key.type === 'admin');
+    const adminKey = integration.api_keys.find((key) => key.type === 'admin');
     if (!adminKey) {
         throw new Error('Integration creation did not return an admin API key');
     }
@@ -129,10 +138,7 @@ const createIntegration = async (sessionCookie) => {
 };
 
 const exportCredentials = (adminApiKey) => {
-    const lines = [
-        `GHOST_ADMIN_API_URL=${GHOST_URL}`,
-        `GHOST_ADMIN_API_KEY=${adminApiKey}`
-    ];
+    const lines = [`GHOST_ADMIN_API_URL=${GHOST_URL}`, `GHOST_ADMIN_API_KEY=${adminApiKey}`];
 
     // never print the key itself - it would end up in CI or terminal logs
     if (process.env.GITHUB_ENV) {
@@ -149,7 +155,9 @@ const bootstrap = async () => {
     // the request helper uses the core http module, so a https:// (or
     // otherwise non-http) URL would fail confusingly further down
     if (!GHOST_URL.startsWith('http://')) {
-        throw new Error(`GHOST_URL must be an http:// URL (got '${GHOST_URL}') - this script only targets local/CI Ghost instances`);
+        throw new Error(
+            `GHOST_URL must be an http:// URL (got '${GHOST_URL}') - this script only targets local/CI Ghost instances`,
+        );
     }
 
     await createOwner();
@@ -169,5 +177,5 @@ if (require.main === module) {
 
 module.exports = {
     bootstrap,
-    OWNER
+    OWNER,
 };
