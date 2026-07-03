@@ -114,8 +114,21 @@ const isNotFoundHaltedError = (err) => {
     return err.name === 'HaltedError' && err.status === 404;
 };
 
+/**
+ * Zapier boolean inputs occasionally arrive stringified (see the
+ * `newsletters_default` guards in the member creates), so a plain truthy
+ * check would treat 'false' as enabled. Only real and stringified true count.
+ *
+ * @param {boolean|string|undefined} value a boolean input field's value
+ * @returns {boolean}
+ */
+const isEnabled = (value) => {
+    return value === true || value === 'true';
+};
+
 module.exports = {
     initAdminApi,
+    isEnabled,
     isNotFoundHaltedError,
     RequestError,
     SUPPORTED_GHOST_VERSION,
