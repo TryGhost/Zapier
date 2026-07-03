@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Self-contained e2e runner - a bare `yarn test:e2e` should just work.
+# Self-contained e2e runner - a bare `pnpm test:e2e` should just work.
 #
 # Resolution order:
 # 1. GHOST_ADMIN_API_URL/GHOST_ADMIN_API_KEY exported (CI): run vitest
@@ -59,7 +59,7 @@ pick_free_port() {
 
 # 1. explicit credentials (CI exports these via $GITHUB_ENV)
 if [ -n "${GHOST_ADMIN_API_URL:-}" ] && [ -n "${GHOST_ADMIN_API_KEY:-}" ]; then
-    exec yarn test:e2e:bare
+    exec pnpm test:e2e:bare
 fi
 
 # 2. credentials from a previous bootstrap - reuse them if that Ghost is
@@ -68,7 +68,7 @@ if [ -f "${env_file}" ]; then
     url="$(sed -n 's/^GHOST_ADMIN_API_URL=//p' "${env_file}")"
     if [ -n "${url}" ] && ghost_answers "${url}"; then
         echo "Reusing the Ghost at ${url} (from test-e2e/.env.local)"
-        exec yarn test:e2e:bare
+        exec pnpm test:e2e:bare
     fi
     echo "test-e2e/.env.local points at a Ghost that no longer answers - re-provisioning"
     rm -f "${env_file}"
@@ -120,11 +120,11 @@ elif command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
 else
     cat >&2 <<'EOF'
 No Ghost to test against and no way to provision one. Pick one:
-  - start docker                    -> `yarn test:e2e` boots a throwaway ghost:6 container
+  - start docker                    -> `pnpm test:e2e` boots a throwaway ghost:6 container
   - GHOST_CORE_PATH=/path/to/Ghost  -> boots Ghost from a source checkout
                                        (needs `pnpm install --frozen-lockfile --filter ghost...`)
   - run any fresh Ghost yourself    -> `node test-e2e/setup/bootstrap.js` (set GHOST_URL if it
-                                       is not on http://localhost:2368), then `yarn test:e2e`
+                                       is not on http://localhost:2368), then `pnpm test:e2e`
 EOF
     exit 1
 fi
@@ -132,7 +132,7 @@ fi
 GHOST_URL="${ghost_url}" node "${here}/setup/bootstrap.js"
 
 set +e
-yarn test:e2e:bare
+pnpm test:e2e:bare
 status=$?
 set -e
 
