@@ -74,3 +74,16 @@ To check changes against a production-like setup before promoting:
 5. Use your local Ghost as usual — webhook deliveries and API requests from
    Zapier now hit it. If nothing comes through, check Zapier's error
    dashboard.
+
+## Maintenance releases for the previous major
+
+Existing Zaps stay pinned to the integration version they were created on,
+and Zapier blocks migrating users across the integration's own majors — so
+users of the previous major can only receive fixes through same-major
+releases (e.g. `2.6.4`).
+
+The [`2.x` branch](https://github.com/TryGhost/Zapier/tree/2.x) exists for
+exactly that: it is the last Ghost-≥2.19-compatible state (before the
+Ghost 6 floor) on the modern toolchain, with working CI. To ship a fix for
+old-major users: branch off `2.x`, open a PR targeting `2.x`, then push and
+promote a same-major version and migrate users to it.
