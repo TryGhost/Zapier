@@ -10,8 +10,8 @@ Zapier users connect their Ghost site with an Admin API key and URL (from
 Ghost Admin under `Integrations » Zapier`) and build Zaps from:
 
 - **Triggers** — instant REST hooks fed by Ghost webhooks: post/page
-  published, post scheduled, member created/updated/deleted, tag, author, and
-  newsletter created
+  published, post scheduled, member created/updated/deleted, tag, author,
+  newsletter, and tier created
 - **Creates** — create a post, create or update a member
 - **Searches** — find a member or an author
 

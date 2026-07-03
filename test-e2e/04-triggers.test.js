@@ -70,6 +70,14 @@ describe('E2E Trigger performLists', function () {
         expect(tag.slug).toBe(fixtures.tagSlug);
     });
 
+    it('tier_created lists the default paid tier and excludes the free tier', async function () {
+        const tiers = await performList('tier_created');
+
+        expect(tiers).toHaveLength(1);
+        expect(tiers[0].type).toBe('paid');
+        expect(tiers[0].name).toBe(OWNER.blogTitle);
+    });
+
     it('author_created lists the owner user', async function () {
         const [author] = await performList('author_created');
 

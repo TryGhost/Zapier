@@ -11,6 +11,108 @@ describe('E2E Creates', function () {
         authData = getAuthData();
     });
 
+    // runs before 'Create Member' so fixtures.member stays the newest member
+    // (the trigger specs assert on the latest member) - see helpers.js
+    describe('Complimentary tiers', function () {
+        let paidTier;
+
+        beforeAll(async function () {
+            // a fresh Ghost install ships with one active paid tier named
+            // after the site, even without Stripe connected
+            const tiers = await appTester(App.triggers.tier_created.operation.performList, {
+                authData,
+                meta: { isFillingDynamicDropdown: true },
+            });
+
+            expect(tiers).toHaveLength(1);
+            expect(tiers[0].type).toBe('paid');
+            expect(tiers[0].active).toBe(true);
+            expect(tiers[0].name).toBe(OWNER.blogTitle);
+
+            paidTier = tiers[0];
+        });
+
+        it('creates a comped member without Stripe connected', async function () {
+            const member = await appTester(App.creates.create_member.operation.perform, {
+                authData,
+                inputData: {
+                    name: fixtures.compedMember.name,
+                    email: fixtures.compedMember.email,
+                    comped_tier: paidTier.id,
+                    send_email: false,
+                },
+            });
+
+            expect(member.email).toBe(fixtures.compedMember.email);
+            expect(member.status).toBe('comped');
+            expect(member.tiers).toHaveLength(1);
+            expect(member.tiers[0].id).toBe(paidTier.id);
+        });
+
+        it('removes complimentary subscriptions but Ghost keeps the comped status without Stripe', async function () {
+            const [member] = await appTester(App.searches.member.operation.perform, {
+                authData,
+                inputData: { email: fixtures.compedMember.email },
+            });
+
+            const updated = await appTester(App.creates.update_member.operation.perform, {
+                authData,
+                inputData: {
+                    id: member.id,
+                    comped_remove: true,
+                },
+            });
+
+            expect(updated.tiers).toHaveLength(0);
+            // without Stripe, Ghost skips its member status recalculation on
+            // edit (`needsProducts` is Stripe-gated in the member repository),
+            // so the tier is detached but the status is left as it was
+            expect(updated.status).toBe('comped');
+        });
+
+        it('attaches a tier on update but Ghost keeps the free status without Stripe', async function () {
+            const created = await appTester(App.creates.create_member.operation.perform, {
+                authData,
+                inputData: {
+                    name: fixtures.tieredMember.name,
+                    email: fixtures.tieredMember.email,
+                    send_email: false,
+                },
+            });
+            expect(created.status).toBe('free');
+
+            const updated = await appTester(App.creates.update_member.operation.perform, {
+                authData,
+                inputData: {
+                    id: created.id,
+                    comped_tier: paidTier.id,
+                },
+            });
+
+            expect(updated.tiers).toHaveLength(1);
+            expect(updated.tiers[0].id).toBe(paidTier.id);
+            // the same Stripe-gated status recalculation as above: on a
+            // Stripe-connected site this member would become 'comped'
+            expect(updated.status).toBe('free');
+        });
+
+        it('rejects the deprecated comped flag without Stripe connected', async function () {
+            await expect(
+                appTester(App.creates.create_member.operation.perform, {
+                    authData,
+                    inputData: {
+                        email: 'e2e-legacy-comped@example.com',
+                        comped: true,
+                        send_email: false,
+                    },
+                }),
+            ).rejects.toMatchObject({
+                name: 'HaltedError',
+                message: expect.stringMatching(/Missing Stripe connection/),
+            });
+        });
+    });
+
     describe('Create Member', function () {
         it('creates a member without sending an email', async function () {
             const member = await appTester(App.creates.create_member.operation.perform, {

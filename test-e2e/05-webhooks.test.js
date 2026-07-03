@@ -14,6 +14,7 @@ const HOOK_TRIGGERS = [
     'member_updated',
     'member_deleted',
     'newsletter_created',
+    'tier_created',
 ];
 
 HOOK_TRIGGERS.forEach(function (triggerKey) {
