@@ -160,14 +160,14 @@ module.exports = {
                 required: false,
                 dynamic: 'tier_created.id.name',
                 helpText:
-                    'Give the member a free of charge subscription to a specific paid tier. Cannot be combined with the other complimentary fields.',
+                    "Give the member a free of charge subscription to a specific paid tier. Cannot be combined with the other complimentary fields. On sites without a connected Stripe account the tier is attached, but the member's status is not recalculated until Stripe is connected.",
             },
             {
                 key: 'comped_remove',
                 label: 'Remove complimentary subscriptions',
                 type: 'boolean',
                 helpText:
-                    'If enabled, all complimentary subscriptions are removed from the member. Cannot be combined with the other complimentary fields.',
+                    'If enabled, all complimentary subscriptions are removed from the member. Cannot be combined with the other complimentary fields. On sites without a connected Stripe account the tiers are detached, but the member keeps a comped status until Stripe is connected.',
             },
             {
                 key: 'comped',
