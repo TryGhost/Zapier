@@ -408,7 +408,31 @@ describe('Creates', function () {
             );
         });
 
-        it('rejects combining the deprecated comped flag with the new complimentary fields', function () {
+        it('rejects combining the deprecated comped flag with a complimentary tier', function () {
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        id: '5c9c9c8d51b5bf974afad2a4',
+                        comped: true,
+                        comped_tier: '6220aa04dd8021001c50e6e2',
+                    },
+                },
+            );
+
+            return appTester(App.creates.update_member.operation.perform, bundle).then(
+                () => {
+                    expect.unreachable('expected the call to be rejected');
+                },
+                (err) => {
+                    expect(err.name).toEqual('HaltedError');
+                    expect(err.message).toMatch(/leave it blank/);
+                },
+            );
+        });
+
+        it('rejects combining the deprecated comped flag with the remove flag', function () {
             let bundle = Object.assign(
                 {},
                 { authData },

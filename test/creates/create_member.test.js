@@ -439,6 +439,55 @@ describe('Creates', function () {
             });
         });
 
+        it('allows a complimentary tier alongside an unchecked comped flag', function () {
+            // comped: false is a no-op on create, so it does not count as
+            // using the deprecated mechanism - only a truthy comped conflicts
+            let bundle = Object.assign(
+                {},
+                { authData },
+                {
+                    inputData: {
+                        name: 'Test Member',
+                        email: 'test@example.com',
+                        comped: false,
+                        comped_tier: '6220aa04dd8021001c50e6e2',
+                    },
+                },
+            );
+
+            apiMock
+                .post('/ghost/api/admin/members/?send_email=true', {
+                    members: [
+                        {
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            tiers: [{ id: '6220aa04dd8021001c50e6e2' }],
+                        },
+                    ],
+                })
+                .reply(201, {
+                    members: [
+                        {
+                            id: '5c9c9c8d51b5bf974afad2a4',
+                            name: 'Test Member',
+                            email: 'test@example.com',
+                            status: 'comped',
+                            comped: true,
+                            labels: [],
+                            created_at: '2019-10-03T11:54:10.123Z',
+                            updated_at: '2019-10-03T11:54:10.123Z',
+                        },
+                    ],
+                });
+
+            return appTester(App.creates.create_member.operation.perform, bundle).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+
+                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
+                expect(member.status).toBe('comped');
+            });
+        });
+
         it('rejects combining a complimentary tier with the deprecated comped flag', function () {
             let bundle = Object.assign(
                 {},
