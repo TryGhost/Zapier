@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', function () {
@@ -54,9 +54,9 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.perform, bundle)
                     .then(([member]) => {
-                        member.id.should.eql('5c9a1929da323575684e5786');
-                        member.name.should.eql('Test Member');
-                        member.email.should.eql('test@example.com');
+                        expect(member.id).toEqual('5c9a1929da323575684e5786');
+                        expect(member.name).toEqual('Test Member');
+                        expect(member.email).toEqual('test@example.com');
                     });
             });
 
@@ -97,13 +97,13 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performList, bundle)
                     .then((results) => {
-                        apiMock.isDone().should.be.true;
-                        results.length.should.eql(1);
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(results.length).toEqual(1);
 
                         let [firstMember] = results;
-                        firstMember.id.should.eql('one');
-                        firstMember.name.should.eql('Member One');
-                        firstMember.email.should.eql('one@example.com');
+                        expect(firstMember.id).toEqual('one');
+                        expect(firstMember.name).toEqual('Member One');
+                        expect(firstMember.email).toEqual('one@example.com');
                     });
             });
 
@@ -130,7 +130,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performSubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
 
@@ -149,7 +149,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performUnsubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
         });
@@ -166,10 +166,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performList, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -180,10 +180,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performSubscribe, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
 
@@ -198,10 +198,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.member_deleted.operation.performUnsubscribe, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
                     });
             });
         });

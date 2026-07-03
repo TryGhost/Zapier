@@ -1,7 +1,7 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-require('should');
+import {describe, it, expect, beforeAll} from 'vitest';
 
-const {App, appTester, getAuthData} = require('./helpers');
+import {App, appTester, getAuthData} from './helpers';
 
 // every hook trigger that can subscribe against a modern Ghost - the
 // deprecated subscriber_* triggers are covered in 06-subscribers.test.js
@@ -21,7 +21,7 @@ HOOK_TRIGGERS.forEach(function (triggerKey) {
     describe(`E2E Webhook subscription: ${triggerKey}`, function () {
         let authData;
 
-        before(function () {
+        beforeAll(function () {
             authData = getAuthData();
         });
 
@@ -33,7 +33,7 @@ HOOK_TRIGGERS.forEach(function (triggerKey) {
                 targetUrl: `http://example.com/hook/${triggerKey}`
             });
 
-            subscribeData.id.should.be.a.String();
+            expect(subscribeData.id).toBeTypeOf('string');
 
             // a failed DELETE would reject and fail the test
             await appTester(operation.performUnsubscribe, {

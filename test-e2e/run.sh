@@ -4,7 +4,7 @@ set -euo pipefail
 # Self-contained e2e runner - a bare `yarn test:e2e` should just work.
 #
 # Resolution order:
-# 1. GHOST_ADMIN_API_URL/GHOST_ADMIN_API_KEY exported (CI): run mocha
+# 1. GHOST_ADMIN_API_URL/GHOST_ADMIN_API_KEY exported (CI): run vitest
 #    directly, no lifecycle management
 # 2. test-e2e/.env.local pointing at a Ghost that still answers: reuse it
 # 3. GHOST_CORE_PATH set: boot Ghost from that source checkout
@@ -14,8 +14,8 @@ set -euo pipefail
 #
 # Ghosts provisioned by 3 and 4 are fresh installs - the suite's fixtures
 # use fixed emails/titles, so re-running against seeded data would fail -
-# and are torn down afterwards whether mocha passes or fails. The script's
-# exit code is mocha's exit code.
+# and are torn down afterwards whether vitest passes or fails. The script's
+# exit code is vitest's exit code.
 
 here="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "${here}/.." && pwd)"

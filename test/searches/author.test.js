@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Searches', function () {
@@ -63,14 +63,14 @@ describe('Searches', function () {
 
             return appTester(App.searches.author.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [firstAuthor] = results;
-                    firstAuthor.id.should.eql('5951f5fca366002ebd5dbef7');
-                    firstAuthor.name.should.eql('Ghost');
-                    firstAuthor.email.should.eql('ghost-author@example.com');
-                    firstAuthor.slug.should.eql('ghost');
+                    expect(firstAuthor.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(firstAuthor.name).toEqual('Ghost');
+                    expect(firstAuthor.email).toEqual('ghost-author@example.com');
+                    expect(firstAuthor.slug).toEqual('ghost');
                 });
         });
 
@@ -110,14 +110,14 @@ describe('Searches', function () {
 
             return appTester(App.searches.author.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [firstAuthor] = results;
-                    firstAuthor.id.should.eql('5951f5fca366002ebd5dbef7');
-                    firstAuthor.name.should.eql('Ghost');
-                    firstAuthor.email.should.eql('ghost-author@example.com');
-                    firstAuthor.slug.should.eql('ghost');
+                    expect(firstAuthor.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(firstAuthor.name).toEqual('Ghost');
+                    expect(firstAuthor.email).toEqual('ghost-author@example.com');
+                    expect(firstAuthor.slug).toEqual('ghost');
                 });
         });
 
@@ -145,8 +145,8 @@ describe('Searches', function () {
 
             return appTester(App.searches.author.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(0);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(0);
                 });
         });
 
@@ -163,8 +163,8 @@ describe('Searches', function () {
 
                 return appTester(App.searches.author.operation.inputFields[SEARCH_TERM_FIELD], bundle)
                     .then(([field]) => {
-                        field.key.should.eql('email');
-                        field.required.should.eql(true);
+                        expect(field.key).toEqual('email');
+                        expect(field.required).toEqual(true);
                     });
             });
 
@@ -177,8 +177,8 @@ describe('Searches', function () {
 
                 return appTester(App.searches.author.operation.inputFields[SEARCH_TERM_FIELD], bundle)
                     .then(([field]) => {
-                        field.key.should.eql('slug');
-                        field.required.should.eql(true);
+                        expect(field.key).toEqual('slug');
+                        expect(field.required).toEqual(true);
                     });
             });
         });
@@ -207,10 +207,10 @@ describe('Searches', function () {
 
             return appTester(App.searches.author.operation.perform, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    err.name.should.eql('HaltedError');
-                    err.message.should.match(/Validation \(isEmail\)/i);
+                    expect(err.name).toEqual('HaltedError');
+                    expect(err.message).toMatch(/Validation \(isEmail\)/i);
                 });
         });
     });

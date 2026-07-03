@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 const samplePost = {
@@ -167,9 +167,9 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.post_scheduled.operation.perform, bundle)
                 .then(([post]) => {
-                    post.id.should.eql('5c936c15eac9f256dec0bb96');
-                    post.authors.length.should.eql(1, 'no of authors');
-                    post.tags.length.should.eql(1, 'no of tags');
+                    expect(post.id).toEqual('5c936c15eac9f256dec0bb96');
+                    expect(post.authors.length, 'no of authors').toEqual(1);
+                    expect(post.tags.length, 'no of tags').toEqual(1);
                 });
         });
 
@@ -204,13 +204,13 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.post_scheduled.operation.performList, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [firstPost] = results;
-                    firstPost.id.should.eql('5c936c15eac9f256dec0bb96');
-                    firstPost.authors.length.should.eql(1, 'no of authors');
-                    firstPost.tags.length.should.eql(1, 'no of tags');
+                    expect(firstPost.id).toEqual('5c936c15eac9f256dec0bb96');
+                    expect(firstPost.authors.length, 'no of authors').toEqual(1);
+                    expect(firstPost.tags.length, 'no of tags').toEqual(1);
                 });
         });
 
@@ -235,7 +235,7 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.post_scheduled.operation.performSubscribe, bundle)
                 .then(() => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
                 });
         });
 
@@ -253,7 +253,7 @@ describe('Triggers', function () {
 
             return appTester(App.triggers.post_scheduled.operation.performUnsubscribe, bundle)
                 .then(() => {
-                    apiMock.isDone().should.be.true;
+                    expect(apiMock.isDone()).toBe(true);
                 });
         });
     });

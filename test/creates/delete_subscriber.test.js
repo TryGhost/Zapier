@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Creates', function () {
@@ -46,8 +46,8 @@ describe('Creates', function () {
 
                 return appTester(App.creates.delete_subscriber.operation.perform, bundle)
                     .then((result) => {
-                        apiMock.isDone().should.be.true;
-                        result.should.eql({email: 'test@example.com'});
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(result).toEqual({email: 'test@example.com'});
                     });
             });
 
@@ -74,10 +74,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.delete_subscriber.operation.perform, bundle)
                     .then(() => {
-                        true.should.eql(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/subscriber not found/i);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/subscriber not found/i);
                     });
             });
 
@@ -104,10 +104,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.delete_subscriber.operation.perform, bundle)
                     .then(() => {
-                        true.should.eql(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.eql('HaltedError');
-                        err.message.should.match(/validation \(isEmail\) failed for email/i);
+                        expect(err.name).toEqual('HaltedError');
+                        expect(err.message).toMatch(/validation \(isEmail\) failed for email/i);
                     });
             });
         });
@@ -128,10 +128,10 @@ describe('Creates', function () {
 
                 return appTester(App.creates.delete_subscriber.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support subscribers. Supported version range is <3.0.0, you are using 3.0/);
                     });
             });
         });

@@ -1,12 +1,15 @@
-const fs = require('fs');
-const {join} = require('path');
+import fs from 'fs';
+import {join} from 'path';
+import {fileURLToPath} from 'url';
 
-const should = require('should');
-const zapier = require('zapier-platform-core');
+import {expect} from 'vitest';
+import zapier from 'zapier-platform-core';
 
-const App = require('../index');
+import App from '../index';
 
 const appTester = zapier.createAppTester(App);
+
+const here = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * Loads the credentials written by `test-e2e/setup/bootstrap.js` into the
@@ -15,7 +18,7 @@ const appTester = zapier.createAppTester(App);
  * always win over the file.
  */
 const loadLocalEnv = () => {
-    const envFile = join(__dirname, '.env.local');
+    const envFile = join(here, '.env.local');
     if (!fs.existsSync(envFile)) {
         return;
     }
@@ -64,18 +67,19 @@ const getAuthData = () => {
  */
 const shouldHalt = async (promise, messagePattern) => {
     const error = await promise.then(
-        () => should.fail('expected a HaltedError but the call succeeded'),
+        () => expect.unreachable('expected a HaltedError but the call succeeded'),
         err => err
     );
 
-    error.name.should.equal('HaltedError');
-    error.message.should.match(messagePattern);
+    expect(error.name).toBe('HaltedError');
+    expect(error.message).toMatch(messagePattern);
 };
 
 // data seeded by 02-creates.test.js and asserted on by the search and
-// trigger specs - mocha loads the spec files in alphabetical order.
-// The suite assumes a freshly bootstrapped Ghost install; `yarn test:e2e`
-// provisions (and tears down) one per run automatically.
+// trigger specs - the e2e vitest config runs the spec files one at a time
+// in filename order. The suite assumes a freshly bootstrapped Ghost
+// install; `yarn test:e2e` provisions (and tears down) one per run
+// automatically.
 const fixtures = {
     member: {
         name: 'E2E Member',
@@ -95,7 +99,7 @@ const fixtures = {
     missingSlug: 'e2e-does-not-exist'
 };
 
-module.exports = {
+export {
     App,
     appTester,
     getAuthData,

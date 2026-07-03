@@ -1,21 +1,21 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-require('should');
+import {describe, it, expect, beforeAll} from 'vitest';
 
-const {App, appTester, getAuthData} = require('./helpers');
-const {OWNER} = require('./setup/bootstrap');
+import {App, appTester, getAuthData} from './helpers';
+import {OWNER} from './setup/bootstrap';
 
 describe('E2E Authentication', function () {
     let authData;
 
-    before(function () {
+    beforeAll(function () {
         authData = getAuthData();
     });
 
     it('succeeds with the bootstrapped Admin API key', async function () {
         const result = await appTester(App.authentication.test, {authData});
 
-        result.blogTitle.should.equal(OWNER.blogTitle);
-        result.blogUrl.should.startWith(authData.adminApiUrl);
+        expect(result.blogTitle).toBe(OWNER.blogTitle);
+        expect(result.blogUrl.startsWith(authData.adminApiUrl)).toBe(true);
     });
 
     it('fails with an incorrect Admin API key secret', async function () {
@@ -28,7 +28,7 @@ describe('E2E Authentication', function () {
         // Ghost rejects the mis-signed token with "Invalid token: invalid
         // signature" - matching on it proves a real credential rejection
         // rather than any incidental failure (network, wrong URL, ...)
-        await appTester(App.authentication.test, {authData: badAuthData})
-            .should.be.rejectedWith(/invalid token/i);
+        await expect(appTester(App.authentication.test, {authData: badAuthData}))
+            .rejects.toThrow(/invalid token/i);
     });
 });

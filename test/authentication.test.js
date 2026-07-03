@@ -1,9 +1,9 @@
-require('should');
-const nock = require('nock');
-const zapier = require('zapier-platform-core');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../index');
+import App from '../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Authentication', function () {
@@ -35,7 +35,7 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    nock.pendingMocks().length.should.eql(0);
+                    expect(nock.pendingMocks().length).toEqual(0);
                 });
         });
 
@@ -52,7 +52,7 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    nock.pendingMocks().length.should.eql(0);
+                    expect(nock.pendingMocks().length).toEqual(0);
                 });
         });
 
@@ -75,10 +75,10 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    err.message.should.match(/^Invalid token/);
-                    nock.pendingMocks().length.should.eql(0);
+                    expect(err.message).toMatch(/^Invalid token/);
+                    expect(nock.pendingMocks().length).toEqual(0);
                 });
         });
 
@@ -92,11 +92,11 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    err.message.should.match(/^Supported Ghost version/);
-                    err.message.should.match(/you are using 2\.10/);
-                    nock.pendingMocks().length.should.eql(0);
+                    expect(err.message).toMatch(/^Supported Ghost version/);
+                    expect(err.message).toMatch(/you are using 2\.10/);
+                    expect(nock.pendingMocks().length).toEqual(0);
                 });
         });
 
@@ -111,10 +111,10 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    // nock.pendingMocks().length.should.eql(0);
-                    err.message.should.match(/^Supported Ghost version/);
+                    // expect(nock.pendingMocks().length).toEqual(0);
+                    expect(err.message).toMatch(/^Supported Ghost version/);
                 });
         });
 
@@ -129,10 +129,10 @@ describe('Authentication', function () {
 
             return appTester(App.authentication.test, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    // nock.pendingMocks().length.should.eql(0);
-                    err.message.should.match(/^Supplied 'Admin API URL' does not/);
+                    // expect(nock.pendingMocks().length).toEqual(0);
+                    expect(err.message).toMatch(/^Supplied 'Admin API URL' does not/);
                 });
         });
     });

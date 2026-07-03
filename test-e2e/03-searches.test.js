@@ -1,13 +1,13 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-require('should');
+import {describe, it, expect, beforeAll} from 'vitest';
 
-const {App, appTester, getAuthData, fixtures} = require('./helpers');
-const {OWNER} = require('./setup/bootstrap');
+import {App, appTester, getAuthData, fixtures} from './helpers';
+import {OWNER} from './setup/bootstrap';
 
 describe('E2E Searches', function () {
     let authData;
 
-    before(function () {
+    beforeAll(function () {
         authData = getAuthData();
     });
 
@@ -18,9 +18,9 @@ describe('E2E Searches', function () {
                 inputData: {email: fixtures.member.email}
             });
 
-            results.should.have.length(1);
-            results[0].email.should.equal(fixtures.member.email);
-            results[0].name.should.equal(`${fixtures.member.name} Updated`);
+            expect(results).toHaveLength(1);
+            expect(results[0].email).toBe(fixtures.member.email);
+            expect(results[0].name).toBe(`${fixtures.member.name} Updated`);
         });
 
         it('returns an empty array for an unknown email', async function () {
@@ -29,7 +29,8 @@ describe('E2E Searches', function () {
                 inputData: {email: fixtures.missingEmail}
             });
 
-            results.should.be.an.Array().and.have.length(0);
+            expect(Array.isArray(results)).toBe(true);
+            expect(results).toHaveLength(0);
         });
     });
 
@@ -40,17 +41,17 @@ describe('E2E Searches', function () {
                 inputData: {search_by: 'email', email: OWNER.email}
             });
 
-            byEmail.should.have.length(1);
-            byEmail[0].email.should.equal(OWNER.email);
-            byEmail[0].slug.should.be.a.String();
+            expect(byEmail).toHaveLength(1);
+            expect(byEmail[0].email).toBe(OWNER.email);
+            expect(byEmail[0].slug).toBeTypeOf('string');
 
             const bySlug = await appTester(App.searches.author.operation.perform, {
                 authData,
                 inputData: {search_by: 'slug', slug: byEmail[0].slug}
             });
 
-            bySlug.should.have.length(1);
-            bySlug[0].email.should.equal(OWNER.email);
+            expect(bySlug).toHaveLength(1);
+            expect(bySlug[0].email).toBe(OWNER.email);
         });
 
         it('returns an empty array for an unknown email', async function () {
@@ -59,7 +60,8 @@ describe('E2E Searches', function () {
                 inputData: {search_by: 'email', email: fixtures.missingEmail}
             });
 
-            results.should.be.an.Array().and.have.length(0);
+            expect(Array.isArray(results)).toBe(true);
+            expect(results).toHaveLength(0);
         });
 
         it('returns an empty array for an unknown slug', async function () {
@@ -68,7 +70,8 @@ describe('E2E Searches', function () {
                 inputData: {search_by: 'slug', slug: fixtures.missingSlug}
             });
 
-            results.should.be.an.Array().and.have.length(0);
+            expect(Array.isArray(results)).toBe(true);
+            expect(results).toHaveLength(0);
         });
     });
 });

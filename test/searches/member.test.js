@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Searches', function () {
@@ -49,13 +49,13 @@ describe('Searches', function () {
 
             return appTester(App.searches.member.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [member] = results;
-                    member.id.should.eql('5951f5fca366002ebd5dbef7');
-                    member.name.should.eql('Ghost');
-                    member.email.should.eql('ghost-member@example.com');
+                    expect(member.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(member.name).toEqual('Ghost');
+                    expect(member.email).toEqual('ghost-member@example.com');
                 });
         });
 
@@ -93,12 +93,13 @@ describe('Searches', function () {
 
             return appTester(App.searches.member.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(1);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
 
                     let [member] = results;
-                    member.id.should.eql('5951f5fca366002ebd5dbef7');
-                    member.email.should.eql('ghost-member@example.com');
+                    expect(member.id).toEqual('5951f5fca366002ebd5dbef7');
+                    expect(member.name).toEqual('Ghost');
+                    expect(member.email).toEqual('ghost-member@example.com');
                 });
         });
 
@@ -129,8 +130,8 @@ describe('Searches', function () {
 
             return appTester(App.searches.member.operation.perform, bundle)
                 .then((results) => {
-                    apiMock.isDone().should.be.true;
-                    results.length.should.eql(0);
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(0);
                 });
         });
 
@@ -161,10 +162,10 @@ describe('Searches', function () {
 
             return appTester(App.searches.member.operation.perform, bundle)
                 .then(() => {
-                    true.should.eql(false);
+                    expect.unreachable('expected the call to be rejected');
                 }, (err) => {
-                    err.name.should.eql('RequestError');
-                    err.message.should.match(/Authorization failed/);
+                    expect(err.name).toEqual('RequestError');
+                    expect(err.message).toMatch(/Authorization failed/);
                 });
         });
 
@@ -180,10 +181,10 @@ describe('Searches', function () {
 
                 return appTester(App.searches.member.operation.perform, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support member search. Supported version range is >=3.0.0, you are using 2.34/);
+                        expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support member search. Supported version range is >=3.0.0, you are using 2.34/);
                     });
             });
         });

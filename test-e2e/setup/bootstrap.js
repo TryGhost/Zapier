@@ -158,7 +158,7 @@ const bootstrap = async () => {
     exportCredentials(adminApiKey);
 };
 
-// guard so that mocha (or anything else) can require this file without
+// guard so that the test runner (or anything else) can import this file without
 // triggering the setup flow
 if (require.main === module) {
     bootstrap().catch((err) => {

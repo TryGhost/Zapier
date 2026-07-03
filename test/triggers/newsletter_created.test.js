@@ -1,10 +1,10 @@
-require('should');
-const nock = require('nock');
+import {describe, it, expect, beforeEach, afterEach} from 'vitest';
+import nock from 'nock';
 
-const zapier = require('zapier-platform-core');
+import zapier from 'zapier-platform-core';
 
 // Use this to make test calls into your app:
-const App = require('../../index');
+import App from '../../index';
 const appTester = zapier.createAppTester(App);
 
 describe('Triggers', function () {
@@ -54,9 +54,9 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.perform, bundle)
                     .then(([newsletter]) => {
-                        newsletter.id.should.eql('627be9e49278a3c9b09f8883');
-                        newsletter.name.should.eql('Default newsletter');
-                        newsletter.slug.should.eql('default-newsletter');
+                        expect(newsletter.id).toEqual('627be9e49278a3c9b09f8883');
+                        expect(newsletter.name).toEqual('Default newsletter');
+                        expect(newsletter.slug).toEqual('default-newsletter');
                     });
             });
 
@@ -96,13 +96,13 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.performList, bundle)
                     .then((results) => {
-                        apiMock.isDone().should.be.true;
-                        results.length.should.eql(1);
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(results.length).toEqual(1);
 
                         let [firstNewsletter] = results;
-                        firstNewsletter.id.should.eql('627be9e49278a3c9b09f8883');
-                        firstNewsletter.name.should.eql('Default newsletter');
-                        firstNewsletter.slug.should.eql('default-newsletter');
+                        expect(firstNewsletter.id).toEqual('627be9e49278a3c9b09f8883');
+                        expect(firstNewsletter.name).toEqual('Default newsletter');
+                        expect(firstNewsletter.slug).toEqual('default-newsletter');
                     });
             });
 
@@ -149,11 +149,11 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.performList, bundle)
                     .then((results) => {
-                        apiMock.isDone().should.be.true;
-                        results.length.should.eql(2);
+                        expect(apiMock.isDone()).toBe(true);
+                        expect(results.length).toEqual(2);
 
                         let [firstNewsletter] = results;
-                        firstNewsletter.name.should.eql('Default newsletter');
+                        expect(firstNewsletter.name).toEqual('Default newsletter');
                     });
             });
 
@@ -178,7 +178,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.performSubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
 
@@ -196,7 +196,7 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.performUnsubscribe, bundle)
                     .then(() => {
-                        apiMock.isDone().should.be.true;
+                        expect(apiMock.isDone()).toBe(true);
                     });
             });
         });
@@ -217,10 +217,10 @@ describe('Triggers', function () {
 
                 return appTester(App.triggers.newsletter_created.operation.performList, bundle)
                     .then(() => {
-                        true.should.equal(false);
+                        expect.unreachable('expected the call to be rejected');
                     }, (err) => {
-                        // err.name.should.equal('HaltedError');
-                        err.message.should.match(/does not support newsletters. Supported version range is >=5.0.0, you are using 4.46/);
+                        // expect(err.name).toBe('HaltedError');
+                        expect(err.message).toMatch(/does not support newsletters. Supported version range is >=5.0.0, you are using 4.46/);
                     });
             });
         });
