@@ -4,7 +4,6 @@ node_modules
 *.log
 .environment
 .env
-.eslintcache
 coverage
 test-e2e/.env.local
 # local Ghost checkout + runtime files used by the e2e suite

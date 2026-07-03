@@ -2,7 +2,6 @@ const {initAdminApi} = require('./utils');
 
 const subscribe = (eventName, z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
-    // eslint-disable-next-line camelcase
     const [integrationId] = bundle.authData.adminApiKey.split(':');
 
     // the data returned from webhooks endpoint is added directly to

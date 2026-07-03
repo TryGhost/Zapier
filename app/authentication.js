@@ -12,7 +12,6 @@ const testAuth = (z, {authData}) => {
         const version = semver.coerce(config.version);
 
         if (!semver.satisfies(version, SUPPORTED_GHOST_VERSION)) {
-            // eslint-disable-next-line no-restricted-syntax
             throw new Error(`Supported Ghost version range is ${SUPPORTED_GHOST_VERSION}, you are using ${config.version}`);
         }
 
@@ -30,11 +29,9 @@ const testAuth = (z, {authData}) => {
         // the unversioned Admin API exists from Ghost 5.0, so a 404 means
         // this is not a Ghost site or a Ghost too old to be supported
         if (err instanceof RequestError && err.res.status === 404) {
-            // eslint-disable-next-line no-restricted-syntax
             throw new Error(`Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_GHOST_VERSION})`);
         }
 
-        // eslint-disable-next-line no-restricted-syntax
         throw new Error(err.message);
     });
 };

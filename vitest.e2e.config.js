@@ -6,7 +6,7 @@ const {BaseSequencer} = require('vitest/node');
 // order mocha used to load them in.
 class FilenameOrderSequencer extends BaseSequencer {
     async sort(files) {
-        return [...files].sort((a, b) => a.moduleId.localeCompare(b.moduleId));
+        return files.toSorted((a, b) => a.moduleId.localeCompare(b.moduleId));
     }
 }
 
