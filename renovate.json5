@@ -10,6 +10,11 @@
             allowedVersions: '<20',
         },
         {
+            description: 'Keep pnpm on 10.x: pnpm 11 requires Node 22.13 or newer, but this repo supports any Node 22 (`engines.node: >=22`, `.nvmrc: v22`), and the shared preset automerges `packageManager` bumps, so a pnpm 11 update would silently drop support for Node 22.0-22.12.',
+            matchPackageNames: ['pnpm'],
+            allowedVersions: '<11',
+        },
+        {
             description: "Keep the e2e job's setup-node on Node 22: it boots Ghost from source and follows Ghost's engines (^22.18.0). The shared preset automerges uses-with bumps, so without this rule a major bump to Node 24 would silently drift e2e off Ghost's supported runtime. Patch/minor bumps within 22 stay in range and may automerge.",
             matchManagers: ['github-actions'],
             matchPackageNames: ['node'],
