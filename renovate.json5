@@ -15,8 +15,8 @@
             allowedVersions: '<11',
         },
         {
-            description: "Keep the e2e job's setup-node on Node 22: it boots Ghost from source and follows Ghost's engines (^22.18.0). The shared preset automerges uses-with bumps, so without this rule a major bump to Node 24 would silently drift e2e off Ghost's supported runtime. Patch/minor bumps within 22 stay in range and may automerge.",
-            matchManagers: ['github-actions'],
+            description: "Keep Node updates on 22: the Zapier Lambda runtime for core 19 is Node 22, the e2e job follows Ghost's engines (^22.18.0), and `.nvmrc` mirrors both. The shared preset automerges these bumps, so without this rule a major bump to Node 24 would silently drift CI and local dev off the deployed runtime. Patch/minor bumps within 22 stay in range and may automerge.",
+            matchManagers: ['github-actions', 'nvm'],
             matchPackageNames: ['node'],
             allowedVersions: '<23',
         },
