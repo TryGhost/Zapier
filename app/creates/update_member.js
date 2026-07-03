@@ -1,11 +1,11 @@
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 
 const updateMember = async (z, bundle) => {
     const memberData = {
         id: bundle.inputData.id,
         name: bundle.inputData.name,
         email: bundle.inputData.email,
-        note: bundle.inputData.note
+        note: bundle.inputData.note,
     };
 
     const countSpecified = 'newsletter_count' in bundle.inputData;
@@ -13,10 +13,16 @@ const updateMember = async (z, bundle) => {
         memberData.subscribed = bundle.inputData.subscribed;
     } else if (countSpecified && bundle.inputData.newsletter_count === 'multiple') {
         // Default newsletters is definitely set to false (using !(value !== false) because booleans are sometimes stringified before being set)
-        if (!('newsletters_keepsame' in bundle.inputData && bundle.inputData.newsletters_keepsame !== false)) {
-            memberData.newsletters = 'newsletters' in bundle.inputData
-                ? bundle.inputData.newsletters.map(id => ({id}))
-                : [];
+        if (
+            !(
+                'newsletters_keepsame' in bundle.inputData &&
+                bundle.inputData.newsletters_keepsame !== false
+            )
+        ) {
+            memberData.newsletters =
+                'newsletters' in bundle.inputData
+                    ? bundle.inputData.newsletters.map((id) => ({ id }))
+                    : [];
         }
     } else {
         // Assume single newsletter for older Zaps
@@ -44,7 +50,7 @@ module.exports = {
 
     display: {
         label: 'Update Member',
-        description: 'Updates a member.'
+        description: 'Updates a member.',
     },
 
     operation: {
@@ -53,74 +59,86 @@ module.exports = {
                 key: 'id',
                 required: true,
                 label: 'Member',
-                helpText: 'Select the member to update, or map the Member ID from a previous step. Note this must be a Member ID, not a Label ID.',
+                helpText:
+                    'Select the member to update, or map the Member ID from a previous step. Note this must be a Member ID, not a Label ID.',
                 dynamic: 'member_created.id.name',
-                search: 'member.id'
+                search: 'member.id',
             },
-            {key: 'name', required: false},
-            {key: 'email', required: false},
-            {key: 'note', required: false},
+            { key: 'name', required: false },
+            { key: 'email', required: false },
+            { key: 'note', required: false },
             {
                 key: 'newsletter_count',
                 label: 'Number of newsletters',
                 required: true,
                 choices: {
                     single: 'Single newsletter',
-                    multiple: 'Multiple newsletters'
+                    multiple: 'Multiple newsletters',
                 },
                 helpText: 'How many newsletters does your site have?',
                 default: 'single',
-                altersDynamicFields: true
+                altersDynamicFields: true,
             },
             function (z, bundle) {
                 if (bundle.inputData.newsletter_count === 'single') {
-                    return [{
-                        key: 'subscribed',
-                        label: 'Subscribed to newsletter',
-                        type: 'boolean',
-                        helpText: 'If false, member will not be subscribed to emails.',
-                        required: false
-                    }];
+                    return [
+                        {
+                            key: 'subscribed',
+                            label: 'Subscribed to newsletter',
+                            type: 'boolean',
+                            helpText: 'If false, member will not be subscribed to emails.',
+                            required: false,
+                        },
+                    ];
                 } else if (bundle.inputData.newsletter_count === 'multiple') {
-                    return [{
-                        key: 'newsletters_keepsame',
-                        label: 'Keep the current set of newsletters for the member',
-                        type: 'boolean',
-                        required: true,
-                        default: true,
-                        altersDynamicFields: true
-                    }];
+                    return [
+                        {
+                            key: 'newsletters_keepsame',
+                            label: 'Keep the current set of newsletters for the member',
+                            type: 'boolean',
+                            required: true,
+                            default: true,
+                            altersDynamicFields: true,
+                        },
+                    ];
                 } else {
                     return [];
                 }
             },
             function (z, bundle) {
                 // Using value !== false because booleans in Zapier are occasionally strings
-                if (bundle.inputData.newsletter_count === 'single' || bundle.inputData.newsletters_keepsame !== false) {
+                if (
+                    bundle.inputData.newsletter_count === 'single' ||
+                    bundle.inputData.newsletters_keepsame !== false
+                ) {
                     return [];
                 } else {
-                    return [{
-                        key: 'newsletters',
-                        label: 'Newsletter subscriptions',
-                        helpText: 'Subscribe member to specific newsletters. Leave blank to unsubscribe from all.',
-                        required: false,
-                        list: true,
-                        dynamic: 'newsletter_created.id.name'
-                    }];
+                    return [
+                        {
+                            key: 'newsletters',
+                            label: 'Newsletter subscriptions',
+                            helpText:
+                                'Subscribe member to specific newsletters. Leave blank to unsubscribe from all.',
+                            required: false,
+                            list: true,
+                            dynamic: 'newsletter_created.id.name',
+                        },
+                    ];
                 }
             },
             {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member'
+                helpText: 'Provide a list of labels to attach to the member',
             },
             {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
-                helpText: 'If enabled, member will be placed onto a free of charge premium subscription'
-            }
+                helpText:
+                    'If enabled, member will be placed onto a free of charge premium subscription',
+            },
         ],
 
         perform: updateMember,
@@ -134,26 +152,27 @@ module.exports = {
             subscribed: true,
             status: 'free',
             comped: false,
-            avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+            avatar_image:
+                'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
             labels: [
                 {
                     id: '5f212d395422021ebc4b7043',
                     name: 'Zapier',
                     slug: 'zapier',
                     created_at: '2019-03-28T10:06:05.862Z',
-                    updated_at: '2019-03-28T10:06:05.862Z'
-                }
+                    updated_at: '2019-03-28T10:06:05.862Z',
+                },
             ],
             newsletters: [
                 {
                     id: '62e12664bbd0f0cb56f6f7d1',
                     name: 'Sample Newsletter',
                     description: null,
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             ],
             created_at: '2019-03-28T10:06:05.862Z',
-            updated_at: '2019-03-28T10:06:05.862Z'
-        }
-    }
+            updated_at: '2019-03-28T10:06:05.862Z',
+        },
+    },
 };

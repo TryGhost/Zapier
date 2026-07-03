@@ -1,10 +1,10 @@
-const {initAdminApi, isNotFoundHaltedError} = require('../lib/utils');
+const { initAdminApi, isNotFoundHaltedError } = require('../lib/utils');
 
 const searchMembers = async (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
     const queryParams = {
-        filter: `email:'${bundle.inputData.email}'`
+        filter: `email:'${bundle.inputData.email}'`,
     };
 
     try {
@@ -14,7 +14,7 @@ const searchMembers = async (z, bundle) => {
         if (Array.isArray(member)) {
             return member;
         }
-        
+
         return [member];
     } catch (err) {
         if (isNotFoundHaltedError(err)) {
@@ -31,15 +31,17 @@ module.exports = {
 
     display: {
         label: 'Find a Member',
-        description: 'Search for a member by email address.'
+        description: 'Search for a member by email address.',
     },
 
     operation: {
-        inputFields: [{
-            key: 'email',
-            type: 'string',
-            label: 'Email'
-        }],
+        inputFields: [
+            {
+                key: 'email',
+                type: 'string',
+                label: 'Email',
+            },
+        ],
 
         perform: searchMembers,
 
@@ -52,26 +54,27 @@ module.exports = {
             subscribed: true,
             status: 'free',
             comped: false,
-            avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+            avatar_image:
+                'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
             labels: [
                 {
                     id: '5f212d395422021ebc4b7043',
                     name: 'Zapier',
                     slug: 'zapier',
                     created_at: '2019-10-13T18:12:00.000Z',
-                    updated_at: '2019-10-13T18:12:00.000Z'
-                }
+                    updated_at: '2019-10-13T18:12:00.000Z',
+                },
             ],
             newsletters: [
                 {
                     id: '62e12664bbd0f0cb56f6f7d1',
                     name: 'Sample Newsletter',
                     description: null,
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             ],
             created_at: '2019-10-13T18:12:00.000Z',
-            updated_at: '2019-10-13T18:12:00.000Z'
-        }
-    }
+            updated_at: '2019-10-13T18:12:00.000Z',
+        },
+    },
 };

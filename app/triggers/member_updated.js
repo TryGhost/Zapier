@@ -12,28 +12,34 @@ const SAMPLE_PAYLOAD = {
         subscribed: false,
         status: 'paid',
         comped: true,
-        avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
-        labels: [{
-            id: '5f212d395422021ebc4b7043',
-            name: 'Old label 1',
-            slug: 'old-label-1',
-            created_at: '2020-10-13T18:12:00.000Z',
-            updated_at: '2020-10-13T18:12:00.000Z'
-        }, {
-            id: '5f212d395422021ebc4b7044',
-            name: 'New label',
-            slug: 'new-label',
-            created_at: '2020-10-13T18:12:00.000Z',
-            updated_at: '2020-10-13T18:12:00.000Z'
-        }],
-        newsletters: [{
-            id: '62e12664bbd0f0cb56f6f7d1',
-            name: 'Sample Newsletter',
-            description: null,
-            status: 'active'
-        }],
+        avatar_image:
+            'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+        labels: [
+            {
+                id: '5f212d395422021ebc4b7043',
+                name: 'Old label 1',
+                slug: 'old-label-1',
+                created_at: '2020-10-13T18:12:00.000Z',
+                updated_at: '2020-10-13T18:12:00.000Z',
+            },
+            {
+                id: '5f212d395422021ebc4b7044',
+                name: 'New label',
+                slug: 'new-label',
+                created_at: '2020-10-13T18:12:00.000Z',
+                updated_at: '2020-10-13T18:12:00.000Z',
+            },
+        ],
+        newsletters: [
+            {
+                id: '62e12664bbd0f0cb56f6f7d1',
+                name: 'Sample Newsletter',
+                description: null,
+                status: 'active',
+            },
+        ],
         created_at: '2019-10-13T18:12:00.000Z',
-        updated_at: '2019-10-31T19:58:00.000Z'
+        updated_at: '2019-10-31T19:58:00.000Z',
     },
     // the real webhook's `previous` object only contains the attributes
     // that changed with this edit
@@ -44,21 +50,24 @@ const SAMPLE_PAYLOAD = {
         subscribed: true,
         status: 'free',
         comped: false,
-        labels: [{
-            id: '5f212d395422021ebc4b7043',
-            name: 'Old label 1',
-            slug: 'old-label-1',
-            created_at: '2020-10-13T18:12:00.000Z',
-            updated_at: '2020-10-13T18:12:00.000Z'
-        }, {
-            id: '5f212d395422021ebc4b7045',
-            name: 'Old label 2',
-            slug: 'old-label-2',
-            created_at: '2020-10-13T18:12:00.000Z',
-            updated_at: '2020-10-13T18:12:00.000Z'
-        }],
-        updated_at: '2019-10-13T18:12:00.000Z'
-    }
+        labels: [
+            {
+                id: '5f212d395422021ebc4b7043',
+                name: 'Old label 1',
+                slug: 'old-label-1',
+                created_at: '2020-10-13T18:12:00.000Z',
+                updated_at: '2020-10-13T18:12:00.000Z',
+            },
+            {
+                id: '5f212d395422021ebc4b7045',
+                name: 'Old label 2',
+                slug: 'old-label-2',
+                created_at: '2020-10-13T18:12:00.000Z',
+                updated_at: '2020-10-13T18:12:00.000Z',
+            },
+        ],
+        updated_at: '2019-10-13T18:12:00.000Z',
+    },
 };
 
 const subscribeWebhook = (z, bundle) => {
@@ -74,7 +83,7 @@ const unsubscribeWebhook = (z, bundle) => {
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {member} = bundle.cleanedRequest;
+    const { member } = bundle.cleanedRequest;
 
     return [member];
 };
@@ -89,13 +98,12 @@ module.exports = {
 
     display: {
         label: 'Member Updated',
-        description: 'Triggers when a member is updated.'
+        description: 'Triggers when a member is updated.',
     },
 
     operation: {
         // we don't need any input from the user for this trigger
-        inputFields: [
-        ],
+        inputFields: [],
 
         // use resthooks rather than polling
         type: 'hook',
@@ -106,6 +114,6 @@ module.exports = {
         perform: handleWebhook,
         performList: getSamplePayload,
 
-        sample: SAMPLE_PAYLOAD
-    }
+        sample: SAMPLE_PAYLOAD,
+    },
 };

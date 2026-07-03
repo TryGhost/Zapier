@@ -1,4 +1,4 @@
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
 const subscribeWebhook = (z, bundle) => {
@@ -14,7 +14,7 @@ const unsubscribeWebhook = (z, bundle) => {
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {member} = bundle.cleanedRequest;
+    const { member } = bundle.cleanedRequest;
 
     return [member.current];
 };
@@ -24,7 +24,7 @@ const getLatestMember = (z, bundle) => {
 
     return api.members.browse({
         order: 'created_at DESC',
-        limit: 1
+        limit: 1,
     });
 };
 
@@ -34,13 +34,12 @@ module.exports = {
 
     display: {
         label: 'Member Created',
-        description: 'Triggers when a new member is added.'
+        description: 'Triggers when a new member is added.',
     },
 
     operation: {
         // we don't need any input from the user for this trigger
-        inputFields: [
-        ],
+        inputFields: [],
 
         // use resthooks rather than polling
         type: 'hook',
@@ -60,26 +59,27 @@ module.exports = {
             subscribed: true,
             status: 'free',
             comped: false,
-            avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+            avatar_image:
+                'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
             labels: [
                 {
                     id: '5f212d395422021ebc4b7043',
                     name: 'Zapier',
                     slug: 'zapier',
                     created_at: '2019-10-13T18:12:00.000Z',
-                    updated_at: '2019-10-13T18:12:00.000Z'
-                }
+                    updated_at: '2019-10-13T18:12:00.000Z',
+                },
             ],
             newsletters: [
                 {
                     id: '62e12664bbd0f0cb56f6f7d1',
                     name: 'Sample Newsletter',
                     description: null,
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             ],
             created_at: '2019-10-13T18:12:00.000Z',
-            updated_at: '2019-10-13T18:12:00.000Z'
-        }
-    }
+            updated_at: '2019-10-13T18:12:00.000Z',
+        },
+    },
 };

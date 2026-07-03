@@ -1,10 +1,10 @@
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 
 const createMember = async (z, bundle) => {
     const memberData = {
         name: bundle.inputData.name,
         email: bundle.inputData.email,
-        note: bundle.inputData.note
+        note: bundle.inputData.note,
     };
 
     const countSpecified = 'newsletter_count' in bundle.inputData;
@@ -12,10 +12,16 @@ const createMember = async (z, bundle) => {
         memberData.subscribed = bundle.inputData.subscribed;
     } else if (countSpecified && bundle.inputData.newsletter_count === 'multiple') {
         // Default newsletters is definitely set to false (using !(value !== false) because booleans are sometimes stringified before being set)
-        if (!('newsletters_default' in bundle.inputData && bundle.inputData.newsletters_default !== false)) {
-            memberData.newsletters = 'newsletters' in bundle.inputData
-                ? bundle.inputData.newsletters.map(id => ({id}))
-                : [];
+        if (
+            !(
+                'newsletters_default' in bundle.inputData &&
+                bundle.inputData.newsletters_default !== false
+            )
+        ) {
+            memberData.newsletters =
+                'newsletters' in bundle.inputData
+                    ? bundle.inputData.newsletters.map((id) => ({ id }))
+                    : [];
         }
     } else {
         // Assume single newsletter for older Zaps
@@ -55,45 +61,50 @@ module.exports = {
 
     display: {
         label: 'Create Member',
-        description: 'Creates a member.'
+        description: 'Creates a member.',
     },
 
     operation: {
         inputFields: [
-            {key: 'name', required: false},
-            {key: 'email', required: true},
-            {key: 'note', required: false},
+            { key: 'name', required: false },
+            { key: 'email', required: true },
+            { key: 'note', required: false },
             {
                 key: 'newsletter_count',
                 label: 'Number of newsletters',
                 required: true,
                 choices: {
                     single: 'Single newsletter',
-                    multiple: 'Multiple newsletters'
+                    multiple: 'Multiple newsletters',
                 },
                 helpText: 'How many newsletters does your site have?',
                 default: 'single',
-                altersDynamicFields: true
+                altersDynamicFields: true,
             },
             function (z, bundle) {
                 if (bundle.inputData.newsletter_count === 'single') {
-                    return [{
-                        key: 'subscribed',
-                        label: 'Subscribe to newsletter',
-                        type: 'boolean',
-                        helpText: 'If false, member will not be subscribed to emails.',
-                        required: false
-                    }];
+                    return [
+                        {
+                            key: 'subscribed',
+                            label: 'Subscribe to newsletter',
+                            type: 'boolean',
+                            helpText: 'If false, member will not be subscribed to emails.',
+                            required: false,
+                        },
+                    ];
                 } else if (bundle.inputData.newsletter_count === 'multiple') {
-                    return [{
-                        key: 'newsletters_default',
-                        label: 'Subscribe to default newsletters',
-                        type: 'boolean',
-                        helpText: 'If false, you can subscribe member to specific newsletters or unsubscribe from all.',
-                        required: true,
-                        default: true,
-                        altersDynamicFields: true
-                    }];
+                    return [
+                        {
+                            key: 'newsletters_default',
+                            label: 'Subscribe to default newsletters',
+                            type: 'boolean',
+                            helpText:
+                                'If false, you can subscribe member to specific newsletters or unsubscribe from all.',
+                            required: true,
+                            default: true,
+                            altersDynamicFields: true,
+                        },
+                    ];
                 } else {
                     // Should never happen, but occasionally will be the case on load
                     return [];
@@ -101,47 +112,61 @@ module.exports = {
             },
             function (z, bundle) {
                 // Using value !== false because booleans in Zapier are occasionally strings
-                if (bundle.inputData.newsletter_count === 'single' || bundle.inputData.newsletters_default !== false) {
+                if (
+                    bundle.inputData.newsletter_count === 'single' ||
+                    bundle.inputData.newsletters_default !== false
+                ) {
                     return [];
                 } else {
-                    return [{
-                        key: 'newsletters',
-                        label: 'Newsletter subscriptions',
-                        helpText: 'Choose which newsletters the member will be subscribed to',
-                        required: false,
-                        list: true,
-                        dynamic: 'newsletter_created.id.name'
-                    }];
+                    return [
+                        {
+                            key: 'newsletters',
+                            label: 'Newsletter subscriptions',
+                            helpText: 'Choose which newsletters the member will be subscribed to',
+                            required: false,
+                            list: true,
+                            dynamic: 'newsletter_created.id.name',
+                        },
+                    ];
                 }
             },
             {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member'
+                helpText: 'Provide a list of labels to attach to the member',
             },
             {
                 key: 'send_email',
                 label: 'Send email to member?',
                 type: 'boolean',
-                default: 'true'
+                default: 'true',
             },
             {
                 key: 'email_type',
                 label: 'Type of email to send',
                 required: false,
                 choices: [
-                    {value: 'signup', label: 'Signup Confirmation', sample: '"You\'ve successfully signed up"'},
-                    {value: 'signin', label: 'Login Link', sample: '"Click here to log in"'},
-                    {value: 'subscribe', label: 'Newsletter Subscription', sample: '"Confirm your subscription"'}
-                ]
+                    {
+                        value: 'signup',
+                        label: 'Signup Confirmation',
+                        sample: '"You\'ve successfully signed up"',
+                    },
+                    { value: 'signin', label: 'Login Link', sample: '"Click here to log in"' },
+                    {
+                        value: 'subscribe',
+                        label: 'Newsletter Subscription',
+                        sample: '"Confirm your subscription"',
+                    },
+                ],
             },
             {
                 key: 'comped',
                 label: 'Complimentary premium plan',
                 type: 'boolean',
-                helpText: 'If enabled, member will be placed onto a free of charge premium subscription'
-            }
+                helpText:
+                    'If enabled, member will be placed onto a free of charge premium subscription',
+            },
         ],
 
         perform: createMember,
@@ -155,26 +180,27 @@ module.exports = {
             subscribed: true,
             status: 'free',
             comped: false,
-            avatar_image: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
+            avatar_image:
+                'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=250&r=g&d=blank',
             labels: [
                 {
                     id: '5f212d395422021ebc4b7043',
                     name: 'Zapier',
                     slug: 'zapier',
                     created_at: '2019-03-28T10:06:05.862Z',
-                    updated_at: '2019-03-28T10:06:05.862Z'
-                }
+                    updated_at: '2019-03-28T10:06:05.862Z',
+                },
             ],
             newsletters: [
                 {
                     id: '62e12664bbd0f0cb56f6f7d1',
                     name: 'Sample Newsletter',
                     description: null,
-                    status: 'active'
-                }
+                    status: 'active',
+                },
             ],
             created_at: '2019-03-28T10:06:05.862Z',
-            updated_at: '2019-03-28T10:06:05.862Z'
-        }
-    }
+            updated_at: '2019-03-28T10:06:05.862Z',
+        },
+    },
 };

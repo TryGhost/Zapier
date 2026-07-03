@@ -1,5 +1,5 @@
-const {defineConfig} = require('vitest/config');
-const {BaseSequencer} = require('vitest/node');
+const { defineConfig } = require('vitest/config');
+const { BaseSequencer } = require('vitest/node');
 
 // The e2e specs share state (02-creates seeds the fixtures the later specs
 // assert on), so files must run one at a time in filename order - the same
@@ -16,7 +16,7 @@ module.exports = defineConfig({
         testTimeout: 30000,
         fileParallelism: false,
         sequence: {
-            sequencer: FilenameOrderSequencer
-        }
-    }
+            sequencer: FilenameOrderSequencer,
+        },
+    },
 });

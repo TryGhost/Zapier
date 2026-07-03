@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {initAdminApi} = require('../lib/utils');
+const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
 
 const subscribeWebhook = _.partial(webhooks.subscribe, 'user.added');
@@ -10,24 +10,24 @@ const unsubscribeWebhook = webhooks.unsubscribe;
 const handleWebhook = (z, bundle) => {
     // bundle.cleanedRequest will include the parsed JSON object (if it's not a
     // test poll) and also a .querystring property with the URL's query string.
-    const {user} = bundle.cleanedRequest;
+    const { user } = bundle.cleanedRequest;
 
     return [user.current];
 };
 
-const listAuthors = (z, {authData, meta}) => {
+const listAuthors = (z, { authData, meta }) => {
     const api = initAdminApi(z, authData);
 
     if (meta.isFillingDynamicDropdown) {
         return api.users.browse({
             order: 'name DESC',
-            limit: 'all'
+            limit: 'all',
         });
     }
 
     return api.users.browse({
         order: 'created_at DESC',
-        limit: 1
+        limit: 1,
     });
 };
 
@@ -38,7 +38,7 @@ module.exports = {
     display: {
         label: 'Author Created',
         description: 'Triggers when a new author is added.',
-        hidden: true // only used by authors dynamic dropdown
+        hidden: true, // only used by authors dynamic dropdown
     },
 
     operation: {
@@ -72,7 +72,7 @@ module.exports = {
             last_seen: null,
             created_at: '2019-01-08T14:49:40.000Z',
             updated_at: '2019-01-08T14:49:40.000Z',
-            url: 'http://localhost:2368/author/ghost/'
-        }
-    }
+            url: 'http://localhost:2368/author/ghost/',
+        },
+    },
 };

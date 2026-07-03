@@ -1,4 +1,4 @@
-const {initAdminApi} = require('./utils');
+const { initAdminApi } = require('./utils');
 
 const subscribe = (eventName, z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
@@ -9,7 +9,7 @@ const subscribe = (eventName, z, bundle) => {
     return api.webhooks.add({
         integration_id: integrationId,
         target_url: bundle.targetUrl,
-        event: eventName
+        event: eventName,
     });
 };
 
@@ -17,10 +17,10 @@ const unsubscribe = (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
     const id = bundle.subscribeData.id;
 
-    return api.webhooks.delete({id});
+    return api.webhooks.delete({ id });
 };
 
 module.exports = {
     subscribe,
-    unsubscribe
+    unsubscribe,
 };
