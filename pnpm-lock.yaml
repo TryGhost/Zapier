@@ -28,10 +28,10 @@ importers:
         specifier: 14.0.16
         version: 14.0.16
       oxfmt:
-        specifier: ^0.57.0
+        specifier: 0.57.0
         version: 0.57.0
       oxlint:
-        specifier: ^1.72.0
+        specifier: 1.72.0
         version: 1.72.0
       vitest:
         specifier: 4.1.9
