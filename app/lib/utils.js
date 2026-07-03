@@ -1,4 +1,3 @@
-const semver = require('semver');
 const GhostAdminApi = require('@tryghost/admin-api');
 const packageInfo = require('../../package.json');
 const packageVersion = packageInfo.version;
@@ -85,34 +84,8 @@ const isNotFoundHaltedError = (err) => {
     return err.name === 'HaltedError' && err.status === 404;
 };
 
-/**
- * Checks if version needed to perform an action satisfies connected Ghost instance.
- * Ghost version is taken from site endpoint (https://ghost.org/docs/api/v3/admin/#the-site-object)
- * "Semver String (major.minor) The current version of the Ghost site. Use this to check the minimum
- * version is high enough for compatibility with integrations.". Based on this patch version is not
- * taken into account during the check.
- *
- * @param {String} semverRange semver string, e.g.: `> 3.6' the patch version is not taken into account
- * @param {String} action name of the action that was attempted, e.g.: 'member labels'
- * @param {Object} z Zapier's internal z object, passed in as first argument to all function calls in Zapier app
- * @param {Object} bundle Zapier's internal bundle object, holds the user’s auth details and the data for the API requests.
- */
-const versionCheck = (semverRange, action, z, {authData}) => {
-    const api = initAdminApi(z, authData);
-
-    return api.site.read().then((config) => {
-        const version = semver.coerce(config.version);
-
-        if (!semver.satisfies(version, semverRange)) {
-            const message = `The version of Ghost your site is using does not support ${action}. Supported version range is ${semverRange}, you are using ${config.version}.`;
-            throw new z.errors.HaltedError(message);
-        }
-    });
-};
-
 module.exports = {
     initAdminApi,
     isNotFoundHaltedError,
-    versionCheck,
     RequestError
 };

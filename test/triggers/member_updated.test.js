@@ -27,169 +27,109 @@ describe('Triggers', function () {
             nock.cleanAll();
         });
 
-        describe('with supported version', function () {
-            beforeEach(function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.1'}
-                });
-            });
-
-            it('loads sample member data', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    cleanedRequest: {
-                        member: {
-                            current: {
-                                id: '5a01d3ecc8d50d0e606a7e7c',
-                                name: 'New Member Name',
-                                email: 'sample@example.com',
-                                note: 'Updated sample member record.',
-                                created_at: '2019-10-13T18:12:00.000Z',
-                                updated_at: '2019-10-31T14:58:00.000Z'
-                            },
-                            previous: {
-                                name: 'Old Member Name',
-                                note: 'Just a sample member record.',
-                                updated_at: '2019-10-13T18:12:00.000Z'
-                            }
+        it('loads sample member data', function () {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {},
+                cleanedRequest: {
+                    member: {
+                        current: {
+                            id: '5a01d3ecc8d50d0e606a7e7c',
+                            name: 'New Member Name',
+                            email: 'sample@example.com',
+                            note: 'Updated sample member record.',
+                            created_at: '2019-10-13T18:12:00.000Z',
+                            updated_at: '2019-10-31T14:58:00.000Z'
+                        },
+                        previous: {
+                            name: 'Old Member Name',
+                            note: 'Just a sample member record.',
+                            updated_at: '2019-10-13T18:12:00.000Z'
                         }
                     }
-                });
-
-                return appTester(App.triggers.member_updated.operation.perform, bundle)
-                    .then(([member]) => {
-                        expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
-                        expect(member.current.name).toEqual('New Member Name');
-                        expect(member.current.email).toEqual('sample@example.com');
-                        expect(member.previous.name).toEqual('Old Member Name');
-                    });
+                }
             });
 
-            it('loads member from list', function () {
-                return appTester(App.triggers.member_updated.operation.performList, {authData})
-                    .then(([member]) => {
-                        expect(member.current).toBeTruthy();
-                        expect(Object.keys(member.current).length).toEqual(11);
-                        expect(member.previous).toBeTruthy();
-                        expect(Object.keys(member.previous).length).toEqual(8);
-
-                        expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
-
-                        expect(member.current.name).toEqual('New Member Name');
-                        expect(member.previous.name).toEqual('Old Member Name');
-
-                        expect(member.current.email).toEqual('sample@example.com');
-                        expect(member.previous.email).toEqual('oldsample@example.com');
-
-                        expect(member.current.note).toEqual('Updated sample member record.');
-                        expect(member.previous.note).toEqual('Old sample member record.');
-
-                        expect(member.current.labels).toBeTruthy();
-                        expect(member.current.labels.length).toBe(2);
-                        expect(member.current.labels[0].name).toEqual('Old label 1');
-                        expect(member.current.labels[1].name).toEqual('New label');
-
-                        expect(member.previous.labels).toBeTruthy();
-                        expect(member.previous.labels.length).toEqual(2);
-                        expect(member.previous.labels[0].name).toEqual('Old label 1');
-                        expect(member.previous.labels[1].name).toEqual('Old label 2');
-                    });
-            });
-
-            it('subscribes to webhook', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    targetUrl: 'https://webooks.zapier.com/ghost/member'
+            return appTester(App.triggers.member_updated.operation.perform, bundle)
+                .then(([member]) => {
+                    expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
+                    expect(member.current.name).toEqual('New Member Name');
+                    expect(member.current.email).toEqual('sample@example.com');
+                    expect(member.previous.name).toEqual('Old Member Name');
                 });
-
-                apiMock.post('/ghost/api/v2/admin/webhooks/', {
-                    webhooks: [{
-                        integration_id: '5c3e1182e79eace7f58c9c3b',
-                        target_url: 'https://webooks.zapier.com/ghost/member',
-                        event: 'member.edited'
-                    }]
-                }).reply(201, {
-                    webhooks: [{
-                        id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/member',
-                        event: 'member.edited'
-                    }]
-                });
-
-                return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
-                    .then(() => {
-                        expect(apiMock.isDone()).toBe(true);
-                    });
-            });
-
-            it('unsubscribes from webhook', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    subscribeData: {
-                        id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/member',
-                        event: 'member.edited'
-                    }
-                });
-
-                apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
-                    .reply(204);
-
-                return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
-                    .then(() => {
-                        expect(apiMock.isDone()).toBe(true);
-                    });
-            });
         });
 
-        describe('with unsupported version', function () {
-            beforeEach(function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '3.0'}
+        it('loads member from list', function () {
+            return appTester(App.triggers.member_updated.operation.performList, {authData})
+                .then(([member]) => {
+                    expect(member.current).toBeTruthy();
+                    expect(Object.keys(member.current).length).toEqual(11);
+                    expect(member.previous).toBeTruthy();
+                    expect(Object.keys(member.previous).length).toEqual(8);
+
+                    expect(member.current.id).toEqual('5a01d3ecc8d50d0e606a7e7c');
+
+                    expect(member.current.name).toEqual('New Member Name');
+                    expect(member.previous.name).toEqual('Old Member Name');
+
+                    expect(member.current.email).toEqual('sample@example.com');
+                    expect(member.previous.email).toEqual('oldsample@example.com');
+
+                    expect(member.current.note).toEqual('Updated sample member record.');
+                    expect(member.previous.note).toEqual('Old sample member record.');
+
+                    expect(member.current.labels).toBeTruthy();
+                    expect(member.current.labels.length).toBe(2);
+                    expect(member.current.labels[0].name).toEqual('Old label 1');
+                    expect(member.current.labels[1].name).toEqual('New label');
+
+                    expect(member.previous.labels).toBeTruthy();
+                    expect(member.previous.labels.length).toEqual(2);
+                    expect(member.previous.labels[0].name).toEqual('Old label 1');
+                    expect(member.previous.labels[1].name).toEqual('Old label 2');
                 });
+        });
+
+        it('subscribes to webhook', function () {
+            let bundle = Object.assign({}, {authData}, {
+                targetUrl: 'https://webooks.zapier.com/ghost/member'
             });
 
-            it('shows unsupported error for list', function () {
-                let bundle = Object.assign({}, {authData});
-
-                return appTester(App.triggers.member_updated.operation.performList, bundle)
-                    .then(() => {
-                        expect.unreachable('expected the call to be rejected');
-                    }, (err) => {
-                        expect(err.name).toBe('HaltedError');
-                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
-                    });
+            apiMock.post('/ghost/api/v2/admin/webhooks/', {
+                webhooks: [{
+                    integration_id: '5c3e1182e79eace7f58c9c3b',
+                    target_url: 'https://webooks.zapier.com/ghost/member',
+                    event: 'member.edited'
+                }]
+            }).reply(201, {
+                webhooks: [{
+                    id: '12345',
+                    target_url: 'https://webooks.zapier.com/ghost/member',
+                    event: 'member.edited'
+                }]
             });
 
-            it('shows unsupported error when subscribing', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    targetUrl: 'https://webooks.zapier.com/ghost/member'
+            return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
+                .then(() => {
+                    expect(apiMock.isDone()).toBe(true);
                 });
+        });
 
-                return appTester(App.triggers.member_updated.operation.performSubscribe, bundle)
-                    .then(() => {
-                        expect.unreachable('expected the call to be rejected');
-                    }, (err) => {
-                        expect(err.name).toBe('HaltedError');
-                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
-                    });
+        it('unsubscribes from webhook', function () {
+            let bundle = Object.assign({}, {authData}, {
+                subscribeData: {
+                    id: '12345',
+                    target_url: 'https://webooks.zapier.com/ghost/member',
+                    event: 'member.edited'
+                }
             });
 
-            it('shows unsupported error when unsubscribing', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    subscribeData: {
-                        id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/member',
-                        event: 'member.added'
-                    }
+            apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
+                .reply(204);
+
+            return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
+                .then(() => {
+                    expect(apiMock.isDone()).toBe(true);
                 });
-
-                return appTester(App.triggers.member_updated.operation.performUnsubscribe, bundle)
-                    .then(() => {
-                        expect.unreachable('expected the call to be rejected');
-                    }, (err) => {
-                        expect(err.name).toBe('HaltedError');
-                        expect(err.message).toMatch(/does not support members. Supported version range is >=3.0.3, you are using 3.0/);
-                    });
-            });
         });
     });
 });

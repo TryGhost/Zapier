@@ -1,8 +1,4 @@
-const {versionCheck} = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
-
-// `member.edited` webhook was added in 3.0.3
-const SUPPORTED_VERSION = '>=3.0.3';
 
 // we always return a sample payload for this trigger because it's not possible
 // to show useful "changed" data when fetching a record from the API
@@ -56,15 +52,11 @@ const SAMPLE_PAYLOAD = {
     }
 };
 
-const subscribeWebhook = async (z, bundle) => {
-    await versionCheck(SUPPORTED_VERSION, 'members', z, bundle);
-
+const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('member.edited', z, bundle);
 };
 
-const unsubscribeWebhook = async (z, bundle) => {
-    await versionCheck(SUPPORTED_VERSION, 'members', z, bundle);
-
+const unsubscribeWebhook = (z, bundle) => {
     return webhooks.unsubscribe(z, bundle);
 };
 
@@ -78,9 +70,7 @@ const handleWebhook = (z, bundle) => {
     return [member];
 };
 
-const getSamplePayload = async (z, bundle) => {
-    await versionCheck(SUPPORTED_VERSION, 'members', z, bundle);
-
+const getSamplePayload = () => {
     return Promise.resolve([SAMPLE_PAYLOAD]);
 };
 
@@ -90,7 +80,7 @@ module.exports = {
 
     display: {
         label: 'Member Updated',
-        description: 'Triggers when a member is updated (requires Ghost 3.0.3 or later).'
+        description: 'Triggers when a member is updated.'
     },
 
     operation: {

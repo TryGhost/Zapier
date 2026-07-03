@@ -27,202 +27,170 @@ describe('Triggers', function () {
             nock.cleanAll();
         });
 
-        describe('with supported version', function () {
-            beforeEach(function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '5.0'}
-                });
-            });
-
-            it('loads newsletter from webhook data', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    cleanedRequest: {
-                        newsletter: {
-                            current: {
-                                id: '627be9e49278a3c9b09f8883',
-                                name: 'Default newsletter',
-                                description: 'Thoughts, stories and ideas.',
-                                slug: 'default-newsletter',
-                                created_at: '2019-03-22T08:39:02.890Z',
-                                updated_at: '2019-03-22T08:39:02.890Z'
-                            },
-                            previous: {}
-                        }
-                    }
-                });
-
-                return appTester(App.triggers.newsletter_created.operation.perform, bundle)
-                    .then(([newsletter]) => {
-                        expect(newsletter.id).toEqual('627be9e49278a3c9b09f8883');
-                        expect(newsletter.name).toEqual('Default newsletter');
-                        expect(newsletter.slug).toEqual('default-newsletter');
-                    });
-            });
-
-            it('loads newsletter from list', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    meta: {
-                        frontend: true
-                    }
-                });
-
-                apiMock.get('/ghost/api/v2/admin/newsletters/')
-                    .query({
-                        order: 'created_at DESC',
-                        limit: 1
-                    })
-                    .reply(200, {
-                        newsletters: [{
+        it('loads newsletter from webhook data', function () {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {},
+                cleanedRequest: {
+                    newsletter: {
+                        current: {
                             id: '627be9e49278a3c9b09f8883',
                             name: 'Default newsletter',
                             description: 'Thoughts, stories and ideas.',
                             slug: 'default-newsletter',
                             created_at: '2019-03-22T08:39:02.890Z',
                             updated_at: '2019-03-22T08:39:02.890Z'
-                        }],
-                        meta: {
-                            pagination: {
-                                page: 1,
-                                limit: 1,
-                                pages: 1,
-                                total: 1,
-                                next: null,
-                                prev: null
-                            }
-                        }
-                    });
-
-                return appTester(App.triggers.newsletter_created.operation.performList, bundle)
-                    .then((results) => {
-                        expect(apiMock.isDone()).toBe(true);
-                        expect(results.length).toEqual(1);
-
-                        let [firstNewsletter] = results;
-                        expect(firstNewsletter.id).toEqual('627be9e49278a3c9b09f8883');
-                        expect(firstNewsletter.name).toEqual('Default newsletter');
-                        expect(firstNewsletter.slug).toEqual('default-newsletter');
-                    });
-            });
-
-            it('loads all newsletters when filling dynamic dropdown', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    inputData: {},
-                    meta: {
-                        isFillingDynamicDropdown: true
+                        },
+                        previous: {}
                     }
-                });
-
-                apiMock.get('/ghost/api/v2/admin/newsletters/')
-                    .query({
-                        order: 'name DESC',
-                        limit: 'all'
-                    })
-                    .reply(200, {
-                        newsletters: [{
-                            id: '627be9e49278a3c9b09f8883',
-                            name: 'Default newsletter',
-                            description: 'Thoughts, stories and ideas.',
-                            slug: 'default-newsletter',
-                            created_at: '2019-03-22T08:39:02.890Z',
-                            updated_at: '2019-03-22T08:39:02.890Z'
-                        }, {
-                            id: '627be9e49278a3c9b09f8884',
-                            name: 'Weekly newsletter',
-                            description: 'A weekly roundup.',
-                            slug: 'weekly-newsletter',
-                            created_at: '2019-03-22T08:39:02.890Z',
-                            updated_at: '2019-03-22T08:39:02.890Z'
-                        }],
-                        meta: {
-                            pagination: {
-                                page: 1,
-                                limit: 'all',
-                                pages: 1,
-                                total: 2,
-                                next: null,
-                                prev: null
-                            }
-                        }
-                    });
-
-                return appTester(App.triggers.newsletter_created.operation.performList, bundle)
-                    .then((results) => {
-                        expect(apiMock.isDone()).toBe(true);
-                        expect(results.length).toEqual(2);
-
-                        let [firstNewsletter] = results;
-                        expect(firstNewsletter.name).toEqual('Default newsletter');
-                    });
+                }
             });
 
-            it('subscribes to webhook', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    targetUrl: 'https://webooks.zapier.com/ghost/newsletter'
+            return appTester(App.triggers.newsletter_created.operation.perform, bundle)
+                .then(([newsletter]) => {
+                    expect(newsletter.id).toEqual('627be9e49278a3c9b09f8883');
+                    expect(newsletter.name).toEqual('Default newsletter');
+                    expect(newsletter.slug).toEqual('default-newsletter');
                 });
-
-                apiMock.post('/ghost/api/v2/admin/webhooks/', {
-                    webhooks: [{
-                        integration_id: '5c3e1182e79eace7f58c9c3b',
-                        target_url: 'https://webooks.zapier.com/ghost/newsletter',
-                        event: 'newsletter.added'
-                    }]
-                }).reply(201, {
-                    webhooks: [{
-                        id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/newsletter',
-                        event: 'newsletter.added'
-                    }]
-                });
-
-                return appTester(App.triggers.newsletter_created.operation.performSubscribe, bundle)
-                    .then(() => {
-                        expect(apiMock.isDone()).toBe(true);
-                    });
-            });
-
-            it('unsubscribes from webhook', function () {
-                let bundle = Object.assign({}, {authData}, {
-                    subscribeData: {
-                        id: '12345',
-                        target_url: 'https://webooks.zapier.com/ghost/member',
-                        event: 'newsletter.added'
-                    }
-                });
-
-                apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
-                    .reply(204);
-
-                return appTester(App.triggers.newsletter_created.operation.performUnsubscribe, bundle)
-                    .then(() => {
-                        expect(apiMock.isDone()).toBe(true);
-                    });
-            });
         });
 
-        describe('with unsupported version', function () {
-            beforeEach(function () {
-                apiMock.get('/ghost/api/v2/admin/site/').reply(200, {
-                    site: {version: '4.46'}
-                });
+        it('loads newsletter from list', function () {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {},
+                meta: {
+                    frontend: true
+                }
             });
 
-            it('shows unsupported error for list', function () {
-                let bundle = Object.assign({}, {authData}, {
+            apiMock.get('/ghost/api/v2/admin/newsletters/')
+                .query({
+                    order: 'created_at DESC',
+                    limit: 1
+                })
+                .reply(200, {
+                    newsletters: [{
+                        id: '627be9e49278a3c9b09f8883',
+                        name: 'Default newsletter',
+                        description: 'Thoughts, stories and ideas.',
+                        slug: 'default-newsletter',
+                        created_at: '2019-03-22T08:39:02.890Z',
+                        updated_at: '2019-03-22T08:39:02.890Z'
+                    }],
                     meta: {
-                        isFillingDynamicDropdown: true
+                        pagination: {
+                            page: 1,
+                            limit: 1,
+                            pages: 1,
+                            total: 1,
+                            next: null,
+                            prev: null
+                        }
                     }
                 });
 
-                return appTester(App.triggers.newsletter_created.operation.performList, bundle)
-                    .then(() => {
-                        expect.unreachable('expected the call to be rejected');
-                    }, (err) => {
-                        // expect(err.name).toBe('HaltedError');
-                        expect(err.message).toMatch(/does not support newsletters. Supported version range is >=5.0.0, you are using 4.46/);
-                    });
+            return appTester(App.triggers.newsletter_created.operation.performList, bundle)
+                .then((results) => {
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(1);
+
+                    let [firstNewsletter] = results;
+                    expect(firstNewsletter.id).toEqual('627be9e49278a3c9b09f8883');
+                    expect(firstNewsletter.name).toEqual('Default newsletter');
+                    expect(firstNewsletter.slug).toEqual('default-newsletter');
+                });
+        });
+
+        it('loads all newsletters when filling dynamic dropdown', function () {
+            let bundle = Object.assign({}, {authData}, {
+                inputData: {},
+                meta: {
+                    isFillingDynamicDropdown: true
+                }
             });
+
+            apiMock.get('/ghost/api/v2/admin/newsletters/')
+                .query({
+                    order: 'name DESC',
+                    limit: 'all'
+                })
+                .reply(200, {
+                    newsletters: [{
+                        id: '627be9e49278a3c9b09f8883',
+                        name: 'Default newsletter',
+                        description: 'Thoughts, stories and ideas.',
+                        slug: 'default-newsletter',
+                        created_at: '2019-03-22T08:39:02.890Z',
+                        updated_at: '2019-03-22T08:39:02.890Z'
+                    }, {
+                        id: '627be9e49278a3c9b09f8884',
+                        name: 'Weekly newsletter',
+                        description: 'A weekly roundup.',
+                        slug: 'weekly-newsletter',
+                        created_at: '2019-03-22T08:39:02.890Z',
+                        updated_at: '2019-03-22T08:39:02.890Z'
+                    }],
+                    meta: {
+                        pagination: {
+                            page: 1,
+                            limit: 'all',
+                            pages: 1,
+                            total: 2,
+                            next: null,
+                            prev: null
+                        }
+                    }
+                });
+
+            return appTester(App.triggers.newsletter_created.operation.performList, bundle)
+                .then((results) => {
+                    expect(apiMock.isDone()).toBe(true);
+                    expect(results.length).toEqual(2);
+
+                    let [firstNewsletter] = results;
+                    expect(firstNewsletter.name).toEqual('Default newsletter');
+                });
+        });
+
+        it('subscribes to webhook', function () {
+            let bundle = Object.assign({}, {authData}, {
+                targetUrl: 'https://webooks.zapier.com/ghost/newsletter'
+            });
+
+            apiMock.post('/ghost/api/v2/admin/webhooks/', {
+                webhooks: [{
+                    integration_id: '5c3e1182e79eace7f58c9c3b',
+                    target_url: 'https://webooks.zapier.com/ghost/newsletter',
+                    event: 'newsletter.added'
+                }]
+            }).reply(201, {
+                webhooks: [{
+                    id: '12345',
+                    target_url: 'https://webooks.zapier.com/ghost/newsletter',
+                    event: 'newsletter.added'
+                }]
+            });
+
+            return appTester(App.triggers.newsletter_created.operation.performSubscribe, bundle)
+                .then(() => {
+                    expect(apiMock.isDone()).toBe(true);
+                });
+        });
+
+        it('unsubscribes from webhook', function () {
+            let bundle = Object.assign({}, {authData}, {
+                subscribeData: {
+                    id: '12345',
+                    target_url: 'https://webooks.zapier.com/ghost/member',
+                    event: 'newsletter.added'
+                }
+            });
+
+            apiMock.delete('/ghost/api/v2/admin/webhooks/12345/')
+                .reply(204);
+
+            return appTester(App.triggers.newsletter_created.operation.performUnsubscribe, bundle)
+                .then(() => {
+                    expect(apiMock.isDone()).toBe(true);
+                });
         });
     });
 });
