@@ -7,6 +7,7 @@
   "author": "Ghost Foundation",
   "license": "MIT",
   "main": "index.js",
+  "packageManager": "pnpm@10.34.4",
   "scripts": {
     "lint": "eslint . --ext .js --cache",
     "test": "vitest run --coverage",
@@ -14,8 +15,7 @@
     "test:e2e:bare": "vitest run --config vitest.e2e.config.js"
   },
   "engines": {
-    "node": ">=22",
-    "npm": ">=10.7.0"
+    "node": ">=22"
   },
   "dependencies": {
     "@tryghost/admin-api": "1.14.10",
