@@ -12,7 +12,7 @@ npm install --global zapier-platform-cli
 zapier-platform login
 
 # setup dependencies
-yarn
+pnpm install
 
 zapier-platform test
 ```

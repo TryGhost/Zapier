@@ -11,7 +11,7 @@
  * are written to `test-e2e/.env.local` (gitignored) so the key never
  * appears in logs.
  *
- * Running the e2e suite locally: just `yarn test:e2e` - with docker
+ * Running the e2e suite locally: just `pnpm test:e2e` - with docker
  * running it provisions a throwaway ghost:6 container, runs this
  * bootstrap and tears everything down again (see test-e2e/run.sh).
  * Overrides:
@@ -19,7 +19,7 @@
  *   instead of docker (dependencies must be installed)
  * - to manage Ghost yourself: start a fresh instance, run this script
  *   directly (set GHOST_URL if it is not on http://localhost:2368), then
- *   `yarn test:e2e` picks the credentials up from test-e2e/.env.local
+ *   `pnpm test:e2e` picks the credentials up from test-e2e/.env.local
  */
 const http = require('http');
 const fs = require('fs');
