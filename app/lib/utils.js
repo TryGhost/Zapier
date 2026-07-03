@@ -1,6 +1,12 @@
 const GhostAdminApi = require('@tryghost/admin-api');
 const packageInfo = require('../../package.json');
 const packageVersion = packageInfo.version;
+
+// Single source of truth for the Ghost compatibility floor - the auth-time
+// version check and the Accept-Version request header must move together
+const GHOST_MAJOR = 6;
+const SUPPORTED_GHOST_VERSION = `>=${GHOST_MAJOR}.0`;
+const ADMIN_API_VERSION = `v${GHOST_MAJOR}.0`;
 class RequestError extends Error {
     constructor(message, res) {
         super(message);
@@ -13,8 +19,9 @@ class RequestError extends Error {
 // Convenience method for creating a GhostAdminAPI instance from the bundle data
 const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}) => {
     function makeRequest({url, method, data: body, params = {}, headers = {}}) {
-        // the SDK always sends its own User-Agent - prefix it with ours
-        headers['User-Agent'] = `Zapier/${packageVersion} ${headers['User-Agent']}`;
+        // the SDK normally sends its own User-Agent - prefix it with ours,
+        // coping with it being absent so we never send "... undefined"
+        headers['User-Agent'] = [`Zapier/${packageVersion}`, headers['User-Agent']].filter(Boolean).join(' ');
 
         return z.request({
             url,
@@ -64,7 +71,7 @@ const initAdminApi = (z, {adminApiUrl: adminUrl, adminApiKey: key}) => {
         makeRequest,
         // 'v{major}.{minor}' targets the unversioned /ghost/api/admin/
         // endpoints and is sent as the Accept-Version request header
-        version: 'v6.0'
+        version: ADMIN_API_VERSION
     });
 };
 
@@ -83,5 +90,6 @@ const isNotFoundHaltedError = (err) => {
 module.exports = {
     initAdminApi,
     isNotFoundHaltedError,
-    RequestError
+    RequestError,
+    SUPPORTED_GHOST_VERSION
 };

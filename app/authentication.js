@@ -1,7 +1,5 @@
 const semver = require('semver');
-const {initAdminApi, RequestError} = require('./lib/utils');
-
-const SUPPORTED_VERSION = '>=6.0';
+const {initAdminApi, RequestError, SUPPORTED_GHOST_VERSION} = require('./lib/utils');
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
@@ -13,9 +11,9 @@ const testAuth = (z, {authData}) => {
     return api.site.read().then((config) => {
         const version = semver.coerce(config.version);
 
-        if (!semver.satisfies(version, SUPPORTED_VERSION)) {
+        if (!semver.satisfies(version, SUPPORTED_GHOST_VERSION)) {
             // eslint-disable-next-line no-restricted-syntax
-            throw new Error(`Supported Ghost version range is ${SUPPORTED_VERSION}, you are using ${config.version}`);
+            throw new Error(`Supported Ghost version range is ${SUPPORTED_GHOST_VERSION}, you are using ${config.version}`);
         }
 
         // make an authenticated request to ensure the API key is valid
@@ -33,7 +31,7 @@ const testAuth = (z, {authData}) => {
         // this is not a Ghost site or a Ghost too old to be supported
         if (err instanceof RequestError && err.res.status === 404) {
             // eslint-disable-next-line no-restricted-syntax
-            throw new Error(`Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_VERSION})`);
+            throw new Error(`Supplied 'Admin API URL' does not point to a Ghost site with a supported version (${SUPPORTED_GHOST_VERSION})`);
         }
 
         // eslint-disable-next-line no-restricted-syntax
