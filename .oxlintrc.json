@@ -13,7 +13,7 @@
     },
     "overrides": [
         {
-            "files": ["test-e2e/setup/bootstrap.js"],
+            "files": ["test-e2e/setup/bootstrap.js", "scripts/*.js"],
             "rules": {
                 "no-console": "off"
             }
