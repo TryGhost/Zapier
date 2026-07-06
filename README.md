@@ -96,8 +96,9 @@ suite, and tears everything down again. Alternatives:
 ## Deployment
 
 The integration is deployed to Zapier's platform (app `1566`) by GitHub
-Actions: every merge to main refreshes a private `0.0.0-preview` version,
-and publishing a GitHub release pushes and promotes the tagged version.
+Actions: every green Test run on main refreshes a private `0.0.0-preview`
+version, and publishing a GitHub release pushes and promotes the tagged
+version.
 Only the staged user migration is run by hand. The full runbook — the
 automated flow, first-run setup, failure recovery, and testing a private
 version against a local Ghost — lives in
