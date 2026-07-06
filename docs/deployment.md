@@ -8,13 +8,17 @@ hand anymore (a manual runbook survives [as a fallback](#fallback-manual-cli-run
 
 The integration is Zapier app `1566` (`App1566`), pinned in `.zapierapprc`.
 
-## Previews: every merge to main
+## Previews: green Test runs on main
 
 [`preview.yml`](../.github/workflows/preview.yml) pushes a private build to
 Zapier after every green Test run on main, at the fixed snapshot version
 **`0.0.0-preview`**. Zapier never allows promoting labeled versions and only
 promoted versions become immutable, so this version can never collide with a
-release and is simply replaced on every push.
+release and is simply replaced on every push. In practice that is every
+human merge to main; the one exception is the publish workflow's own
+bookkeeping commit, which is pushed by the Actions bot and therefore
+triggers no Test run and no preview (its content shipped as the release
+anyway).
 
 To try the current main: open the Zap editor with the developer account and
 pick version `0.0.0-preview` of the Ghost integration. To test against a
@@ -126,6 +130,22 @@ Actions UI** (or re-publish the release). Specifically:
   it should only ever have the developer account), delete it with
   `zapier-platform delete:version 0.0.0-preview` after migrating those Zaps
   off, or switch the snapshot label in `preview.yml`.
+- **The next release tags the bookkeeping commit**: the auto-merged
+  bookkeeping commit is pushed by the Actions bot, so it carries no Test
+  run — tagging exactly that commit makes the green-check guard fail with
+  "missing". Run `gh workflow run test.yml --ref main`, wait for green,
+  then re-run the publish run (or tag a later commit).
+
+Two smaller caveats, no action needed:
+
+- **Preview ordering race**: a cancelled preview run's upload can in
+  principle still land around the same time as its successor's, so
+  `0.0.0-preview` may briefly not match the newest main commit. The next
+  green merge (or a manual re-run) replaces it wholesale.
+- **One release at a time**: the publish concurrency group keeps at most
+  one run pending — publishing several releases in quick succession
+  cancels the middle ones. Cancelled that way, a release simply needs its
+  run re-run from the Actions UI; nothing has half-happened.
 
 ## Testing a private version against a local Ghost
 

@@ -24,8 +24,9 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
 ## Boundaries
 
 - **Deploys happen only through the GitHub Actions workflows** — a private
-  preview on every merge to main (`preview.yml`), push + promote on a GitHub
-  release (`publish.yml`); see [docs/deployment.md](docs/deployment.md).
+  preview from every green Test run on main (`preview.yml`), push + promote
+  on a GitHub release (`publish.yml`); see
+  [docs/deployment.md](docs/deployment.md).
   Never run `zapier-platform push`, `promote`, or `migrate` directly, and
   never create GitHub releases or tags — publishing a release *is* the
   deploy, and it is human-owned.
