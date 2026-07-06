@@ -66,10 +66,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          CONCLUSION="$(gh api "repos/${GITHUB_REPOSITORY}/commits/$(git rev-parse HEAD)/check-runs?check_name=Required%20checks%20pass" \
-              --jq '[.check_runs[].conclusion] | first')"
-          if [ "$CONCLUSION" != 'success' ]; then
-              echo "::error::'Required checks pass' is '${CONCLUSION:-missing}' on the tagged commit - only release commits with a green Test run."
+          # any(): a commit can carry several check runs with this name
+          # (push, pull_request, and workflow_dispatch suites) in no
+          # defined order - one green run is what the ruleset requires
+          GREEN="$(gh api "repos/${GITHUB_REPOSITORY}/commits/$(git rev-parse HEAD)/check-runs?check_name=Required%20checks%20pass" \
+              --jq '[.check_runs[].conclusion] | any(. == "success")')"
+          if [ "$GREEN" != 'true' ]; then
+              echo "::error::No successful 'Required checks pass' run on the tagged commit - only release commits with a green Test run. If this tags the previous release's bookkeeping commit, dispatch Test onto main first (docs/deployment.md)."
               exit 1
           fi
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -125,7 +128,9 @@ jobs:
           TAG: ${{ github.event.release.tag_name }}
           RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          if git show origin/main:CHANGELOG.md | grep -q "^## ${VERSION}\$"; then
+          # -xF: exact fixed-string line match, so the version's dots can't
+          # act as regex wildcards (same reasoning as in the script itself)
+          if git show origin/main:CHANGELOG.md | grep -qxF "## ${VERSION}"; then
               echo "main already carries the ${VERSION} changelog - nothing to land"
               exit 0
           fi
@@ -154,9 +159,18 @@ jobs:
           fi
           # PRs created with GITHUB_TOKEN don't trigger pull_request
           # workflows, so dispatch Test explicitly to satisfy the
-          # 'Required checks pass' rule, then let auto-merge land it
+          # 'Required checks pass' rule, then let auto-merge land it.
+          # The same property applies to the eventual auto-merge push to
+          # main: it triggers no workflows, which is what makes a
+          # publish -> Test -> preview trigger loop impossible - but it
+          # also means the bookkeeping commit itself gets no Test run
+          # (see docs/deployment.md for the follow-on release caveat)
           gh workflow run test.yml --ref "$BRANCH"
-          gh pr merge --auto --rebase "$BRANCH"
+          if [ "$(gh pr view "$BRANCH" --json autoMergeRequest --jq '.autoMergeRequest != null')" = 'true' ]; then
+              echo "auto-merge already enabled on the ${BRANCH} PR"
+          else
+              gh pr merge --auto --rebase "$BRANCH"
+          fi
       - name: Write the run summary
         env:
           VERSION: ${{ steps.version.outputs.version }}
