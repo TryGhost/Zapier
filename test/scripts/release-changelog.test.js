@@ -1,8 +1,10 @@
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { finalize, extract } from '../../scripts/release-changelog';
+import { finalize, extract, main } from '../../scripts/release-changelog';
 
 // The real changelog is the input the publish workflow will run against, so
 // test against it directly: if its shape drifts (e.g. the Unreleased heading
@@ -85,5 +87,76 @@ describe('extract', () => {
 
     it('fails loudly when the section is missing', () => {
         expect(() => extract(realChangelog, '9.9.9')).toThrow(/no "## 9\.9\.9" section/);
+    });
+});
+
+describe('main (CLI entry)', () => {
+    let log;
+    let error;
+    let tmpDir;
+    let tmpChangelog;
+
+    beforeEach(() => {
+        log = vi.spyOn(console, 'log').mockImplementation(() => {});
+        error = vi.spyOn(console, 'error').mockImplementation(() => {});
+        tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'release-changelog-'));
+        tmpChangelog = path.join(tmpDir, 'CHANGELOG.md');
+        fs.writeFileSync(tmpChangelog, realChangelog);
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        fs.rmSync(tmpDir, { recursive: true, force: true });
+    });
+
+    it('rejects unknown commands with usage and exit code 1', () => {
+        expect(main(['promote', '3.0.0'])).toBe(1);
+        expect(error).toHaveBeenCalledWith(expect.stringContaining('Usage:'));
+    });
+
+    it('rejects a missing version with usage and exit code 1', () => {
+        expect(main(['finalize'])).toBe(1);
+        expect(error).toHaveBeenCalledWith(expect.stringContaining('Usage:'));
+    });
+
+    it('finalize rewrites the file and reports the renamed heading', () => {
+        expect(main(['finalize', '3.0.0', tmpChangelog])).toBe(0);
+
+        expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(
+            realChangelog.replace('## Unreleased (next major)', '## 3.0.0'),
+        );
+        expect(log).toHaveBeenCalledWith(expect.stringContaining('Renamed the Unreleased heading'));
+    });
+
+    it('finalize is a no-op on a second run and says so', () => {
+        main(['finalize', '3.0.0', tmpChangelog]);
+        const finalized = fs.readFileSync(tmpChangelog, 'utf8');
+        log.mockClear();
+
+        expect(main(['finalize', '3.0.0', tmpChangelog])).toBe(0);
+
+        expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(finalized);
+        expect(log).toHaveBeenCalledWith(expect.stringContaining('nothing to do'));
+    });
+
+    it('extract prints the section without touching the file', () => {
+        expect(main(['extract', '2.6.2', tmpChangelog])).toBe(0);
+
+        expect(log).toHaveBeenCalledWith(extract(realChangelog, '2.6.2'));
+        expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(realChangelog);
+    });
+
+    it('defaults to the repository CHANGELOG.md when no file is given', () => {
+        expect(main(['extract', '2.6.2'])).toBe(0);
+
+        expect(log).toHaveBeenCalledWith(extract(realChangelog, '2.6.2'));
+    });
+
+    it('propagates changelog rejections so the workflow step fails', () => {
+        fs.writeFileSync(tmpChangelog, '## 2.0.0\n\n* old release\n');
+
+        expect(() => main(['finalize', '3.0.0', tmpChangelog])).toThrow(
+            /neither an "## Unreleased" heading/,
+        );
     });
 });
