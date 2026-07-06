@@ -2,9 +2,9 @@
 
 How the Ghost integration is versioned, released, and rolled out on Zapier's
 platform. Deploys run through two GitHub Actions workflows — humans decide
-*when* by creating a GitHub release, and humans own the staged user
-migration afterwards. Nobody runs `zapier-platform push` or `promote` by
-hand anymore (a manual runbook survives [as a fallback](#fallback-manual-cli-runbook)).
+*when* by running `pnpm ship`, and humans own the staged user migration
+afterwards. Nobody runs `zapier-platform push` or `promote` by hand anymore
+(a manual runbook survives [as a fallback](#fallback-manual-cli-runbook)).
 
 The integration is Zapier app `1566` (`App1566`), pinned in `.zapierapprc`.
 
@@ -24,28 +24,42 @@ To try the current main: open the Zap editor with the developer account and
 pick version `0.0.0-preview` of the Ghost integration. To test against a
 local Ghost, see [below](#testing-a-private-version-against-a-local-ghost).
 
-## Releasing: publish a GitHub release
+## Releasing: `pnpm ship`
 
 1. Make sure `CHANGELOG.md` has the release notes under the running
    `## Unreleased` heading — the release fails (on purpose) without them.
-2. [Create a GitHub release](https://github.com/TryGhost/Zapier/releases/new)
-   for a new tag `vX.Y.Z` on main (e.g. `v3.0.0`). The tag names the
-   integration version; nothing is bumped by hand. Don't mark it as a
-   pre-release — Zapier cannot promote labeled versions, so pre-releases are
-   rejected.
-3. [`publish.yml`](../.github/workflows/publish.yml) takes over:
-   - **guards**: the tag parses as a promotable `x.y.z` version, points at a
-     commit on main, and that commit has a green "Required checks pass" run;
+2. From a clean, up-to-date main checkout, run **the** release command:
+
+   ```sh
+   pnpm ship 3.0.0   # or: pnpm ship patch|minor|major
+   ```
+
+   [`@tryghost/pro-ship`](https://www.npmjs.com/package/@tryghost/pro-ship)
+   bumps `package.json`, commits (`package.json` + lockfile) as `vX.Y.Z`,
+   creates the annotated `vX.Y.Z` tag, and pushes both with `--follow-tags`
+   — the main ruleset's Ghost Foundation bypass exists for exactly this
+   push. Don't ship a prerelease (`pnpm ship prerelease` / `-beta` versions):
+   Zapier cannot promote labeled versions, so the publish workflow rejects
+   such tags.
+3. The tag push triggers [`publish.yml`](../.github/workflows/publish.yml):
+   - **guards**: the tag parses as a promotable `x.y.z` version, matches
+     the `package.json` version pro-ship committed, and points at a commit
+     on main;
+   - **wait for Test**: pro-ship pushes the commit and tag together, so
+     Test on that commit is normally still running when publish starts —
+     the workflow polls up to 20 minutes for a green "Required checks pass"
+     and fails loudly on a red run or timeout;
    - **finalize**: renames the `## Unreleased` heading in `CHANGELOG.md` to
-     `## X.Y.Z` (`scripts/release-changelog.js`) and sets the version in
-     `package.json`;
+     `## X.Y.Z` in its workspace (`scripts/release-changelog.js`) so
+     promote can read the section — the version itself was already
+     committed by pro-ship;
    - **push + promote**: uploads the build and promotes it. `promote` reads
      the `## X.Y.Z` section of `CHANGELOG.md` as the user-facing changelog.
      From here on, new connections use the released version; existing users
      stay where they are;
-   - **bookkeeping**: opens a `release/vX.Y.Z` PR with the finalized
-     `CHANGELOG.md` and `package.json`, dispatches Test onto it, and enables
-     auto-merge, so main records the release without anyone pushing to it
+   - **bookkeeping**: opens a tiny changelog-only `release/vX.Y.Z` PR (just
+     the heading rename), dispatches Test onto it, and enables auto-merge,
+     so the changelog history lands on main without anyone pushing to it
      directly.
 4. **Migrate existing users — the only manual step.** Roll out gradually and
    watch [Zapier's error dashboard](https://developer.zapier.com/) between
@@ -64,8 +78,10 @@ Zapier's own reference:
 
 ## Versioning rules
 
-- The released version is defined by the release tag; the publish workflow
-  writes it into `package.json`. Never bump the version by hand.
+- The version is set by `pnpm ship` (pro-ship bumps `package.json`, commits
+  and tags). Never bump the version by hand, and never create `v*` tags any
+  other way — the publish workflow cross-checks tag against `package.json`
+  and rejects mismatches.
 - `CHANGELOG.md` collects unreleased work under a literal `## Unreleased`
   heading (suffixes like "(next major)" are fine). The publish workflow
   turns it into the release heading.
@@ -95,10 +111,10 @@ release:
 4. **Watch a preview run**: merge any PR (or re-run the last Test run on
    main) and confirm the Preview workflow pushes `0.0.0-preview`, then that
    the version shows up in the Zap editor.
-5. **Supervise the first release**: create the next release (per above) and
-   watch the publish run end-to-end — the `versions --format json` state
-   check, the promote, and the bookkeeping PR auto-merging — before trusting
-   it unattended.
+5. **Supervise the first release**: run `pnpm ship 3.0.0` (per above) and
+   watch the publish run end-to-end — the wait for Test on the tagged
+   commit, the `versions --format json` state check, the promote, and the
+   changelog PR auto-merging — before trusting it unattended.
 
 ## Failure modes and recovery
 
@@ -106,19 +122,26 @@ The publish workflow is ordered so a failure never needs an undo: guards and
 changelog finalizing run before anything mutates, Zapier goes live before
 the repo bookkeeping, and every step is idempotent or self-skipping. **The
 universal recovery is: fix the cause, then re-run the failed run from the
-Actions UI** (or re-publish the release). Specifically:
+Actions UI.** Specifically:
 
-- **A guard fails** (bad tag, tag not on main, Test not green, missing
-  release notes): nothing happened — neither Zapier nor the repo changed.
-  Fix and re-run. If the tag itself was wrong, delete the release and tag
-  and start over; nothing referenced them yet.
+- **Test is still running when publish starts — that's normal**, not a
+  failure: pro-ship pushes the version commit and its tag together, so the
+  publish run waits (up to 20 minutes) for "Required checks pass" on the
+  tagged commit. It fails loudly if Test goes red (fix main, then re-run
+  the publish run — or ship a new version) or on timeout (re-run once Test
+  is green).
+- **A guard fails** (prerelease or malformed tag, tag/package.json version
+  mismatch, tag not on main, missing release notes): nothing happened —
+  neither Zapier nor the repo changed beyond pro-ship's version commit.
+  Ship the next version properly with `pnpm ship`; don't reuse or move the
+  bad tag.
 - **Push or promote fails**: the repo is untouched; a non-promoted upload
   may exist on Zapier but is harmless — the next attempt overwrites it
   (only *promoted* versions are immutable). Re-run.
 - **Promote succeeded, bookkeeping PR failed**: the release is live and
-  correct; only main's `CHANGELOG.md`/`package.json` lag. Re-running skips
-  push/promote (the version already reports state `promoted`) and redoes
-  the PR. Equally fine: open the same two-file PR by hand.
+  correct; only the changelog heading rename on main lags. Re-running
+  skips push/promote (the version already reports state `promoted`) and
+  redoes the PR. Equally fine: open the same one-file PR by hand.
 - **The bookkeeping PR hangs unmerged**: auto-merge waits for "Required
   checks pass"; the workflow dispatches Test onto the branch to provide it.
   If another commit lands on main first, the branch needs updating before
@@ -130,14 +153,14 @@ Actions UI** (or re-publish the release). Specifically:
   it should only ever have the developer account), delete it with
   `zapier-platform delete:version 0.0.0-preview` after migrating those Zaps
   off, or switch the snapshot label in `preview.yml`.
-- **The next release tags the bookkeeping commit**: the auto-merged
-  bookkeeping commit is pushed by the Actions bot, so it carries no Test
-  run — tagging exactly that commit makes the green-check guard fail with
-  "missing". Run `gh workflow run test.yml --ref main`, wait for green,
-  then re-run the publish run (or tag a later commit).
+Three smaller caveats, no action needed:
 
-Two smaller caveats, no action needed:
-
+- **The bookkeeping commit is workflow-blind**: the auto-merged changelog
+  commit is pushed by the Actions bot, so it triggers no Test run and no
+  preview. Harmless in practice — `pnpm ship` always stacks a fresh,
+  Test-covered version commit on top before tagging, so a release never
+  points at the bot commit — but if anything ever needs a check run on
+  that exact commit, `gh workflow run test.yml --ref main` provides one.
 - **Preview ordering race**: a cancelled preview run's upload can in
   principle still land around the same time as its successor's, so
   `0.0.0-preview` may briefly not match the newest main commit. The next
@@ -189,8 +212,10 @@ the CLI (`npm install --global zapier-platform-cli` — the binary is called
    main release: `node scripts/release-changelog.js finalize X.Y.Z`) — the
    `## X.Y.Z` changelog section is what `promote` ships as the user-facing
    changelog
-2. Land those changes through a PR, tag the released commit `vX.Y.Z`, and
-   push the tag
+2. Land those changes through a PR, tag the released commit, and push the
+   tag. Use a **plain `X.Y.Z` tag** (matching the 2.x history), not
+   `vX.Y.Z` — every pushed `v*` tag triggers the publish workflow, which
+   would run (and reject a non-main tag) pointlessly
 3. `zapier-platform push`
 4. `zapier-platform promote X.Y.Z`
 5. Migrate users gradually (see the release flow above)

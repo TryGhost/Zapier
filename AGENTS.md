@@ -25,14 +25,16 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
 
 - **Deploys happen only through the GitHub Actions workflows** — a private
   preview from every green Test run on main (`preview.yml`), push + promote
-  on a GitHub release (`publish.yml`); see
+  on a `vX.Y.Z` tag (`publish.yml`); see
   [docs/deployment.md](docs/deployment.md).
-  Never run `zapier-platform push`, `promote`, or `migrate` directly, and
-  never create GitHub releases or tags — publishing a release *is* the
-  deploy, and it is human-owned.
-- **Never bump `version` in package.json.** The publish workflow sets it
-  from the release tag (and finalizes `CHANGELOG.md`'s `## Unreleased`
-  heading, which the release requires — keep the heading intact).
+  Never run `zapier-platform push`, `promote`, or `migrate` directly, never
+  run `pnpm ship` / `pro-ship` (it pushes straight to main via a ruleset
+  bypass and *is* the deploy trigger), and never create releases or tags —
+  releasing is human-owned.
+- **Never bump `version` in package.json.** `pnpm ship` owns the version:
+  it bumps, commits, and tags in one step. The publish workflow finalizes
+  `CHANGELOG.md`'s `## Unreleased` heading, which the release requires —
+  keep the heading intact.
 - **Never lower the coverage thresholds** in `vitest.config.js` — they are
   100% across the board and gate CI.
 - **The Ghost compatibility floor is single-sourced** as `GHOST_MAJOR` in
