@@ -23,18 +23,24 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
 
 ## Boundaries
 
-- **Never run `zapier-platform push`, `promote`, or `migrate`.** Deploying to
-  Zapier is human-owned — see [docs/deployment.md](docs/deployment.md).
-- **Never bump `version` in package.json.** Versions are owner-managed as
-  part of the manual release flow.
+- **Deploys happen only through the GitHub Actions workflows** — a private
+  preview on every merge to main (`preview.yml`), push + promote on a GitHub
+  release (`publish.yml`); see [docs/deployment.md](docs/deployment.md).
+  Never run `zapier-platform push`, `promote`, or `migrate` directly, and
+  never create GitHub releases or tags — publishing a release *is* the
+  deploy, and it is human-owned.
+- **Never bump `version` in package.json.** The publish workflow sets it
+  from the release tag (and finalizes `CHANGELOG.md`'s `## Unreleased`
+  heading, which the release requires — keep the heading intact).
 - **Never lower the coverage thresholds** in `vitest.config.js` — they are
   100% across the board and gate CI.
 - **The Ghost compatibility floor is single-sourced** as `GHOST_MAJOR` in
   `app/lib/utils.js`: the auth-time version check and the `Accept-Version`
   request header must move together. Don't hardcode Ghost versions elsewhere.
-- **Keep the Renovate guards in `renovate.json5`.** `zapier-platform-core`
-  majors change Zapier's deployed Lambda runtime and need a coordinated
-  manual push/promote/migrate, so they must never ride an automated merge;
+- **Keep the Renovate guards in `renovate.json5`.** `zapier-platform`
+  (core and CLI) majors change Zapier's deployed Lambda runtime and need a
+  coordinated release + staged migrate, so they must never ride an automated
+  merge;
   the pnpm `<11` and e2e setup-node `<23` rules protect the supported Node
   range. Each rule's `description` explains its reasoning — update it if you
   change the rule.
