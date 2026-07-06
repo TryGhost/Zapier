@@ -5,7 +5,7 @@ module.exports = defineConfig({
         include: ['test/**/*.test.js'],
         coverage: {
             provider: 'v8',
-            include: ['app/**/*.js', 'index.js'],
+            include: ['app/**/*.js', 'scripts/**/*.js', 'index.js'],
             reporter: ['text', 'lcov'],
             // the suite genuinely covers everything; keep the gates at the
             // actual level so coverage can only stay put or improve

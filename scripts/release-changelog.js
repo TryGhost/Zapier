@@ -94,32 +94,43 @@ function extract(changelog, version) {
     return (nextHeading === -1 ? body : body.slice(0, nextHeading)).join('\n').trim();
 }
 
-function main(command, version) {
+/**
+ * @param {string[]} args CLI arguments: `<finalize|extract> <version> [file]`
+ * @returns {number} process exit code
+ * @throws when the changelog rejects the command (missing heading etc.)
+ */
+function main(args) {
+    const [command, version, file = CHANGELOG_PATH] = args;
     if (!version || !['finalize', 'extract'].includes(command)) {
-        console.error('Usage: node scripts/release-changelog.js <finalize|extract> <version>');
-        process.exit(1);
+        console.error(
+            'Usage: node scripts/release-changelog.js <finalize|extract> <version> [file]',
+        );
+        return 1;
     }
-    const changelog = fs.readFileSync(CHANGELOG_PATH, 'utf8');
+    const changelog = fs.readFileSync(file, 'utf8');
     if (command === 'finalize') {
         const result = finalize(changelog, version);
         if (result.alreadyFinalized) {
-            console.log(`CHANGELOG.md already has a "## ${version}" heading - nothing to do`);
+            console.log(`${file} already has a "## ${version}" heading - nothing to do`);
         } else {
-            fs.writeFileSync(CHANGELOG_PATH, result.changelog);
+            fs.writeFileSync(file, result.changelog);
             console.log(`Renamed the Unreleased heading to "## ${version}"`);
         }
     } else {
         console.log(extract(changelog, version));
     }
+    return 0;
 }
 
+/* v8 ignore start - process entry point; main() itself is unit-tested */
 if (require.main === module) {
     try {
-        main(process.argv[2], process.argv[3]);
+        process.exitCode = main(process.argv.slice(2));
     } catch (error) {
         console.error(error.message);
-        process.exit(1);
+        process.exitCode = 1;
     }
 }
+/* v8 ignore stop */
 
-module.exports = { finalize, extract };
+module.exports = { finalize, extract, main };
