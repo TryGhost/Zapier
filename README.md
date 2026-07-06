@@ -65,14 +65,13 @@ auto-switching enabled). See Zapier's
 for details.
 
 ```sh
-# install the Zapier CLI globally (the binary is called `zapier-platform` since v19)
-npm install --global zapier-platform-cli
-
-# authenticate against Zapier's platform with a deploy key
-zapier-platform login
-
-# install dependencies
+# install dependencies (includes the Zapier CLI - run it as
+# `pnpm exec zapier-platform`; the binary is called `zapier-platform` since v19)
 pnpm install
+
+# authenticate against Zapier's platform with a deploy key (only needed for
+# platform commands like `versions` - deploys themselves run from CI)
+pnpm exec zapier-platform login
 ```
 
 ## Testing
@@ -96,10 +95,12 @@ suite, and tears everything down again. Alternatives:
 
 ## Deployment
 
-The integration is deployed to Zapier's platform (app `1566`) with the
-`zapier-platform` CLI; versions are pushed, promoted, and migrated by hand.
-The full runbook — private and public releases, staged user migration, and
-testing a private version against a local Ghost — lives in
+The integration is deployed to Zapier's platform (app `1566`) by GitHub
+Actions: every merge to main refreshes a private `0.0.0-preview` version,
+and publishing a GitHub release pushes and promotes the tagged version.
+Only the staged user migration is run by hand. The full runbook — the
+automated flow, first-run setup, failure recovery, and testing a private
+version against a local Ghost — lives in
 [docs/deployment.md](docs/deployment.md).
 
 ## Useful resources
