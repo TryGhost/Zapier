@@ -30,7 +30,8 @@
     "nock": "14.0.16",
     "oxfmt": "0.57.0",
     "oxlint": "1.72.0",
-    "vitest": "4.1.9"
+    "vitest": "4.1.9",
+    "zapier-platform-cli": "19.0.0"
   },
   "pnpm": {
     "overrides": {
