@@ -1,0 +1,178 @@
+# Releases the integration when a GitHub release is published for a vX.Y.Z
+# tag on main: finalizes CHANGELOG.md and package.json for that version,
+# pushes the build to Zapier, promotes it (new connections start using it),
+# and lands the finalized files back on main via an auto-merging PR.
+#
+# Step order is deliberate: everything that can reject the release (guards,
+# finalize) runs first, then the Zapier side (push, promote), and the repo
+# bookkeeping PR only after the release is actually live. Every step is
+# idempotent or skippable, so a partly-failed run can be re-run from the
+# Actions UI and converges instead of double-releasing (see
+# docs/deployment.md for the failure modes).
+#
+# The staged user migration (`zapier-platform migrate`) is deliberately NOT
+# automated - it stays human-owned.
+name: Publish
+on:
+  release:
+    types: [published]
+permissions: {}
+concurrency:
+  # never interleave two releases; don't cancel a release mid-promote
+  group: zapier-publish
+jobs:
+  publish:
+    name: Push and promote on Zapier
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: zapier
+    permissions:
+      contents: write # push the release bookkeeping branch
+      pull-requests: write # open the bookkeeping PR + enable auto-merge
+      actions: write # dispatch Test onto the bookkeeping branch
+      checks: read # verify Test passed on the tagged commit
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          # full history so the tagged commit can be checked against main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Derive the version from the release tag
+        id: version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          if [ "$PRERELEASE" = 'true' ]; then
+              echo "::error::GitHub pre-releases are not supported: Zapier cannot promote labeled versions. Test main via the 0.0.0-preview snapshot instead."
+              exit 1
+          fi
+          VERSION="${TAG#v}"
+          # x.y.z with each part 0-999 and no leading zeros - the promotable
+          # subset of Zapier's version format (labels can't be promoted)
+          if ! printf '%s' "$VERSION" | grep -Eq '^(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})\.(0|[1-9][0-9]{0,2})$'; then
+              echo "::error::Tag '$TAG' does not name a promotable Zapier version - tag releases as vX.Y.Z (e.g. v3.0.0)."
+              exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Require the tagged commit to be on main
+        run: |
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+              echo "::error::The release tag does not point at a commit on main. Only main releases are automated; 2.x maintenance releases stay manual (docs/deployment.md)."
+              exit 1
+          fi
+      - name: Require a green Test run on the tagged commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CONCLUSION="$(gh api "repos/${GITHUB_REPOSITORY}/commits/$(git rev-parse HEAD)/check-runs?check_name=Required%20checks%20pass" \
+              --jq '[.check_runs[].conclusion] | first')"
+          if [ "$CONCLUSION" != 'success' ]; then
+              echo "::error::'Required checks pass' is '${CONCLUSION:-missing}' on the tagged commit - only release commits with a green Test run."
+              exit 1
+          fi
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Finalize CHANGELOG.md and package.json for the release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # renames '## Unreleased ...' to '## <version>'; fails loudly when
+          # there are no release notes, is a no-op when already finalized
+          node scripts/release-changelog.js finalize "$VERSION"
+          npm pkg set version="$VERSION"
+      - name: Check whether the version is already promoted
+        # makes re-runs converge: a re-run after a successful promote must
+        # not try to overwrite the (now immutable) promoted version
+        id: zapier
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
+          DISABLE_ZAPIER_ANALYTICS: 1
+        run: |
+          # `--format json` keys the rows by display header, and a promoted
+          # version reports state 'promoted' - both verified against the
+          # live integration with CLI 19.0.0
+          STATE="$(pnpm exec zapier-platform versions --format json \
+              | jq -r --arg v "$VERSION" '[.[] | select(.Version == $v) | .State] | first // "absent"')"
+          echo "Version $VERSION is '$STATE' on Zapier"
+          echo "state=$STATE" >> "$GITHUB_OUTPUT"
+      - name: Push the version to Zapier
+        if: steps.zapier.outputs.state != 'promoted'
+        # see preview.yml for the --skip-dep-install rationale
+        run: pnpm exec zapier-platform push --skip-dep-install
+        env:
+          ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
+          DISABLE_ZAPIER_ANALYTICS: 1
+      - name: Promote the version
+        if: steps.zapier.outputs.state != 'promoted'
+        # promote reads the '## <version>' section of CHANGELOG.md (just
+        # finalized above) as the user-facing changelog and errors without it
+        run: pnpm exec zapier-platform promote "$VERSION" --yes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ZAPIER_DEPLOY_KEY: ${{ secrets.ZAPIER_DEPLOY_KEY }}
+          DISABLE_ZAPIER_ANALYTICS: 1
+      - name: Land the finalized files on main via an auto-merging PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+        run: |
+          if git show origin/main:CHANGELOG.md | grep -q "^## ${VERSION}\$"; then
+              echo "main already carries the ${VERSION} changelog - nothing to land"
+              exit 0
+          fi
+          BRANCH="release/v${VERSION}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          gh auth setup-git
+          git switch -c "$BRANCH"
+          git add CHANGELOG.md package.json
+          git commit -m "Finalize the ${VERSION} release
+
+          The ${TAG} release was pushed and promoted on Zapier by the publish
+          workflow; this records the released version and its changelog
+          heading on main."
+          # --force: the branch may linger from a previously failed run
+          git push --force origin "$BRANCH"
+          if [ -z "$(gh pr list --head "$BRANCH" --json number --jq '.[].number')" ]; then
+              {
+                  echo "Automated follow-up to the [${TAG} release](${RELEASE_URL}): records the released version in package.json and finalizes the CHANGELOG.md heading. Zapier already serves this version."
+                  echo
+                  echo '## Changelog'
+                  echo
+                  node scripts/release-changelog.js extract "$VERSION"
+              } > /tmp/pr-body.md
+              gh pr create --base main --head "$BRANCH" --title "Finalize the ${VERSION} release" --body-file /tmp/pr-body.md
+          fi
+          # PRs created with GITHUB_TOKEN don't trigger pull_request
+          # workflows, so dispatch Test explicitly to satisfy the
+          # 'Required checks pass' rule, then let auto-merge land it
+          gh workflow run test.yml --ref "$BRANCH"
+          gh pr merge --auto --rebase "$BRANCH"
+      - name: Write the run summary
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          {
+              echo "## Zapier release ${VERSION}"
+              echo
+              echo "- Pushed and promoted: new connections now use ${VERSION}."
+              echo "- Existing users stay on their current version until migrated."
+              echo
+              echo '### Remaining manual step: staged migration'
+              echo
+              echo '```sh'
+              echo "zapier-platform migrate <oldVersion> ${VERSION} 10   # then 50, 100"
+              echo 'zapier-platform history'
+              echo '```'
+              echo
+              echo "Watch Zapier's error dashboard between steps - see docs/deployment.md."
+          } >> "$GITHUB_STEP_SUMMARY"

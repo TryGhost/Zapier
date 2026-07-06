@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+  # the publish workflow dispatches Test onto its release bookkeeping
+  # branch: PRs created with GITHUB_TOKEN never trigger pull_request runs,
+  # and the 'Required checks pass' rule needs a run on the head commit
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
