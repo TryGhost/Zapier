@@ -6,24 +6,54 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { finalize, extract, main } from '../../scripts/release-changelog';
 
-// The real changelog is the input the publish workflow will run against, so
-// test against it directly: if its shape drifts (e.g. the Unreleased heading
-// is renamed), these tests fail before a release does.
+// State-dependent behaviour (renaming, idempotence, extraction) is tested
+// against this fixture rather than the repository's CHANGELOG.md: the live
+// file legitimately flips between "has an Unreleased heading" and "already
+// finalized" as part of every release's bookkeeping PR, so tests pinned to
+// one of those states fail on the other - which is exactly what blocked the
+// 3.0.0 bookkeeping PR. The live file keeps one state-agnostic guard below.
+const UNRELEASED_CHANGELOG = `## Unreleased (next major)
+
+* (Breaking) Requires Ghost 6.0 or later to connect
+
+## 2.6.3
+
+* Add \`uuid\` to Member Updated trigger
+
+## 2.6.2
+
+* Add \`status\` property to Member Updated trigger
+* Fix Member Search action to return correct results when no member is found
+
+## 2.6.0
+
+* (New) Allow multiple newsletters to be added to members
+
+## 1.0.3
+
+* Initial public release
+`;
+
 const realChangelog = fs.readFileSync(new URL('../../CHANGELOG.md', import.meta.url), 'utf8');
+const packageVersion = JSON.parse(
+    fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
+).version;
 
 describe('finalize', () => {
-    it('renames the Unreleased heading of the real CHANGELOG.md to the release version', () => {
-        const { changelog, alreadyFinalized } = finalize(realChangelog, '3.0.0');
+    it('renames the Unreleased heading to the release version', () => {
+        const { changelog, alreadyFinalized } = finalize(UNRELEASED_CHANGELOG, '3.0.0');
 
         expect(alreadyFinalized).toBe(false);
         expect(changelog).toMatch(/^## 3\.0\.0$/m);
         expect(changelog).not.toMatch(/^## Unreleased/m);
         // only the heading line changes
-        expect(changelog).toBe(realChangelog.replace('## Unreleased (next major)', '## 3.0.0'));
+        expect(changelog).toBe(
+            UNRELEASED_CHANGELOG.replace('## Unreleased (next major)', '## 3.0.0'),
+        );
     });
 
     it('is idempotent when the version heading already exists', () => {
-        const finalized = finalize(realChangelog, '3.0.0').changelog;
+        const finalized = finalize(UNRELEASED_CHANGELOG, '3.0.0').changelog;
 
         const rerun = finalize(finalized, '3.0.0');
 
@@ -32,10 +62,10 @@ describe('finalize', () => {
     });
 
     it('treats an already-released version as finalized without touching Unreleased', () => {
-        const result = finalize(realChangelog, '2.6.3');
+        const result = finalize(UNRELEASED_CHANGELOG, '2.6.3');
 
         expect(result.alreadyFinalized).toBe(true);
-        expect(result.changelog).toBe(realChangelog);
+        expect(result.changelog).toBe(UNRELEASED_CHANGELOG);
     });
 
     it('fails loudly when neither the Unreleased nor the version heading exists', () => {
@@ -45,19 +75,23 @@ describe('finalize', () => {
     });
 
     it('rejects labeled versions - they cannot be promoted on Zapier', () => {
-        expect(() => finalize(realChangelog, '3.0.0-beta')).toThrow(/not a valid release version/);
+        expect(() => finalize(UNRELEASED_CHANGELOG, '3.0.0-beta')).toThrow(
+            /not a valid release version/,
+        );
     });
 
     it('rejects tag-shaped and malformed versions', () => {
         for (const version of ['v3.0.0', '3.0', '3.0.0.0', '03.0.0', '1000.0.0']) {
-            expect(() => finalize(realChangelog, version)).toThrow(/not a valid release version/);
+            expect(() => finalize(UNRELEASED_CHANGELOG, version)).toThrow(
+                /not a valid release version/,
+            );
         }
     });
 });
 
 describe('extract', () => {
     it('returns the finalized Unreleased body as the release section', () => {
-        const finalized = finalize(realChangelog, '3.0.0').changelog;
+        const finalized = finalize(UNRELEASED_CHANGELOG, '3.0.0').changelog;
 
         const section = extract(finalized, '3.0.0');
 
@@ -67,26 +101,40 @@ describe('extract', () => {
         expect(section).not.toContain('Add `uuid` to Member Updated trigger');
     });
 
-    it('extracts a historical release section from the real CHANGELOG.md', () => {
-        expect(extract(realChangelog, '2.6.2')).toBe(
+    it('extracts a historical release section', () => {
+        expect(extract(UNRELEASED_CHANGELOG, '2.6.2')).toBe(
             '* Add `status` property to Member Updated trigger\n' +
                 '* Fix Member Search action to return correct results when no member is found',
         );
     });
 
     it('extracts the final section when no later heading follows', () => {
-        expect(extract(realChangelog, '1.0.3')).toBe('* Initial public release');
+        expect(extract(UNRELEASED_CHANGELOG, '1.0.3')).toBe('* Initial public release');
     });
 
     it('does not match versions that only appear as substrings of other versions', () => {
         // "## 2.6.0" must not be found inside "## 2.6.03" or list items
-        expect(extract(realChangelog, '2.6.0')).toBe(
+        expect(extract(UNRELEASED_CHANGELOG, '2.6.0')).toBe(
             '* (New) Allow multiple newsletters to be added to members',
         );
     });
 
     it('fails loudly when the section is missing', () => {
-        expect(() => extract(realChangelog, '9.9.9')).toThrow(/no "## 9\.9\.9" section/);
+        expect(() => extract(UNRELEASED_CHANGELOG, '9.9.9')).toThrow(/no "## 9\.9\.9" section/);
+    });
+});
+
+describe('the repository CHANGELOG.md', () => {
+    // The one thing the live file must satisfy in ANY release state - before
+    // a release (Unreleased heading present), on a bookkeeping branch
+    // (already finalized), or between the two: the publish workflow can
+    // finalize it for the current package version and extract a non-empty
+    // promote text from the result. This is the workflow's real precondition
+    // and it holds on both sides of a release.
+    it('is finalizable and extractable for the current package version', () => {
+        const { changelog } = finalize(realChangelog, packageVersion);
+
+        expect(extract(changelog, packageVersion).trim()).not.toBe('');
     });
 });
 
@@ -101,7 +149,7 @@ describe('main (CLI entry)', () => {
         error = vi.spyOn(console, 'error').mockImplementation(() => {});
         tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'release-changelog-'));
         tmpChangelog = path.join(tmpDir, 'CHANGELOG.md');
-        fs.writeFileSync(tmpChangelog, realChangelog);
+        fs.writeFileSync(tmpChangelog, UNRELEASED_CHANGELOG);
     });
 
     afterEach(() => {
@@ -123,7 +171,7 @@ describe('main (CLI entry)', () => {
         expect(main(['finalize', '3.0.0', tmpChangelog])).toBe(0);
 
         expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(
-            realChangelog.replace('## Unreleased (next major)', '## 3.0.0'),
+            UNRELEASED_CHANGELOG.replace('## Unreleased (next major)', '## 3.0.0'),
         );
         expect(log).toHaveBeenCalledWith(expect.stringContaining('Renamed the Unreleased heading'));
     });
@@ -142,11 +190,13 @@ describe('main (CLI entry)', () => {
     it('extract prints the section without touching the file', () => {
         expect(main(['extract', '2.6.2', tmpChangelog])).toBe(0);
 
-        expect(log).toHaveBeenCalledWith(extract(realChangelog, '2.6.2'));
-        expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(realChangelog);
+        expect(log).toHaveBeenCalledWith(extract(UNRELEASED_CHANGELOG, '2.6.2'));
+        expect(fs.readFileSync(tmpChangelog, 'utf8')).toBe(UNRELEASED_CHANGELOG);
     });
 
     it('defaults to the repository CHANGELOG.md when no file is given', () => {
+        // a historical release section exists in every release state of the
+        // live file, unlike the current version's section
         expect(main(['extract', '2.6.2'])).toBe(0);
 
         expect(log).toHaveBeenCalledWith(extract(realChangelog, '2.6.2'));
