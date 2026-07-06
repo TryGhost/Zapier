@@ -14,7 +14,8 @@
     "format": "oxfmt .",
     "test": "vitest run --coverage",
     "test:e2e": "./test-e2e/run.sh",
-    "test:e2e:bare": "vitest run --config vitest.e2e.config.js"
+    "test:e2e:bare": "vitest run --config vitest.e2e.config.js",
+    "ship": "pro-ship"
   },
   "engines": {
     "node": ">=22"
@@ -26,6 +27,7 @@
     "zapier-platform-core": "19.0.0"
   },
   "devDependencies": {
+    "@tryghost/pro-ship": "1.1.5",
     "@vitest/coverage-v8": "4.1.9",
     "nock": "14.0.16",
     "oxfmt": "0.57.0",
