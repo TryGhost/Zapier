@@ -30,11 +30,12 @@ const UNRELEASED_HEADING = /^## Unreleased\b.*$/m;
 const RELEASE_VERSION = /^(?:0|[1-9]\d{0,2})\.(?:0|[1-9]\d{0,2})\.(?:0|[1-9]\d{0,2})$/;
 
 /**
+ * @param {string} changelog full CHANGELOG.md contents
  * @param {string} version release version, e.g. "3.0.0"
- * @returns {RegExp} matcher for that version's `## <version>` heading line
+ * @returns {boolean} whether a `## <version>` heading line exists
  */
-function versionHeading(version) {
-    return new RegExp(`^## ${version.replaceAll('.', '\\.')}$`, 'm');
+function hasVersionHeading(changelog, version) {
+    return changelog.split('\n').includes(`## ${version}`);
 }
 
 /**
@@ -59,7 +60,7 @@ function assertReleaseVersion(version) {
  */
 function finalize(changelog, version) {
     assertReleaseVersion(version);
-    if (versionHeading(version).test(changelog)) {
+    if (hasVersionHeading(changelog, version)) {
         return { changelog, alreadyFinalized: true };
     }
     if (!UNRELEASED_HEADING.test(changelog)) {
@@ -83,13 +84,14 @@ function finalize(changelog, version) {
  */
 function extract(changelog, version) {
     assertReleaseVersion(version);
-    const headingMatch = versionHeading(version).exec(changelog);
-    if (!headingMatch) {
+    const lines = changelog.split('\n');
+    const headingIndex = lines.indexOf(`## ${version}`);
+    if (headingIndex === -1) {
         throw new Error(`CHANGELOG.md has no "## ${version}" section`);
     }
-    const body = changelog.slice(headingMatch.index + headingMatch[0].length);
-    const nextHeading = /^## /m.exec(body);
-    return (nextHeading ? body.slice(0, nextHeading.index) : body).trim();
+    const body = lines.slice(headingIndex + 1);
+    const nextHeading = body.findIndex((line) => line.startsWith('## '));
+    return (nextHeading === -1 ? body : body.slice(0, nextHeading)).join('\n').trim();
 }
 
 function main(command, version) {
