@@ -2,8 +2,9 @@
 
 Ghost's official Zapier integration — a Zapier Platform CLI app
 (`zapier-platform-core` 19, Node 22, CommonJS). See [README.md](README.md)
-for what it does and [docs/deployment.md](docs/deployment.md) for the release
-runbook.
+for the overview, [docs/integration.md](docs/integration.md) for the app
+surface, [docs/testing.md](docs/testing.md) for testing, and
+[docs/deployment.md](docs/deployment.md) for the release runbook.
 
 ## Commands
 
@@ -31,6 +32,10 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
   run `pnpm ship` / `pro-ship` (it pushes straight to main via a ruleset
   bypass and *is* the deploy trigger), and never create releases or tags —
   releasing is human-owned.
+- **Zapier platform CLI/browser access uses the owner account.** For
+  `zapier-platform login`, `validate`, `versions`, or fallback runbooks, use
+  the `info+zapier@ghost.org` Zapier account from 1Password; don't use a
+  personal Zapier account.
 - **Never bump `version` in package.json.** `pnpm ship` owns the version:
   it bumps, commits, and tags in one step. The publish workflow finalizes
   `CHANGELOG.md`'s `## Unreleased` heading, which the release requires —
@@ -68,3 +73,8 @@ via `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
 - The `sample` objects in `app/` triggers/creates/searches mirror real
   Ghost 6 API shapes and are shown to users in the Zap editor — don't trim
   or invent fields.
+- For complimentary-member work, read
+  [docs/integration.md](docs/integration.md#complimentary-members) first:
+  the old `comped` field is deprecated but must keep working for existing
+  Zaps, while the newer tier-specific fields must stay mutually exclusive
+  with it.
