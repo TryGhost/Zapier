@@ -10,13 +10,16 @@ Zapier users connect their Ghost site with an Admin API key and URL (from
 Ghost Admin under `Integrations » Zapier`) and build Zaps from:
 
 - **Triggers** — instant REST hooks fed by Ghost webhooks: post/page
-  published, post scheduled, member created/updated/deleted, tag, author,
-  newsletter, and tier created
+  published, post scheduled, and member created/updated/deleted
 - **Creates** — create a post, create or update a member
 - **Searches** — find a member or an author
 
 All requests target the unversioned Admin API (`/ghost/api/admin/`) and
 declare their compatibility version via the `Accept-Version` header.
+
+For the full trigger/action inventory, including hidden dropdown providers
+for authors, tags, newsletters, and tiers, see
+[docs/integration.md](docs/integration.md).
 
 ## How it works
 
@@ -92,6 +95,9 @@ suite, and tears everything down again. Alternatives:
 - run any **fresh** Ghost install yourself, then
   `node test-e2e/setup/bootstrap.js` (set `GHOST_URL` if it is not on
   `http://localhost:2368`) followed by `pnpm test:e2e`
+
+More detail, including testing a private Zapier version against a local Ghost,
+lives in [docs/testing.md](docs/testing.md).
 
 ## Deployment
 

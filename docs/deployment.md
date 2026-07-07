@@ -22,7 +22,8 @@ anyway).
 
 To try the current main: open the Zap editor with the developer account and
 pick version `0.0.0-preview` of the Ghost integration. To test against a
-local Ghost, see [below](#testing-a-private-version-against-a-local-ghost).
+local Ghost, use the private-version flow in
+[testing.md](testing.md#testing-a-private-zapier-version-against-local-ghost).
 
 ## Releasing: `pnpm ship`
 
@@ -171,6 +172,10 @@ Three smaller caveats, no action needed:
   run re-run from the Actions UI; nothing has half-happened.
 
 ## Testing a private version against a local Ghost
+
+The fuller testing guide lives in
+[testing.md](testing.md#testing-a-private-zapier-version-against-local-ghost).
+The short version:
 
 To check changes against a production-like setup before promoting:
 
