@@ -102,7 +102,9 @@ release:
    [Zapier developer dashboard](https://developer.zapier.com/app/1566) with
    the integration's owner account from 1Password (`info+zapier@ghost.org`)
    and generate a deploy key for app 1566 (the same credential
-   `zapier-platform login` provisions).
+   `zapier-platform login` provisions). Use that same 1Password account when
+   the Zapier Platform CLI login flow asks you to authenticate in the
+   browser.
 2. **Create the `zapier` GitHub environment** (repo Settings → Environments)
    and add the key as the `ZAPIER_DEPLOY_KEY` environment secret. Both
    workflows request this environment; until it exists with the secret,
@@ -216,7 +218,8 @@ follow the [fallback runbook](#fallback-manual-cli-runbook).
 
 For 2.x maintenance releases, or if the workflows are unavailable. You need
 the CLI (`npm install --global zapier-platform-cli` — the binary is called
-`zapier-platform` since v19) and `zapier-platform login`.
+`zapier-platform` since v19) and `zapier-platform login`. Use the
+`info+zapier@ghost.org` Zapier account from 1Password for the CLI login flow.
 
 1. Set the version in `package.json` and finalize `CHANGELOG.md` (for a
    main release: `node scripts/release-changelog.js finalize X.Y.Z`) — the

@@ -95,7 +95,8 @@ hook triggers, or connection labels. The checks look for compatibility and
 definition problems such as removed public surfaces, sample data drift,
 missing polling URLs for REST hooks, unsafe auth labels, and bad help text.
 
-Run them through the CLI when you have a deploy key available:
+Run them through the CLI when you are logged in with the Zapier owner account
+from 1Password (`info+zapier@ghost.org`):
 
 ```sh
 pnpm exec zapier-platform validate

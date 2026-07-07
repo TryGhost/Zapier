@@ -72,8 +72,8 @@ for details.
 # `pnpm exec zapier-platform`; the binary is called `zapier-platform` since v19)
 pnpm install
 
-# authenticate against Zapier's platform with a deploy key (only needed for
-# platform commands like `versions` - deploys themselves run from CI)
+# authenticate against Zapier's platform for CLI commands. Use the
+# `info+zapier@ghost.org` Zapier account from 1Password.
 pnpm exec zapier-platform login
 ```
 
