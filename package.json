@@ -21,7 +21,7 @@
     "node": ">=22"
   },
   "dependencies": {
-    "@tryghost/admin-api": "1.14.10",
+    "@tryghost/admin-api": "1.14.11",
     "lodash": "4.18.1",
     "semver": "7.8.5",
     "zapier-platform-core": "19.0.0"
