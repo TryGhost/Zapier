@@ -71,15 +71,17 @@ private push, before promotion.
    ```
 
 3. In a regular Zapier account, create a new Zap and choose the Ghost version
-   under test.
+   under test. If you need the integration owner account, use the
+   `info+zapier@ghost.org` credentials from 1Password.
 4. Connect the Zap to the tunnel URL.
 5. Use local Ghost normally. Trigger events and Admin API calls from Zapier
    should now arrive at your local process.
 
-If nothing arrives, check the Zap run history and Zapier's developer error
-dashboard first, then check the local Ghost logs. Most failures at this layer
-are URL, auth, webhook delivery, or sample-shape problems rather than unit
-test problems.
+If nothing arrives, check the Zap run history and the
+[Zapier developer dashboard for app 1566](https://developer.zapier.com/app/1566)
+first, then check the local Ghost logs. Most failures at this layer are URL,
+auth, webhook delivery, or sample-shape problems rather than unit test
+problems.
 
 Do not run `zapier-platform push`, `promote`, or `migrate` by hand for normal
 main releases. The deploy path is in [deployment.md](deployment.md); staged

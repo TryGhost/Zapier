@@ -116,6 +116,26 @@ newer complimentary tier fields are mutually exclusive with the deprecated
 default-tier field, and the code halts the Zap instead of guessing when a user
 sets conflicting inputs.
 
+## Complimentary members
+
+The current member actions let Zap users manage complimentary access more
+precisely than the old `comped` boolean allowed. Create Member and Update
+Member both expose `Complimentary tier`, which assigns the member to a
+specific active paid tier. Update Member also exposes `Remove complimentary
+subscriptions`, which sends an empty `tiers` array to Ghost and removes the
+member's complimentary tier assignments.
+
+The older `Complimentary premium plan` field still exists for existing Zaps,
+but it is deprecated. It can only add or remove the site's default
+complimentary tier and it still depends on the legacy Ghost `comped` behavior.
+Do not combine it with the newer tier-specific fields; the app returns a
+halted error instead of guessing which complimentary path should win.
+
+One Ghost edge case is deliberate: on sites without Stripe connected, Ghost
+can attach or detach tiers but may not immediately recalculate the member's
+status. The Zapier field help text calls that out because the API result can
+look surprising even though the tier assignment changed.
+
 Searches live in `app/searches/`. Member search filters by email. Author
 search reads by either email address or slug.
 

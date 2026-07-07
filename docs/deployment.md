@@ -20,9 +20,10 @@ bookkeeping commit, which is pushed by the Actions bot and therefore
 triggers no Test run and no preview (its content shipped as the release
 anyway).
 
-To try the current main: open the Zap editor with the developer account and
-pick version `0.0.0-preview` of the Ghost integration. To test against a
-local Ghost, use the private-version flow in
+To try the current main: sign in to the Zapier developer account from
+1Password (`info+zapier@ghost.org`), open the Zap editor, and pick version
+`0.0.0-preview` of the Ghost integration. To test against a local Ghost, use
+the private-version flow in
 [testing.md](testing.md#testing-a-private-zapier-version-against-local-ghost).
 
 ## Releasing: `pnpm ship`
@@ -63,8 +64,9 @@ local Ghost, use the private-version flow in
      so the changelog history lands on main without anyone pushing to it
      directly.
 4. **Migrate existing users — the only manual step.** Roll out gradually and
-   watch [Zapier's error dashboard](https://developer.zapier.com/) between
-   steps:
+   watch the [Zapier developer dashboard for app 1566](https://developer.zapier.com/app/1566)
+   between steps. Use the `info+zapier@ghost.org` Zapier account from
+   1Password:
 
    ```sh
    zapier-platform migrate 2.6.3 3.0.0 10   # then 50, then 100
@@ -97,9 +99,10 @@ One-time setup before the workflows can deploy, plus a supervised first
 release:
 
 1. **Create a deploy key**: sign in to the
-   [Zapier developer platform](https://developer.zapier.com/) with the
-   integration's owner account and generate a deploy key for app 1566
-   (the same credential `zapier-platform login` provisions).
+   [Zapier developer dashboard](https://developer.zapier.com/app/1566) with
+   the integration's owner account from 1Password (`info+zapier@ghost.org`)
+   and generate a deploy key for app 1566 (the same credential
+   `zapier-platform login` provisions).
 2. **Create the `zapier` GitHub environment** (repo Settings → Environments)
    and add the key as the `ZAPIER_DEPLOY_KEY` environment secret. Both
    workflows request this environment; until it exists with the secret,
@@ -182,6 +185,8 @@ To check changes against a production-like setup before promoting:
 1. In your regular Zapier account, create a new Zap and select the Ghost
    version under test (`0.0.0-preview`, or migrate a single user account's
    Zaps to it: `zapier-platform migrate 2.6.3 2.6.4 --user=user@example.com`).
+   If you need the owner/developer account, use the `info+zapier@ghost.org`
+   credentials from 1Password.
 2. Expose your local Ghost instance so Zapier can reach it — we use
    [Tailscale Funnel](https://tailscale.com/kb/1223/funnel):
    `tailscale funnel 2368`. (Any tunnel that gives you a public HTTPS URL
@@ -189,8 +194,8 @@ To check changes against a production-like setup before promoting:
 3. Connect the Zap to your local instance via the public URL the tunnel
    printed.
 4. Use your local Ghost as usual — webhook deliveries and API requests from
-   Zapier now hit it. If nothing comes through, check Zapier's error
-   dashboard.
+   Zapier now hit it. If nothing comes through, check the
+   [Zapier developer dashboard for app 1566](https://developer.zapier.com/app/1566).
 
 ## Maintenance releases for the previous major
 
