@@ -105,7 +105,7 @@ jobs:
           echo "::error::Timed out after 20 minutes waiting for a 'Required checks pass' run on ${SHA} - once Test is green, re-run this workflow run (docs/deployment.md)."
           exit 1
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           # no dependency cache here: restored caches are writable from the
