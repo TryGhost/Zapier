@@ -24,7 +24,7 @@
     "@tryghost/admin-api": "1.14.11",
     "lodash": "4.18.1",
     "semver": "7.8.5",
-    "zapier-platform-core": "19.0.0"
+    "zapier-platform-core": "19.1.0"
   },
   "devDependencies": {
     "@tryghost/pro-ship": "1.1.7",
