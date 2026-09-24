@@ -18,8 +18,8 @@ importers:
   .:
     dependencies:
       '@tryghost/admin-api':
-        specifier: 1.14.11
-        version: 1.14.11
+        specifier: 1.14.13
+        version: 1.14.13
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -31,8 +31,8 @@ importers:
         version: 19.1.0
     devDependencies:
       '@tryghost/pro-ship':
-        specifier: 1.1.7
-        version: 1.1.7
+        specifier: 1.1.9
+        version: 1.1.9
       '@vitest/coverage-v8':
         specifier: 4.1.10
         version: 4.1.10(vitest@4.1.10)
@@ -1281,16 +1281,16 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@tryghost/admin-api@1.14.11':
-    resolution: {integrity: sha512-dI4buzO/oR4Hop8R9KowNgjqyVUs0wC+/j6g8vFmOOmSEtGaAT1OF22SW09f9c/Ab7eY0CXXPLIDM9bbgAZjVQ==}
+  '@tryghost/admin-api@1.14.13':
+    resolution: {integrity: sha512-V5ouJQEDxZVtvRRSvwT+wKMupMK27oH031eDQBeGX06e4xmTtVkNUwwBRdM4eKHv0khaA5bwwR4mM1vcbvQ68Q==}
 
-  '@tryghost/pro-ship@1.1.7':
-    resolution: {integrity: sha512-pF06n43ZssCV1rjy/B6MQcempQc7Kij46/odeiJZHoP9GAOPhTLfmq0zSdQp9WE4vhHGHdwboee9Z7gSszCD9g==}
+  '@tryghost/pro-ship@1.1.9':
+    resolution: {integrity: sha512-2DvlpT5P7v8bOizXTtL7/Flmc9wAK3eycroxgMTQWlpFaVlXjmOnuOnFGEeT8JGAdY/F5kk9tLDmb+x43TXbJQ==}
     engines: {node: '>=20.20.0'}
     hasBin: true
 
-  '@tryghost/root-utils@2.3.2':
-    resolution: {integrity: sha512-tUyMS4xJUceE62JjZIjWAXCeoVlbNHWF2dIy6xJkaYgeHw4oZ5YoKMu9Mzqa7TPHIapU+BxwdWV0HvMj9dZGlA==}
+  '@tryghost/root-utils@2.3.14':
+    resolution: {integrity: sha512-VmHSaPdjTCQNOTNvpLTmphi+TdorWbGbjgqTeCYFPgsWw3XUlByWaERYe3PV2JOmd2XeAhpG2KCegrmnPWMlKA==}
 
   '@tufjs/canonical-json@2.0.0':
     resolution: {integrity: sha512-yVtV8zsdo8qFHe+/3kw81dSLyF7D576A5cCFCi4X7B39tWT7SekaEFUnvnWJHz+9qO7qJTah1JbrDjWKqFtdWA==}
@@ -1569,8 +1569,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.18.1:
-    resolution: {integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==}
+  axios@1.20.0:
+    resolution: {integrity: sha512-r8aOh8j9cGKpgQAqpzrUHnSIc6a59Y3Xf/cv8sy1DrHCkZHzQGEuoq1tARk6qSyDdtQGSDgpb9kFlruzPvrgwg==}
 
   b4a@1.8.1:
     resolution: {integrity: sha512-aiqre1Nr0B/6DgE2N5vwTc+2/oQZ4Wh1t4NznYY4E00y8LCt6NqdRv81so00oo27D8MVKTpUa/MwUUtBLXCoDw==}
@@ -4688,7 +4688,7 @@ snapshots:
       '@babel/parser': 7.29.8
       '@babel/template': 7.29.7
       '@babel/types': 7.29.8
-      debug: 4.4.1(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -5062,7 +5062,7 @@ snapshots:
 
   '@kwsites/file-exists@1.1.1':
     dependencies:
-      debug: 4.4.1(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -5575,21 +5575,21 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@tryghost/admin-api@1.14.11':
+  '@tryghost/admin-api@1.14.13':
     dependencies:
-      axios: 1.18.1
+      axios: 1.20.0
       form-data: 4.0.6
       jsonwebtoken: 9.0.3
     transitivePeerDependencies:
       - debug
       - supports-color
 
-  '@tryghost/pro-ship@1.1.7':
+  '@tryghost/pro-ship@1.1.9':
     dependencies:
-      '@tryghost/root-utils': 2.3.2
+      '@tryghost/root-utils': 2.3.14
       semver: 7.8.5
 
-  '@tryghost/root-utils@2.3.2':
+  '@tryghost/root-utils@2.3.14':
     dependencies:
       caller: 1.1.0
       find-root: 1.1.0
@@ -5887,7 +5887,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.18.1:
+  axios@1.20.0:
     dependencies:
       follow-redirects: 1.16.0
       form-data: 4.0.6
