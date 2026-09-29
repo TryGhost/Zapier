@@ -80,22 +80,33 @@ const initAdminApi = (z, { adminApiUrl: adminUrl, adminApiKey: key }) => {
         version: ADMIN_API_VERSION,
     });
 
-    // @tryghost/admin-api 1.14.10 has no tiers resource, so graft a
-    // browse-only one on. It goes through the same makeRequest as the SDK
-    // resources, keeping error handling and the User-Agent prefix identical.
+    // Reads an Admin API path the SDK has no resource for, with the same request handling.
+    function browse(path, params = {}) {
+        return makeRequest({
+            url: `${adminUrl}/ghost/api/admin/${path}`,
+            method: 'GET',
+            params,
+            headers: {
+                // '/admin/' is the token audience for the unversioned
+                // Admin API - the same value the SDK derives internally
+                Authorization: `Ghost ${generateToken(key, '/admin/')}`,
+                'Accept-Version': ADMIN_API_VERSION,
+            },
+        });
+    }
+
+    // @tryghost/admin-api has no tiers or metafields resources, so graft browse-only ones on.
     api.tiers = {
         browse(params = {}) {
-            return makeRequest({
-                url: `${adminUrl}/ghost/api/admin/tiers/`,
-                method: 'GET',
-                params,
-                headers: {
-                    // '/admin/' is the token audience for the unversioned
-                    // Admin API - the same value the SDK derives internally
-                    Authorization: `Ghost ${generateToken(key, '/admin/')}`,
-                    'Accept-Version': ADMIN_API_VERSION,
-                },
-            }).then((data) => data.tiers);
+            return browse('tiers/', params).then((data) => data.tiers);
+        },
+    };
+
+    api.memberMetafields = {
+        browse(namespace) {
+            return browse(`members/metafields/${namespace}/`).then(
+                (data) => data.members_metafields,
+            );
         },
     };
 
