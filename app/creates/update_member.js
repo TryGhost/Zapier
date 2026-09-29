@@ -1,4 +1,9 @@
 const { initAdminApi, isEnabled } = require('../lib/utils');
+const {
+    customFieldInputs,
+    customFieldOutputs,
+    customFieldValuesFrom,
+} = require('../lib/custom_fields');
 
 const updateMember = async (z, bundle) => {
     const memberData = {
@@ -57,6 +62,11 @@ const updateMember = async (z, bundle) => {
         memberData.tiers = [];
     } else if (bundle.inputData.comped !== undefined) {
         memberData.comped = bundle.inputData.comped;
+    }
+
+    const customFields = customFieldValuesFrom(bundle.inputData);
+    if (customFields) {
+        memberData.metafields = customFields;
     }
 
     const api = initAdminApi(z, bundle.authData);
@@ -176,9 +186,12 @@ module.exports = {
                 helpText:
                     'Deprecated - use "Complimentary tier" or "Remove complimentary subscriptions" instead. If enabled, member will be placed onto a free of charge premium subscription to the default tier; if disabled, an existing one is removed. Requires a connected Stripe account.',
             },
+            customFieldInputs,
         ],
 
         perform: updateMember,
+
+        outputFields: [customFieldOutputs],
 
         sample: {
             id: '5c9c9c8d51b5bf974afad2a4',

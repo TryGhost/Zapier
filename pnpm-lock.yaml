@@ -20,6 +20,9 @@ importers:
       '@tryghost/admin-api':
         specifier: 1.14.11
         version: 1.14.11
+      '@tryghost/metafield-types':
+        specifier: 0.1.0
+        version: 0.1.0
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -1283,6 +1286,9 @@ packages:
 
   '@tryghost/admin-api@1.14.11':
     resolution: {integrity: sha512-dI4buzO/oR4Hop8R9KowNgjqyVUs0wC+/j6g8vFmOOmSEtGaAT1OF22SW09f9c/Ab7eY0CXXPLIDM9bbgAZjVQ==}
+
+  '@tryghost/metafield-types@0.1.0':
+    resolution: {integrity: sha512-X3biWp2aqzYNIcBNcDrrlI4wsF6b4cqmbtUXGXJCR6YBK53z0oPIwPOFnCKy2W12qULkoxGvjJzijAHJFJI8Dg==}
 
   '@tryghost/pro-ship@1.1.7':
     resolution: {integrity: sha512-pF06n43ZssCV1rjy/B6MQcempQc7Kij46/odeiJZHoP9GAOPhTLfmq0zSdQp9WE4vhHGHdwboee9Z7gSszCD9g==}
@@ -4451,6 +4457,9 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
 snapshots:
 
   '@babel/code-frame@7.29.7':
@@ -5583,6 +5592,10 @@ snapshots:
     transitivePeerDependencies:
       - debug
       - supports-color
+
+  '@tryghost/metafield-types@0.1.0':
+    dependencies:
+      zod: 4.4.3
 
   '@tryghost/pro-ship@1.1.7':
     dependencies:
@@ -9106,3 +9119,5 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.7.0
+
+  zod@4.4.3: {}

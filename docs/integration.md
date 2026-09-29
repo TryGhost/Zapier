@@ -139,6 +139,65 @@ look surprising even though the tier assignment changed.
 Searches live in `app/searches/`. Member search filters by email. Author
 search reads by either email address or slug.
 
+## Custom fields
+
+A Ghost site can define custom fields to collect about its members, such as
+a company name or a shipping address. `app/lib/custom_fields.js` reads the
+site's definitions through a browse-only `memberMetafields` resource grafted
+onto the Admin API client, and turns them into inputs for Create Member and
+Update Member and into labelled outputs for Find a Member, Member Created and
+Member Updated.
+
+Ghost groups member fields into namespaces, and the fields a publisher defines
+are the `custom` namespace. The app works the same way for any namespace, but
+only offers `custom` for now. Ghost decides which namespaces an integration may
+read and write, so once Ghost can list them for an integration, the app's
+namespace list comes from Ghost.
+
+Every input and output key is the value's path in Ghost's member payload,
+`metafields.<namespace>.<key>[.<part>]`, joined with `__`, which is how Zapier
+flattens nested output. An input's key therefore matches the output a later
+step maps it from. Ghost never changes a field's key after creating it, so
+renaming a field in Ghost relabels a Zap without breaking its mappings. These
+keys are a contract with every Zap built on them: do not change them.
+
+Member Updated also labels what an edit replaced. When an edit changes any
+custom field, Ghost's `member.edited` payload has `previous.metafields` with
+everything the member held before the edit, so the trigger offers each field
+twice: under `current__`, and under `previous__` labelled "(before)". An edit
+that changes no custom field has no `previous.metafields`.
+
+A member with no values has no `metafields` key at all, so a Zap sees those
+outputs as empty.
+
+Which types exist, what each is made of and the type of value each part holds
+come from Ghost's own `@tryghost/metafield-types` package, so the app keeps no
+copy of them. An address is entered part by part, each part labelled from its
+key, and a country is picked from Ghost's list of country codes. A type the
+installed package doesn't know, which a site on a newer Ghost can have, is left
+out until the package is updated; updating it is all a new type needs, because
+every type is drawn from the package. Types never change once Ghost ships them,
+so a newer package never offers a site a part it can't store.
+
+Blank inputs are dropped before the request. Zapier passes an empty string for
+a mapped value that turned out empty, and Ghost reads an empty string as
+clearing a field, so sending it would wipe a value the member already had.
+
+The app detects what the connected Ghost supports from how it answers, never
+from its version:
+
+- A Ghost without custom fields answers the definitions request with a 404,
+  and one from before integrations could read them with a 403. Both mean no
+  custom field inputs; the step still works.
+- Member browse only includes values when asked with `include=metafields`. A
+  Ghost that does not know that include ignores it.
+- A Ghost from before custom fields drops them from a new member silently.
+  Create Member compares what it sent with the member Ghost returns and stops
+  the Zap with the reason instead of reporting success.
+- A Ghost with custom fields, but from before members could be created with
+  their values, refuses the whole request. The Zap stops with Ghost's own
+  message, which says to create the member first and then set the values.
+
 ## Product notes
 
 The member triggers are the easiest place to surprise users. `Member Created`
