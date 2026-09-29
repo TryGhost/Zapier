@@ -4,7 +4,8 @@
  * Runs the Ghost Admin setup flow over HTTP against a running instance:
  * 1. creates the owner user (no auth required on a fresh install)
  * 2. logs in with the owner credentials to obtain a session cookie
- * 3. creates a "Zapier E2E" custom integration and extracts its Admin API key
+ * 3. switches on member custom fields, which are behind a labs flag
+ * 4. creates a "Zapier E2E" custom integration and extracts its Admin API key
  *
  * The resulting `GHOST_ADMIN_API_URL` and `GHOST_ADMIN_API_KEY` values are
  * appended to `$GITHUB_ENV` when running in GitHub Actions, otherwise they
@@ -137,6 +138,15 @@ const createIntegration = async (sessionCookie) => {
     return adminKey.secret.includes(':') ? adminKey.secret : `${adminKey.id}:${adminKey.secret}`;
 };
 
+// Metafields are behind a labs flag. Only a staff session can change settings, so it's switched on here.
+const enableCustomFields = async (sessionCookie) => {
+    const response = await request('PUT', '/ghost/api/admin/settings/', {
+        body: { settings: [{ key: 'labs', value: JSON.stringify({ membersCustomFields: true }) }] },
+        headers: { Cookie: sessionCookie },
+    });
+    assertStatus('Enabling custom fields', response, 200);
+};
+
 const exportCredentials = (adminApiKey) => {
     const lines = [`GHOST_ADMIN_API_URL=${GHOST_URL}`, `GHOST_ADMIN_API_KEY=${adminApiKey}`];
 
@@ -162,6 +172,7 @@ const bootstrap = async () => {
 
     await createOwner();
     const sessionCookie = await createSession();
+    await enableCustomFields(sessionCookie);
     const adminApiKey = await createIntegration(sessionCookie);
     exportCredentials(adminApiKey);
 };

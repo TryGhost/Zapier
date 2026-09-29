@@ -40,7 +40,9 @@ describe('Searches', function () {
             );
 
             apiMock
-                .get(`/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'`)
+                .get(
+                    `/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'&include=metafields`,
+                )
                 .reply(200, {
                     members: [
                         {
@@ -76,7 +78,9 @@ describe('Searches', function () {
             // when the response includes pagination meta the admin-api SDK
             // returns an array which must not get double-wrapped
             apiMock
-                .get(`/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'`)
+                .get(
+                    `/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'&include=metafields`,
+                )
                 .reply(200, {
                     members: [
                         {
@@ -120,7 +124,9 @@ describe('Searches', function () {
             );
 
             apiMock
-                .get(`/ghost/api/admin/members/?filter=email:'do-not-exist%40example.com'`)
+                .get(
+                    `/ghost/api/admin/members/?filter=email:'do-not-exist%40example.com'&include=metafields`,
+                )
                 .reply(404, {
                     errors: [
                         {
@@ -154,7 +160,9 @@ describe('Searches', function () {
             );
 
             apiMock
-                .get(`/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'`)
+                .get(
+                    `/ghost/api/admin/members/?filter=email:'ghost-member%40example.com'&include=metafields`,
+                )
                 .reply(500, {
                     errors: [
                         {

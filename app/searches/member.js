@@ -1,10 +1,13 @@
 const { initAdminApi, isNotFoundHaltedError } = require('../lib/utils');
+const { customFieldOutputs } = require('../lib/custom_fields');
 
 const searchMembers = async (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
 
     const queryParams = {
         filter: `email:'${bundle.inputData.email}'`,
+        // Browse omits metafields unless included. Older Ghost ignores unknown includes.
+        include: 'metafields',
     };
 
     try {
@@ -44,6 +47,8 @@ module.exports = {
         ],
 
         perform: searchMembers,
+
+        outputFields: [customFieldOutputs],
 
         sample: {
             id: '5a01d3ecc8d50d0e606a7e7c',
