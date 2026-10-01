@@ -88,6 +88,10 @@ const fixtures = {
         title: 'E2E Scheduled Post',
         html: '<p>Scheduled by the Zapier e2e suite.</p>',
     },
+    // Created last, so specs that check the newest member run first.
+    customFieldsMember: {
+        email: 'e2e-custom-fields-member@example.com',
+    },
     tagSlug: 'e2e-zapier',
     missingEmail: 'e2e-does-not-exist@example.com',
     missingSlug: 'e2e-does-not-exist',

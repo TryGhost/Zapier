@@ -1,5 +1,6 @@
 const { initAdminApi } = require('../lib/utils');
 const webhooks = require('../lib/webhooks');
+const { customFieldOutputs } = require('../lib/custom_fields');
 
 const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('member.added', z, bundle);
@@ -25,6 +26,8 @@ const getLatestMember = (z, bundle) => {
     return api.members.browse({
         order: 'created_at DESC',
         limit: 1,
+        // Match the webhook payload, which includes metafields.
+        include: 'metafields',
     });
 };
 
@@ -49,6 +52,8 @@ module.exports = {
 
         perform: handleWebhook,
         performList: getLatestMember,
+
+        outputFields: [customFieldOutputs],
 
         sample: {
             id: '5a01d3ecc8d50d0e606a7e7c',

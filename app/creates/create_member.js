@@ -1,4 +1,22 @@
 const { initAdminApi, isEnabled } = require('../lib/utils');
+const {
+    customFieldInputs,
+    customFieldOutputs,
+    customFieldValuesFrom,
+} = require('../lib/custom_fields');
+
+// Throws if the created member is missing metafields that were sent. Older Ghost
+// versions silently drop metafields on create.
+const assertCustomFieldsStored = (z, sent, member) => {
+    const stored = member.metafields?.custom ?? {};
+    const missing = Object.keys(sent.custom).filter((key) => !(key in stored));
+
+    if (missing.length > 0) {
+        throw new z.errors.HaltedError(
+            `The member was created without their custom fields (${missing.join(', ')}): this version of Ghost cannot set them when creating a member. Update Ghost, or set them with an Update Member step.`,
+        );
+    }
+};
 
 const createMember = async (z, bundle) => {
     const memberData = {
@@ -63,7 +81,18 @@ const createMember = async (z, bundle) => {
         queryParams.email_type = bundle.inputData.email_type;
     }
 
-    return api.members.add(memberData, queryParams);
+    const customFields = customFieldValuesFrom(bundle.inputData);
+    if (customFields) {
+        memberData.metafields = customFields;
+    }
+
+    const member = await api.members.add(memberData, queryParams);
+
+    if (customFields) {
+        assertCustomFieldsStored(z, customFields, member);
+    }
+
+    return member;
 };
 
 module.exports = {
@@ -186,9 +215,12 @@ module.exports = {
                 helpText:
                     'Deprecated - use "Complimentary tier" instead. If enabled, member will be placed onto a free of charge premium subscription to the default tier. Requires a connected Stripe account.',
             },
+            customFieldInputs,
         ],
 
         perform: createMember,
+
+        outputFields: [customFieldOutputs],
 
         sample: {
             id: '5c9c9c8d51b5bf974afad2a4',

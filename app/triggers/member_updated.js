@@ -1,4 +1,5 @@
 const webhooks = require('../lib/webhooks');
+const { editedCustomFieldOutputs } = require('../lib/custom_fields');
 
 // we always return a sample payload for this trigger because it's not possible
 // to show useful "changed" data when fetching a record from the API
@@ -113,6 +114,8 @@ module.exports = {
 
         perform: handleWebhook,
         performList: getSamplePayload,
+
+        outputFields: [editedCustomFieldOutputs],
 
         sample: SAMPLE_PAYLOAD,
     },

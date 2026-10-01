@@ -76,6 +76,7 @@ describe('Triggers', function () {
                 .query({
                     order: 'created_at DESC',
                     limit: 1,
+                    include: 'metafields',
                 })
                 .reply(200, {
                     members: [
