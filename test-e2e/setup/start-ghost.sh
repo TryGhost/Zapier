@@ -11,6 +11,7 @@ set -euo pipefail
 #
 # Dependencies must already be installed in the checkout:
 #   pnpm install --frozen-lockfile --filter ghost...
+# Ghost's front-end assets are built here, before it boots.
 #
 # The database is redirected to a throwaway sqlite file next to the log so
 # every run starts from a fresh install (the e2e suite requires one), a
@@ -35,6 +36,12 @@ fi
 log_file="$(cd "$(dirname "${GHOST_LOG_FILE}")" && pwd)/$(basename "${GHOST_LOG_FILE}")"
 pid_file="$(dirname "${log_file}")/ghost.pid"
 db_file="$(dirname "${log_file}")/ghost-e2e.db"
+
+# Ghost's own dev command builds its front-end assets first (the `dev` target
+# depends on `build:assets`), and Ghost refuses to boot without the card asset
+# manifest that build writes.
+echo "Building Ghost front-end assets"
+(cd "${core_dir}" && pnpm build:assets)
 
 echo "Booting Ghost from ${core_dir}"
 echo "  log: ${log_file}"
