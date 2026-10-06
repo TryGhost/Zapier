@@ -1,5 +1,5 @@
-const semver = require('semver');
-const { initAdminApi, RequestError, SUPPORTED_GHOST_VERSION } = require('./lib/utils');
+import semver from 'semver';
+import { initAdminApi, RequestError, SUPPORTED_GHOST_VERSION } from './lib/utils.js';
 
 // Used when first connecting.
 // Any truthy response from the returned promise will indicate valid credentials.
@@ -43,7 +43,7 @@ const testAuth = (z, { authData }) => {
         });
 };
 
-module.exports = {
+export default {
     type: 'custom',
 
     connectionLabel: '{{blogUrl}}',

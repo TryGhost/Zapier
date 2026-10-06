@@ -1,14 +1,9 @@
-import { createRequire } from 'node:module';
-
 import { describe, it, expect } from 'vitest';
 
-// load via require so this file shares the module instance (and therefore
-// the coverage entry) with the tests that reach utils through the app's own
-// CommonJS require chain - a direct ESM import would create a second,
-// vite-transformed copy and split the coverage between the two
-const require = createRequire(import.meta.url);
-const { initAdminApi, isNotFoundHaltedError } = require('../../app/lib/utils');
-const packageVersion = require('../../package.json').version;
+import { initAdminApi, isNotFoundHaltedError } from '../../app/lib/utils.js';
+import packageJson from '../../package.json' with { type: 'json' };
+
+const packageVersion = packageJson.version;
 
 class FakeHaltedError extends Error {
     constructor(message) {

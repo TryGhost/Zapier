@@ -1,4 +1,4 @@
-const { initAdminApi } = require('../lib/utils');
+import { initAdminApi } from '../lib/utils.js';
 
 const createPost = (z, { inputData, authData }) => {
     const api = initAdminApi(z, authData);
@@ -29,7 +29,7 @@ const createPost = (z, { inputData, authData }) => {
     return api.posts.add(inputData, queryParams);
 };
 
-module.exports = {
+export default {
     key: 'create_post',
     noun: 'Post',
 

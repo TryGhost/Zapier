@@ -1,4 +1,4 @@
-const { initAdminApi, isNotFoundHaltedError } = require('../lib/utils');
+import { initAdminApi, isNotFoundHaltedError } from '../lib/utils.js';
 
 const searchAuthors = (z, { inputData, authData }) => {
     const api = initAdminApi(z, authData);
@@ -31,7 +31,7 @@ const searchAuthors = (z, { inputData, authData }) => {
         });
 };
 
-module.exports = {
+export default {
     key: 'author',
     noun: 'Author',
 

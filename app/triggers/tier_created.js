@@ -1,5 +1,5 @@
-const { initAdminApi } = require('../lib/utils');
-const webhooks = require('../lib/webhooks');
+import { initAdminApi } from '../lib/utils.js';
+import * as webhooks from '../lib/webhooks.js';
 
 const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('tier.added', z, bundle);
@@ -43,7 +43,7 @@ const listTiers = (z, bundle) => {
     });
 };
 
-module.exports = {
+export default {
     key: 'tier_created',
     noun: 'Tier',
 

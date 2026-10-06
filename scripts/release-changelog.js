@@ -18,10 +18,11 @@
  *     Prints the body of the `## <version>` section (used for the release
  *     summary). Fails when the section is missing.
  */
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const CHANGELOG_PATH = path.join(__dirname, '..', 'CHANGELOG.md');
+const CHANGELOG_PATH = path.join(import.meta.dirname, '..', 'CHANGELOG.md');
 const UNRELEASED_HEADING = /^## Unreleased\b.*$/m;
 
 // Mirrors the version shapes Zapier accepts (x.y.z, each part 0-999), minus
@@ -123,7 +124,7 @@ function main(args) {
 }
 
 /* v8 ignore start - process entry point; main() itself is unit-tested */
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
     try {
         process.exitCode = main(process.argv.slice(2));
     } catch (error) {
@@ -133,4 +134,4 @@ if (require.main === module) {
 }
 /* v8 ignore stop */
 
-module.exports = { finalize, extract, main };
+export { finalize, extract, main };

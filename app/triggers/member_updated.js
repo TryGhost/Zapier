@@ -1,5 +1,5 @@
-const webhooks = require('../lib/webhooks');
-const { editedCustomFieldOutputs } = require('../lib/custom_fields');
+import * as webhooks from '../lib/webhooks.js';
+import { editedCustomFieldOutputs } from '../lib/custom_fields.js';
 
 // we always return a sample payload for this trigger because it's not possible
 // to show useful "changed" data when fetching a record from the API
@@ -93,7 +93,7 @@ const getSamplePayload = () => {
     return Promise.resolve([SAMPLE_PAYLOAD]);
 };
 
-module.exports = {
+export default {
     key: 'member_updated',
     noun: 'Member',
 

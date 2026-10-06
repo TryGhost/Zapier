@@ -1,7 +1,7 @@
-const { FIELD_PARTS, FIELD_TYPE_IDS } = require('@tryghost/metafield-types/structure');
-const { COUNTRY_CODES } = require('@tryghost/metafield-types/countries');
-const { CUSTOM_NAMESPACE, QUALIFIER } = require('@tryghost/metafield-types/identity');
-const { initAdminApi, isNotFoundHaltedError, RequestError } = require('./utils');
+import { FIELD_PARTS, FIELD_TYPE_IDS } from '@tryghost/metafield-types/structure';
+import { COUNTRY_CODES } from '@tryghost/metafield-types/countries';
+import { CUSTOM_NAMESPACE, QUALIFIER } from '@tryghost/metafield-types/identity';
+import { initAdminApi, isNotFoundHaltedError, RequestError } from './utils.js';
 
 // The namespaces whose fields a Zap offers: today only the fields the publisher
 // defines. Ghost decides what an integration may read and write, so when it can
@@ -128,9 +128,4 @@ const customFieldValuesFrom = (inputData) => {
     return Object.keys(metafields).length > 0 ? metafields : undefined;
 };
 
-module.exports = {
-    customFieldInputs,
-    customFieldOutputs,
-    customFieldValuesFrom,
-    editedCustomFieldOutputs,
-};
+export { customFieldInputs, customFieldOutputs, customFieldValuesFrom, editedCustomFieldOutputs };

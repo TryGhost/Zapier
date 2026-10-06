@@ -1,6 +1,6 @@
-const { initAdminApi } = require('../lib/utils');
-const webhooks = require('../lib/webhooks');
-const { customFieldOutputs } = require('../lib/custom_fields');
+import { initAdminApi } from '../lib/utils.js';
+import * as webhooks from '../lib/webhooks.js';
+import { customFieldOutputs } from '../lib/custom_fields.js';
 
 const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('member.added', z, bundle);
@@ -31,7 +31,7 @@ const getLatestMember = (z, bundle) => {
     });
 };
 
-module.exports = {
+export default {
     key: 'member_created',
     noun: 'Member',
 

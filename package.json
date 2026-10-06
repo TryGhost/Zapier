@@ -6,7 +6,8 @@
   "homepage": "https://ghost.org/",
   "author": "Ghost Foundation",
   "license": "MIT",
-  "main": "index.js",
+  "type": "module",
+  "exports": "./index.js",
   "packageManager": "pnpm@10.34.6",
   "scripts": {
     "lint": "oxlint --quiet && oxfmt --check .",

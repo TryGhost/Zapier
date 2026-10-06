@@ -1,6 +1,6 @@
-const _ = require('lodash');
-const { initAdminApi } = require('../lib/utils');
-const webhooks = require('../lib/webhooks');
+import _ from 'lodash';
+import { initAdminApi } from '../lib/utils.js';
+import * as webhooks from '../lib/webhooks.js';
 
 const subscribeWebhook = _.partial(webhooks.subscribe, 'user.added');
 const unsubscribeWebhook = webhooks.unsubscribe;
@@ -31,7 +31,7 @@ const listAuthors = (z, { authData, meta }) => {
     });
 };
 
-module.exports = {
+export default {
     key: 'author_created',
     noun: 'Author',
 

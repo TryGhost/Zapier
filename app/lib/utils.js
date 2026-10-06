@@ -1,9 +1,9 @@
-const GhostAdminApi = require('@tryghost/admin-api');
+import GhostAdminApi from '@tryghost/admin-api';
 // the SDK does not re-export its token signer, but the grafted tiers
 // resource in initAdminApi needs it to authenticate like the SDK resources
-// do - a moved file would fail at require time and every test would catch it
-const generateToken = require('@tryghost/admin-api/lib/token');
-const packageInfo = require('../../package.json');
+// do - a moved file would fail at import time and every test would catch it
+import generateToken from '@tryghost/admin-api/lib/token.js';
+import packageInfo from '../../package.json' with { type: 'json' };
 const packageVersion = packageInfo.version;
 
 // Single source of truth for the Ghost compatibility floor - the auth-time
@@ -137,10 +137,4 @@ const isEnabled = (value) => {
     return value === true || value === 'true';
 };
 
-module.exports = {
-    initAdminApi,
-    isEnabled,
-    isNotFoundHaltedError,
-    RequestError,
-    SUPPORTED_GHOST_VERSION,
-};
+export { initAdminApi, isEnabled, isNotFoundHaltedError, RequestError, SUPPORTED_GHOST_VERSION };
