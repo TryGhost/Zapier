@@ -31,6 +31,17 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
+      # Zapier runs the app on AWS Lambda's Node 22 runtime, which starts Node
+      # with these flags and so turns off defaults newer Node has on, such as
+      # require() of an ES module. Building checks the packaged app loads, so with
+      # the same flags code that only loads with those defaults fails here
+      # rather than on Zapier.
+      # https://docs.aws.amazon.com/lambda/latest/dg/lambda-nodejs.html
+      - name: Check the packaged app loads on Zapier's runtime
+        if: matrix.node == '22'
+        run: pnpm exec zapier-platform build --skip-dep-install
+        env:
+          NODE_OPTIONS: --no-experimental-require-module --no-experimental-detect-module
 
   e2e:
     runs-on: ubuntu-latest
