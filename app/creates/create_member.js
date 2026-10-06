@@ -1,9 +1,9 @@
-const { initAdminApi, isEnabled } = require('../lib/utils');
-const {
+import { initAdminApi, isEnabled } from '../lib/utils.js';
+import {
     customFieldInputs,
     customFieldOutputs,
     customFieldValuesFrom,
-} = require('../lib/custom_fields');
+} from '../lib/custom_fields.js';
 
 // Throws if the created member is missing metafields that were sent. Older Ghost
 // versions silently drop metafields on create.
@@ -95,7 +95,7 @@ const createMember = async (z, bundle) => {
     return member;
 };
 
-module.exports = {
+export default {
     key: 'create_member',
     noun: 'Member',
 

@@ -1,5 +1,5 @@
-const { initAdminApi } = require('../lib/utils');
-const webhooks = require('../lib/webhooks');
+import { initAdminApi } from '../lib/utils.js';
+import * as webhooks from '../lib/webhooks.js';
 
 const subscribeWebhook = (z, bundle) => {
     return webhooks.subscribe('member.deleted', z, bundle);
@@ -25,7 +25,7 @@ const getLatestMember = (z, bundle) => {
     return api.members.browse({ order: 'created_at DESC', limit: 1 });
 };
 
-module.exports = {
+export default {
     key: 'member_deleted',
     noun: 'Member',
 

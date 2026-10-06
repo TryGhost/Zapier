@@ -1,5 +1,5 @@
-const { defineConfig } = require('vitest/config');
-const { BaseSequencer } = require('vitest/node');
+import { defineConfig } from 'vitest/config';
+import { BaseSequencer } from 'vitest/node';
 
 // The e2e specs share state (02-creates seeds the fixtures the later specs
 // assert on), so files must run one at a time in filename order - the same
@@ -10,7 +10,7 @@ class FilenameOrderSequencer extends BaseSequencer {
     }
 }
 
-module.exports = defineConfig({
+export default defineConfig({
     test: {
         include: ['test-e2e/**/*.test.js'],
         testTimeout: 30000,

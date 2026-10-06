@@ -1,12 +1,9 @@
 // Runs against a real Ghost instance - see test-e2e/setup/bootstrap.js
-import { createRequire } from 'node:module';
-
 import { describe, it, expect, beforeAll } from 'vitest';
 
-import { App, appTester, getAuthData, fixtures } from './helpers';
+import generateToken from '@tryghost/admin-api/lib/token.js';
 
-const require = createRequire(import.meta.url);
-const generateToken = require('@tryghost/admin-api/lib/token');
+import { App, appTester, getAuthData, fixtures } from './helpers';
 
 // The app has no step for defining fields, so the spec uses the Admin API directly.
 const defineCustomField = async ({ adminApiUrl, adminApiKey }, field) => {

@@ -1,5 +1,5 @@
-const { initAdminApi, isNotFoundHaltedError } = require('../lib/utils');
-const { customFieldOutputs } = require('../lib/custom_fields');
+import { initAdminApi, isNotFoundHaltedError } from '../lib/utils.js';
+import { customFieldOutputs } from '../lib/custom_fields.js';
 
 const searchMembers = async (z, bundle) => {
     const api = initAdminApi(z, bundle.authData);
@@ -28,7 +28,7 @@ const searchMembers = async (z, bundle) => {
     }
 };
 
-module.exports = {
+export default {
     key: 'member',
     noun: 'Member',
 

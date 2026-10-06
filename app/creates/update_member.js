@@ -1,9 +1,9 @@
-const { initAdminApi, isEnabled } = require('../lib/utils');
-const {
+import { initAdminApi, isEnabled } from '../lib/utils.js';
+import {
     customFieldInputs,
     customFieldOutputs,
     customFieldValuesFrom,
-} = require('../lib/custom_fields');
+} from '../lib/custom_fields.js';
 
 const updateMember = async (z, bundle) => {
     const memberData = {
@@ -76,7 +76,7 @@ const updateMember = async (z, bundle) => {
     return api.members.edit(memberData, queryParams);
 };
 
-module.exports = {
+export default {
     key: 'update_member',
     noun: 'Member',
 

@@ -22,9 +22,10 @@
  *   directly (set GHOST_URL if it is not on http://localhost:2368), then
  *   `pnpm test:e2e` picks the credentials up from test-e2e/.env.local
  */
-const http = require('http');
-const fs = require('fs');
-const { join } = require('path');
+import http from 'node:http';
+import fs from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const GHOST_URL = process.env.GHOST_URL || 'http://localhost:2368';
 
@@ -155,7 +156,7 @@ const exportCredentials = (adminApiKey) => {
         fs.appendFileSync(process.env.GITHUB_ENV, `${lines.join('\n')}\n`);
         console.log(`Ghost Admin API credentials appended to ${process.env.GITHUB_ENV}`);
     } else {
-        const envFile = join(__dirname, '..', '.env.local');
+        const envFile = join(import.meta.dirname, '..', '.env.local');
         fs.writeFileSync(envFile, `${lines.join('\n')}\n`);
         console.log(`Ghost Admin API credentials written to ${envFile}`);
     }
@@ -179,14 +180,11 @@ const bootstrap = async () => {
 
 // guard so that the test runner (or anything else) can import this file without
 // triggering the setup flow
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
     bootstrap().catch((err) => {
         console.error(err.message);
         process.exit(1);
     });
 }
 
-module.exports = {
-    bootstrap,
-    OWNER,
-};
+export { bootstrap, OWNER };

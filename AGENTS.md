@@ -1,7 +1,7 @@
 # AGENTS.md
 
 Ghost's official Zapier integration — a Zapier Platform CLI app
-(`zapier-platform-core` 19, Node 22, CommonJS). See [README.md](README.md)
+(`zapier-platform-core` 19, Node 22, ES modules). See [README.md](README.md)
 for the overview, [docs/integration.md](docs/integration.md) for the app
 surface, [docs/testing.md](docs/testing.md) for testing, and
 [docs/deployment.md](docs/deployment.md) for the release runbook.

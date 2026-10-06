@@ -1,6 +1,6 @@
-const _ = require('lodash');
-const { initAdminApi } = require('../lib/utils');
-const webhooks = require('../lib/webhooks');
+import _ from 'lodash';
+import { initAdminApi } from '../lib/utils.js';
+import * as webhooks from '../lib/webhooks.js';
 
 const subscribeWebhook = _.partial(webhooks.subscribe, 'page.published');
 const unsubscribeWebhook = webhooks.unsubscribe;
@@ -21,7 +21,7 @@ const getLatestPublishedPage = (z, bundle) => {
     });
 };
 
-module.exports = {
+export default {
     key: 'page_published',
     noun: 'Page',
 
