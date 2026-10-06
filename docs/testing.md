@@ -14,6 +14,12 @@ pnpm test:e2e
 `pnpm test` runs the Vitest unit suite with 100% coverage thresholds. Do not
 lower those thresholds to land a change; add the missing test instead.
 
+Zapier runs the app on AWS Lambda's Node 22 runtime, which starts Node with
+flags that turn off defaults newer Node has on, such as `require()` of an ES
+module. CI's Node 22 job builds the app with those flags in `NODE_OPTIONS`, and
+the build checks the packaged app loads, so a dependency that only loads with
+those defaults fails CI rather than failing on Zapier.
+
 `pnpm test:e2e` runs the Zapier app against a real Ghost. With Docker running,
 it boots a fresh `ghost:6` container, creates the owner user, creates a custom
 integration, writes the Admin API credentials to `test-e2e/.env.local`, runs
