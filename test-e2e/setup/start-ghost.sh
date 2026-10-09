@@ -4,7 +4,9 @@ set -euo pipefail
 # Boots Ghost from a source checkout (TryGhost/Ghost) for the e2e suite and
 # waits until the Admin API answers on http://localhost:${GHOST_PORT}.
 #
-#   GHOST_CORE_PATH  path to a Ghost checkout or its ghost/core directory
+#   GHOST_CORE_PATH  path to a Ghost checkout or its package directory
+#                    (ghost, or ghost/core in checkouts from before
+#                    TryGhost/Ghost#31630 moved it)
 #                    (default: ./Ghost - the knex-migrator convention)
 #   GHOST_LOG_FILE   Ghost boot/output log (default: ./ghost-boot.log)
 #   GHOST_PORT       port to serve on (default: 2368)
@@ -24,12 +26,14 @@ GHOST_CORE_PATH="${GHOST_CORE_PATH:-./Ghost}"
 GHOST_LOG_FILE="${GHOST_LOG_FILE:-./ghost-boot.log}"
 GHOST_PORT="${GHOST_PORT:-2368}"
 
-if [ -f "${GHOST_CORE_PATH}/ghost/core/index.js" ]; then
+if [ -f "${GHOST_CORE_PATH}/ghost/index.js" ]; then
+    core_dir="${GHOST_CORE_PATH}/ghost"
+elif [ -f "${GHOST_CORE_PATH}/ghost/core/index.js" ]; then
     core_dir="${GHOST_CORE_PATH}/ghost/core"
 elif [ -f "${GHOST_CORE_PATH}/index.js" ]; then
     core_dir="${GHOST_CORE_PATH}"
 else
-    echo "GHOST_CORE_PATH ('${GHOST_CORE_PATH}') is not a Ghost checkout - expected ghost/core/index.js" >&2
+    echo "GHOST_CORE_PATH ('${GHOST_CORE_PATH}') is not a Ghost checkout - expected ghost/index.js" >&2
     exit 1
 fi
 
@@ -49,7 +53,7 @@ echo "  db:  ${db_file}"
 
 (
     cd "${core_dir}"
-    # same boot command as ghost/core's own dev tooling (see nodemon.json);
+    # same boot command as Ghost's own dev tooling (see nodemon.json);
     # env overrides force a fresh sqlite db and the url the specs expect
     NODE_ENV=development \
     url="http://localhost:${GHOST_PORT}" \
