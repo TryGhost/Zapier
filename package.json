@@ -31,7 +31,7 @@
   "devDependencies": {
     "@tryghost/pro-ship": "1.1.9",
     "@vitest/coverage-v8": "5.0.3",
-    "nock": "14.0.17",
+    "nock": "15.0.1",
     "oxfmt": "0.72.0",
     "oxlint": "1.87.0",
     "vitest": "5.0.3",
