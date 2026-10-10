@@ -52,8 +52,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@26.6.4)(@vitest/coverage-v8@5.0.3)(vite@8.3.2(@types/node@26.6.4))
       zapier-platform-cli:
-        specifier: 19.1.0
-        version: 19.1.0(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(@yeoman/types@1.13.1(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12))
+        specifier: 19.2.0
+        version: 19.2.0(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(@yeoman/types@1.13.1(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12))
 
 packages:
 
@@ -4415,8 +4415,8 @@ packages:
     resolution: {integrity: sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg==}
     engines: {node: '>=18'}
 
-  zapier-platform-cli@19.1.0:
-    resolution: {integrity: sha512-E2tPBqRymyC8AT8NyZlTkuNqUZL1EKX1oh/fqsUQKYSYYolcDHiorwW7OtNfDbW4AJWIcNd2BZMLIQ4gNsw6pw==}
+  zapier-platform-cli@19.2.0:
+    resolution: {integrity: sha512-qRDq2Nc0YTn9xnVeBQBA98+dD/9FMvnzX9vW9+y43Jleqtm8A6GGW9RAXwWXPCnv0NFdRCfN3+AyTWWyo7CC8w==}
     engines: {node: '>=18.20'}
     hasBin: true
 
@@ -8966,7 +8966,7 @@ snapshots:
 
   yoctocolors@2.2.0: {}
 
-  zapier-platform-cli@19.1.0(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(@yeoman/types@1.13.1(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)):
+  zapier-platform-cli@19.2.0(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(@yeoman/types@1.13.1(@types/node@26.6.4)(@yeoman/adapter@5.1.0(@types/node@26.6.4))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.4)(@types/vinyl@2.0.12)):
     dependencies:
       '@oclif/core': 4.5.2
       '@oclif/plugin-autocomplete': 3.2.34
