@@ -30,11 +30,11 @@
   },
   "devDependencies": {
     "@tryghost/pro-ship": "1.1.9",
-    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/coverage-v8": "5.0.4",
     "nock": "15.0.1",
     "oxfmt": "0.72.0",
     "oxlint": "1.87.0",
-    "vitest": "5.0.3",
+    "vitest": "5.0.4",
     "zapier-platform-cli": "19.2.0"
   },
   "pnpm": {
