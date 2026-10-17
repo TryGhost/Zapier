@@ -35,7 +35,7 @@
     "oxfmt": "0.73.0",
     "oxlint": "1.88.0",
     "vitest": "5.0.4",
-    "zapier-platform-cli": "19.2.0"
+    "zapier-platform-cli": "19.2.1"
   },
   "pnpm": {
     "overrides": {
