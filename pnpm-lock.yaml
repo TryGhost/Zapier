@@ -30,8 +30,8 @@ importers:
         specifier: 7.8.5
         version: 7.8.5
       zapier-platform-core:
-        specifier: 19.2.0
-        version: 19.2.0
+        specifier: 19.2.1
+        version: 19.2.1
     devDependencies:
       '@tryghost/pro-ship':
         specifier: 1.1.9
@@ -4375,8 +4375,8 @@ packages:
     engines: {node: '>=18.20'}
     hasBin: true
 
-  zapier-platform-core@19.2.0:
-    resolution: {integrity: sha512-F+brdgzRlyA1qEoKvR6qX5qBo5ZjjO1MpLvPapbBp+EHoVauhgRd63JczVrporzOyEXpskiZnzNHffCBQ3NmLQ==}
+  zapier-platform-core@19.2.1:
+    resolution: {integrity: sha512-VOjLRnk8sE42tVqhl61ojCCBFoq90lvgT28pwZWvFNz7vT79XDK7ubNP7fJbeF9xvSyTjTKw68C0it2JHhahNg==}
     engines: {node: '>=16', npm: '>=5.6.0'}
     peerDependencies:
       zapier-platform-legacy-scripting-runner: '>=3'
@@ -4384,8 +4384,8 @@ packages:
       zapier-platform-legacy-scripting-runner:
         optional: true
 
-  zapier-platform-schema@19.2.0:
-    resolution: {integrity: sha512-n4WolO5eWNHit06YRoKnCzvk2FRHw0e3Wm7V5BYbon4gdZ34sQLI+5HKmeeRSJOfv3jluvFTkV1F6ZKF7AuWCg==}
+  zapier-platform-schema@19.2.1:
+    resolution: {integrity: sha512-RVfY6vbKW/j/1CZmz3B5PJRygxCCeFgGvW5pX/dEKKXDGizJOG63fAgkYFIA/gwPfpWMWvYeR4GNBaJLSGYTQQ==}
 
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
@@ -8893,7 +8893,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  zapier-platform-core@19.2.0:
+  zapier-platform-core@19.2.1:
     dependencies:
       '@zapier/secret-scrubber': 1.1.6
       content-disposition: 0.5.4
@@ -8907,13 +8907,13 @@ snapshots:
       node-fetch: 2.7.0
       oauth-sign: 0.9.0
       semver: 7.7.2
-      zapier-platform-schema: 19.2.0
+      zapier-platform-schema: 19.2.1
     optionalDependencies:
       '@types/node': 20.19.43
     transitivePeerDependencies:
       - encoding
 
-  zapier-platform-schema@19.2.0:
+  zapier-platform-schema@19.2.1:
     dependencies:
       json-metaschema: 1.3.0
       jsonschema: 1.5.0
