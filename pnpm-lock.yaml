@@ -40,8 +40,8 @@ importers:
         specifier: 5.0.5
         version: 5.0.5(vitest@5.0.5)
       nock:
-        specifier: 15.0.4
-        version: 15.0.4
+        specifier: 15.0.5
+        version: 15.0.5
       oxfmt:
         specifier: 0.74.0
         version: 0.74.0
@@ -3175,8 +3175,8 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nock@15.0.4:
-    resolution: {integrity: sha512-quP113SfbjFQCvYCE8eKjEFYqFuHoNTnz+JOfwUnTbqwvH7bB/Z1yLS6xxfI0s+7x86V+EptbHv22CxH065FYw==}
+  nock@15.0.5:
+    resolution: {integrity: sha512-nVeuZGS2we1PyvqbW082Qj0EB4bd//6pZk/zOPDlaTPU72qcWrqfHg3kx9JcBcH1fJxwJHjmsfuQ4mss42su4w==}
     engines: {node: '>=22.20.0'}
 
   node-abort-controller@3.1.1:
@@ -7476,7 +7476,7 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nock@15.0.4:
+  nock@15.0.5:
     dependencies:
       '@mswjs/interceptors': 0.44.0
     transitivePeerDependencies:
