@@ -21,8 +21,8 @@ importers:
         specifier: 1.14.14
         version: 1.14.14
       '@tryghost/metafield-types':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.2.0
+        version: 0.2.0
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -1272,8 +1272,8 @@ packages:
   '@tryghost/admin-api@1.14.14':
     resolution: {integrity: sha512-w1kWh9MCd3ghOIyHkm5yKT6y+c7r/sO/qRTd5Ghpudyc7OnHnRu2xCN7SQwr7R2+Rrt31ix4CJCgsxmuLvx7Vg==}
 
-  '@tryghost/metafield-types@0.1.2':
-    resolution: {integrity: sha512-XWe5mJ+LklTN9Cs7sT16wHMue6LvIusGmVtVxg1T43d7naAETETH3hEc3rzDQprx3+xhoFHV/pKafEnqeaUFWA==}
+  '@tryghost/metafield-types@0.2.0':
+    resolution: {integrity: sha512-k6YQJ/XDcpBpA9iVo0dOcLM9RSpXv0WkTwZrm+UMO7WHFTzH5EwUJOwMnLE9a8p7WkU3KImKEfj7GCwRJCehTg==}
 
   '@tryghost/pro-ship@1.1.9':
     resolution: {integrity: sha512-2DvlpT5P7v8bOizXTtL7/Flmc9wAK3eycroxgMTQWlpFaVlXjmOnuOnFGEeT8JGAdY/F5kk9tLDmb+x43TXbJQ==}
@@ -5509,7 +5509,7 @@ snapshots:
       - debug
       - supports-color
 
-  '@tryghost/metafield-types@0.1.2':
+  '@tryghost/metafield-types@0.2.0':
     dependencies:
       zod: 4.6.5
 
