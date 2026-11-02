@@ -10,7 +10,7 @@ overrides:
   form-data@<4.0.6: '>=4.0.6'
   sigstore@<4.1.1: '>=4.1.1'
   tar@<7.5.16: '>=7.5.16'
-  tmp@<0.2.6: '>=0.2.6'
+  tmp@<0.2.7: '>=0.2.7'
   yeoman-environment@<6.0.1: '>=6.0.1'
 
 importers:
@@ -52,8 +52,8 @@ importers:
         specifier: 5.0.5
         version: 5.0.5(@types/node@26.6.6)(@vitest/coverage-v8@5.0.5)(vite@8.3.5(@types/node@26.6.6))
       zapier-platform-cli:
-        specifier: 19.2.1
-        version: 19.2.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(@yeoman/types@1.13.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12))
+        specifier: 19.3.0
+        version: 19.3.0(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(@yeoman/types@1.13.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12))
 
 packages:
 
@@ -1417,9 +1417,9 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
-  adm-zip@0.5.16:
-    resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
-    engines: {node: '>=12.0'}
+  adm-zip@0.6.1:
+    resolution: {integrity: sha512-Xwrja8nx9e5o2N1my4DsKCeKpdrnACyr1wtbPxBDgGzKzKyE9kRtBFA8mWldI+RVlD7CBZNWY/wQ2+ydwOR6kQ==}
+    engines: {node: '>=14.0'}
 
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -4370,9 +4370,9 @@ packages:
     resolution: {integrity: sha512-xYqdZFUK/VYazNl/oCDYN+3WloWQwMfZxBoiNt6qNyk+xfOdi598muWE42rNZFp1kNOiqW936q5RhUdnpqElSg==}
     engines: {node: '>=18'}
 
-  zapier-platform-cli@19.2.1:
-    resolution: {integrity: sha512-CrMuOhgE6r2OPjwzQK6NWrLBmKcVr61pr150EypS2ygV8Jv1Ut5FRAGFAmP/A7wiKMPeTmlQe8vWY+DnMAA9bQ==}
-    engines: {node: '>=18.20'}
+  zapier-platform-cli@19.3.0:
+    resolution: {integrity: sha512-AwlK4RIZlTBbkrFREoWyzfK0f81jNaMmbWHRojlVxD0ZRIdA/cWCvJDKF9Ff/7ggynNcsFt6l3yaI/vsi5b8iw==}
+    engines: {node: '>=22'}
     hasBin: true
 
   zapier-platform-core@19.2.1:
@@ -5665,7 +5665,7 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
-  adm-zip@0.5.16: {}
+  adm-zip@0.6.1: {}
 
   agent-base@6.0.2:
     dependencies:
@@ -8840,14 +8840,14 @@ snapshots:
 
   yoctocolors@2.2.0: {}
 
-  zapier-platform-cli@19.2.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(@yeoman/types@1.13.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)):
+  zapier-platform-cli@19.3.0(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(@yeoman/types@1.13.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)):
     dependencies:
       '@oclif/core': 4.5.2
       '@oclif/plugin-autocomplete': 3.2.34
       '@oclif/plugin-help': 6.2.32
       '@oclif/plugin-not-found': 3.2.62(@types/node@26.6.6)
       '@oclif/plugin-version': 2.2.32
-      adm-zip: 0.5.16
+      adm-zip: 0.6.1
       archiver: 7.0.1
       chrono-node: 2.8.3
       cli-table3: 0.6.5
