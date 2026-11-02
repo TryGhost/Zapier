@@ -35,7 +35,7 @@
     "oxfmt": "0.75.0",
     "oxlint": "1.90.0",
     "vitest": "5.0.5",
-    "zapier-platform-cli": "19.2.1"
+    "zapier-platform-cli": "19.3.0"
   },
   "pnpm": {
     "overrides": {
@@ -44,7 +44,7 @@
       "form-data@<4.0.6": ">=4.0.6",
       "sigstore@<4.1.1": ">=4.1.1",
       "tar@<7.5.16": ">=7.5.16",
-      "tmp@<0.2.6": ">=0.2.6",
+      "tmp@<0.2.7": ">=0.2.7",
       "yeoman-environment@<6.0.1": ">=6.0.1"
     }
   }
