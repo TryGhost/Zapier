@@ -6,7 +6,9 @@ New:
   for each custom field your site defines, and Find a Member, Member Created
   and Member Updated return each member's values under the field names you
   chose. An address is entered part by part, with its country picked from a
-  list. A blank input leaves the
+  list. A list field is picked from its own options. One that takes a single
+  answer says so, and a Zap that picks more than one stops with Ghost's
+  message. Its answers come back as a list. A blank input leaves the
   member's current value alone. Member Updated also returns what an edit
   replaced, labelled "(before)". Refresh fields in the Zap editor to see a
   field you have just added in Ghost.

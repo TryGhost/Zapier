@@ -170,18 +170,39 @@ that changes no custom field has no `previous.metafields`.
 A member with no values has no `metafields` key at all, so a Zap sees those
 outputs as empty.
 
-Which types exist, what each is made of and the type of value each part holds
-come from Ghost's own `@tryghost/metafield-types` package, so the app keeps no
-copy of them. An address is entered part by part, each part labelled from its
-key, and a country is picked from Ghost's list of country codes. A type the
-installed package doesn't know, which a site on a newer Ghost can have, is left
-out until the package is updated; updating it is all a new type needs, because
-every type is drawn from the package. Types never change once Ghost ships them,
-so a newer package never offers a site a part it can't store.
+Which types exist and what each is composed of come from Ghost's own
+`@tryghost/metafield-types` package, so the app keeps no copy of them. A type
+is one value, a record of named parts, or a set of options its field offers,
+and the app lays out inputs for each of those shapes rather than for each
+type:
+
+- One value is one input: long text in a multi-line box, other text on one
+  line, and a choice, such as a country, as a dropdown of what it chooses
+  from, such as Ghost's built-in list of countries.
+- A record, such as an address, is one input per part, each labelled from its
+  key.
+- A set, such as a list field, is a dropdown of the options the publisher
+  gave the field. Its value is always a list of the option texts picked, and
+  Zapier only passes a dropdown's picks as a list when the input takes
+  several, so the input takes several picks even when the field takes one,
+  and the app sends the picks as Zapier passes them. The input's help text
+  says when the field takes one, and Ghost refuses a second pick with "Choose
+  one option.", which stops the Zap. A field whose options Ghost can't read
+  has no input, since Ghost would refuse every answer, but its answers are
+  still labelled as output.
+
+A type the installed package doesn't know, which a site on a newer Ghost can
+have, is left out until the package is updated. Updating it is all a new type
+built from existing building blocks needs, because every type is drawn from
+the package. A new shape, a new kind of leaf or a new source of choices also
+needs handling in the app, and the unit test that offers inputs for every type
+fails until it has it. Types never change once Ghost ships them, so a newer
+package never offers a site a part it can't store.
 
 Blank inputs are dropped before the request. Zapier passes an empty string for
-a mapped value that turned out empty, and Ghost reads an empty string as
-clearing a field, so sending it would wipe a value the member already had.
+a mapped value that turned out empty, and an empty entry in a list, and Ghost
+reads an empty string as clearing a field, so sending it would wipe a value
+the member already had.
 
 The app detects what the connected Ghost supports from how it answers, never
 from its version:

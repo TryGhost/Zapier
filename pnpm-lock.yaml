@@ -21,8 +21,8 @@ importers:
         specifier: 1.14.14
         version: 1.14.14
       '@tryghost/metafield-types':
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.3.0
+        version: 0.3.0
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -1272,8 +1272,8 @@ packages:
   '@tryghost/admin-api@1.14.14':
     resolution: {integrity: sha512-w1kWh9MCd3ghOIyHkm5yKT6y+c7r/sO/qRTd5Ghpudyc7OnHnRu2xCN7SQwr7R2+Rrt31ix4CJCgsxmuLvx7Vg==}
 
-  '@tryghost/metafield-types@0.2.0':
-    resolution: {integrity: sha512-k6YQJ/XDcpBpA9iVo0dOcLM9RSpXv0WkTwZrm+UMO7WHFTzH5EwUJOwMnLE9a8p7WkU3KImKEfj7GCwRJCehTg==}
+  '@tryghost/metafield-types@0.3.0':
+    resolution: {integrity: sha512-uWnc9r28Nz41nyqBmzsnmJPFfC6Q8Wk7Y1kZlU5jKLVNUnhSiUZjdBjj7kugJsppJf2Y9j2tmtzPNWvssWJURw==}
 
   '@tryghost/pro-ship@1.1.9':
     resolution: {integrity: sha512-2DvlpT5P7v8bOizXTtL7/Flmc9wAK3eycroxgMTQWlpFaVlXjmOnuOnFGEeT8JGAdY/F5kk9tLDmb+x43TXbJQ==}
@@ -4391,8 +4391,8 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
-  zod@4.6.5:
-    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
 snapshots:
 
@@ -5509,9 +5509,9 @@ snapshots:
       - debug
       - supports-color
 
-  '@tryghost/metafield-types@0.2.0':
+  '@tryghost/metafield-types@0.3.0':
     dependencies:
-      zod: 4.6.5
+      zod: 4.6.7
 
   '@tryghost/pro-ship@1.1.9':
     dependencies:
@@ -8924,4 +8924,4 @@ snapshots:
       compress-commons: 6.0.2
       readable-stream: 4.8.0
 
-  zod@4.6.5: {}
+  zod@4.6.7: {}

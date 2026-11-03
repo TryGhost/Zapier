@@ -25,12 +25,22 @@ const defineCustomField = async ({ adminApiUrl, adminApiKey }, field) => {
 };
 
 describe('E2E Custom fields', function () {
-    let authData, company, shipping;
+    let authData, company, shipping, plan, topics;
 
     beforeAll(async function () {
         authData = getAuthData();
         company = await defineCustomField(authData, { name: 'Company', type: 'short_text' });
         shipping = await defineCustomField(authData, { name: 'Shipping', type: 'address' });
+        plan = await defineCustomField(authData, {
+            name: 'Plan',
+            type: 'list',
+            settings: { options: ['Gold', 'Silver'], multiple: false },
+        });
+        topics = await defineCustomField(authData, {
+            name: 'Topics',
+            type: 'list',
+            settings: { options: ['News', 'Sport', 'Culture'], multiple: true },
+        });
     });
 
     it("offers an input for each of the site's fields", async function () {
@@ -48,7 +58,17 @@ describe('E2E Custom fields', function () {
             'Shipping: State',
             'Shipping: Postal code',
             'Shipping: Country',
+            'Plan',
+            'Topics',
         ]);
+        expect(inputs.find(({ label }) => label === 'Plan')).toMatchObject({
+            choices: ['Gold', 'Silver'],
+            list: true,
+        });
+        expect(inputs.find(({ label }) => label === 'Topics')).toMatchObject({
+            choices: ['News', 'Sport', 'Culture'],
+            list: true,
+        });
     });
 
     it('creates a member holding the values a Zap set', async function () {
@@ -60,12 +80,16 @@ describe('E2E Custom fields', function () {
                 [`metafields__custom__${company}`]: 'Ghost',
                 [`metafields__custom__${shipping}__city`]: 'Dublin',
                 [`metafields__custom__${shipping}__country`]: 'IE',
+                [`metafields__custom__${plan}`]: ['Gold'],
+                [`metafields__custom__${topics}`]: ['News', 'Culture'],
             },
         });
 
         expect(member.metafields.custom).toEqual({
             [company]: 'Ghost',
             [shipping]: { city: 'Dublin', country: 'IE' },
+            [plan]: ['Gold'],
+            [topics]: ['News', 'Culture'],
         });
     });
 
@@ -82,15 +106,34 @@ describe('E2E Custom fields', function () {
                 [`metafields__custom__${company}`]: 'Ghost Foundation',
                 [`metafields__custom__${shipping}__city`]: '',
                 [`metafields__custom__${shipping}__country`]: 'GB',
+                [`metafields__custom__${plan}`]: [],
+                [`metafields__custom__${topics}`]: ['Sport'],
             },
         });
 
         // Ghost writes only the parts it is sent, so changing the country keeps the
-        // city, and the blank city input is not sent at all.
+        // city, and the blank city input is not sent at all. A list's picks replace
+        // its answers.
         expect(member.metafields.custom).toEqual({
             [company]: 'Ghost Foundation',
             [shipping]: { city: 'Dublin', country: 'GB' },
+            [plan]: ['Gold'],
+            [topics]: ['Sport'],
         });
+    });
+
+    it('stops the Zap when it picks several options for a field that takes one', async function () {
+        const [found] = await appTester(App.searches.member.operation.perform, {
+            authData,
+            inputData: { email: fixtures.customFieldsMember.email },
+        });
+
+        await expect(
+            appTester(App.creates.update_member.operation.perform, {
+                authData,
+                inputData: { id: found.id, [`metafields__custom__${plan}`]: ['Gold', 'Silver'] },
+            }),
+        ).rejects.toThrow('Choose one option.');
     });
 
     it('finds a member together with their values', async function () {
@@ -99,7 +142,11 @@ describe('E2E Custom fields', function () {
             inputData: { email: fixtures.customFieldsMember.email },
         });
 
-        expect(member.metafields.custom[company]).toBe('Ghost Foundation');
+        expect(member.metafields.custom).toMatchObject({
+            [company]: 'Ghost Foundation',
+            [plan]: ['Gold'],
+            [topics]: ['Sport'],
+        });
     });
 
     it('shows the newest member with their values when setting up a Member Created Zap', async function () {
@@ -109,6 +156,10 @@ describe('E2E Custom fields', function () {
         });
 
         expect(member.email).toBe(fixtures.customFieldsMember.email);
-        expect(member.metafields.custom[company]).toBe('Ghost Foundation');
+        expect(member.metafields.custom).toMatchObject({
+            [company]: 'Ghost Foundation',
+            [plan]: ['Gold'],
+            [topics]: ['Sport'],
+        });
     });
 });
