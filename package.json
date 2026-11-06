@@ -33,7 +33,7 @@
     "@vitest/coverage-v8": "5.1.0",
     "nock": "15.0.5",
     "oxfmt": "0.75.0",
-    "oxlint": "1.90.0",
+    "oxlint": "1.91.0",
     "vitest": "5.1.0",
     "zapier-platform-cli": "19.3.0"
   },
