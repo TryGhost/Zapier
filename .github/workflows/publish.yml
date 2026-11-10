@@ -210,11 +210,12 @@ jobs:
               echo "## Zapier release ${VERSION}"
               echo
               echo "- Pushed and promoted: new connections now use ${VERSION}."
-              echo "- Existing users stay on their current version until migrated."
+              echo "- Zapier moves the users who chose to migrate early. Everyone else stays on their current version until migrated."
               echo
               echo '### Remaining manual step: staged migration'
               echo
               echo '```sh'
+              echo 'zapier-platform versions   # users left on each version'
               echo "zapier-platform migrate <oldVersion> ${VERSION} 10   # then 50, 100"
               echo 'zapier-platform history'
               echo '```'
