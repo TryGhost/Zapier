@@ -199,10 +199,11 @@ needs handling in the app, and the unit test that offers inputs for every type
 fails until it has it. Types never change once Ghost ships them, so a newer
 package never offers a site a part it can't store.
 
-Blank inputs are dropped before the request. Zapier passes an empty string for
-a mapped value that turned out empty, and an empty entry in a list, and Ghost
-reads an empty string as clearing a field, so sending it would wipe a value
-the member already had.
+Blank inputs are dropped before the request, so a blank input leaves the
+member's value alone. Zapier passes an empty string for a mapped value that
+turned out empty, and an empty entry in a list. Ghost clears a value only when
+sent `null`, and refuses an empty string or an empty list, so sending a blank
+would stop the Zap.
 
 The app detects what the connected Ghost supports from how it answers, never
 from its version:
