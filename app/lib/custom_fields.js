@@ -149,8 +149,9 @@ const givenValue = (value) => {
 };
 
 // Metafields from a step's inputs, in the member payload's shape, or undefined if
-// none are given. Blank inputs are skipped, because Ghost treats '' as clearing the
-// field.
+// none are given. Blank inputs are skipped, so they leave the member's value alone:
+// Ghost clears a value only when sent null, and refuses '' and [], which would stop
+// the Zap.
 const customFieldValuesFrom = (inputData) => {
     const metafields = {};
 
