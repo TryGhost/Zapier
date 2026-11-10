@@ -57,21 +57,34 @@ the private-version flow in
      committed by pro-ship;
    - **push + promote**: uploads the build and promotes it. `promote` reads
      the `## X.Y.Z` section of `CHANGELOG.md` as the user-facing changelog.
-     From here on, new connections use the released version; existing users
-     stay where they are;
+     From here on, new connections use the released version, and Zapier's
+     [automatic migration](https://docs.zapier.com/integrations/manage/automatic-migrations)
+     moves the users of older versions in this major who chose to migrate
+     early. Everyone else stays where they are until step 4;
    - **bookkeeping**: opens a tiny changelog-only `release/vX.Y.Z` PR (just
      the heading rename), dispatches Test onto it, and enables auto-merge,
      so the changelog history lands on main without anyone pushing to it
      directly.
-4. **Migrate existing users — the only manual step.** Roll out gradually and
-   watch the [Zapier developer dashboard for app 1566](https://developer.zapier.com/app/1566)
+4. **Migrate the remaining users — the only manual step.** Zapier moves
+   nobody else until the previous version is marked legacy or deprecated,
+   so migrate them yourself. Roll out gradually and watch the
+   [Zapier developer dashboard for app 1566](https://developer.zapier.com/app/1566)
    between steps. Use the `info+zapier@ghost.org` Zapier account from
    1Password:
 
    ```sh
-   zapier-platform migrate 2.6.3 3.0.0 10   # then 50, then 100
-   zapier-platform history                  # check the step completed
+   zapier-platform versions                      # users left on each version
+   zapier-platform migrate <previous> X.Y.Z 10   # then 50, then 100
+   zapier-platform history                       # check the step completed
    ```
+
+   To roll back, migrate the other way:
+   `zapier-platform migrate X.Y.Z <previous> 100`. That needs the previous
+   version to still be available, so mark it legacy
+   (`zapier-platform legacy <previous>`) only once the release has run
+   cleanly for a while. A legacy version can't be picked for new Zaps, and
+   Zapier moves most of its remaining users itself. A deprecation date
+   moves all of them, but the version stops working on that date.
 
    Cross-major migrations are blocked (see
    [Versioning rules](#versioning-rules)).
