@@ -37,8 +37,8 @@ importers:
         version: 19.3.0
     devDependencies:
       '@tryghost/pro-ship':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 2.0.3
+        version: 2.0.3
       '@vitest/coverage-v8':
         specifier: 5.1.0
         version: 5.1.0(vitest@5.1.0)
@@ -1273,13 +1273,13 @@ packages:
   '@tryghost/metafield-types@0.4.0':
     resolution: {integrity: sha512-PHKS8yLF4cvikG/cAh/kJFDjl3hGt+CXuOe/dZEHDj/3h6jOT0WV9rvEmwbXz9+1PQNfB5+UDRXL7EZP9ENpXw==}
 
-  '@tryghost/pro-ship@2.0.1':
-    resolution: {integrity: sha512-zlDkQHU0VWzwaZmRATjioFlDPyeZF6f1gpA5oAeT+72AZc8k2PI7SeWELLosVm2dj7Qm2TFPr2MowfyYB8Uydg==}
+  '@tryghost/pro-ship@2.0.3':
+    resolution: {integrity: sha512-ThQ/R2NDLPF7/6xMKwdt44jM18UDC2ZYbQIDXwnm36+Tj/mpgLqiCCENsbNHTc45WyO9kXRdn6eIoKl/ZfRsFg==}
     engines: {node: '>=22.12.0'}
     hasBin: true
 
-  '@tryghost/root-utils@2.3.19':
-    resolution: {integrity: sha512-PIFzf2FUBiDe9H7UZ5om1yX/LgIpl7L96dtcgxahGqEhss5/OLVePaPTAray+VV3Nx7o/VM5HTOVPvuGai3mSw==}
+  '@tryghost/root-utils@2.3.20':
+    resolution: {integrity: sha512-C+DsVB4FouSYmX6dfHwU6X3mHi78G4NfuafwODwVfCiBoYn0G6XfPq4EAFC+LRAyxRs112MbyR/YALxz9oh+Nw==}
 
   '@tufjs/canonical-json@2.0.0':
     resolution: {integrity: sha512-yVtV8zsdo8qFHe+/3kw81dSLyF7D576A5cCFCi4X7B39tWT7SekaEFUnvnWJHz+9qO7qJTah1JbrDjWKqFtdWA==}
@@ -3156,6 +3156,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-emoji@2.2.0:
     resolution: {integrity: sha512-Z3lTE9pLaJF47NyMhd4ww1yFTAP8YhYI8SleJiHzM46Fgpm5cnNzSl9XfzFNqbaz+VlJrIj3fXQ4DeN1Rjm6cw==}
@@ -5463,12 +5464,12 @@ snapshots:
     dependencies:
       zod: 4.6.7
 
-  '@tryghost/pro-ship@2.0.1':
+  '@tryghost/pro-ship@2.0.3':
     dependencies:
-      '@tryghost/root-utils': 2.3.19
+      '@tryghost/root-utils': 2.3.20
       semver: 7.8.6
 
-  '@tryghost/root-utils@2.3.19':
+  '@tryghost/root-utils@2.3.20':
     dependencies:
       caller: 1.1.0
       find-root: 1.1.0
