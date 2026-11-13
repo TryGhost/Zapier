@@ -203,54 +203,139 @@ describe('Creates', function () {
             );
         });
 
-        it('updates member label', function () {
-            let bundle = Object.assign(
-                {},
-                { authData },
+        const labelReply = (labels) => ({
+            members: [
                 {
-                    inputData: {
-                        id: '5c9c9c8d51b5bf974afad2a4',
-                        labels: ['Zapier'],
-                    },
+                    id: '5c9c9c8d51b5bf974afad2a4',
+                    name: 'Test Member',
+                    email: 'test@example.com',
+                    labels: labels.map((name) => ({
+                        id: `label-${name}`,
+                        name,
+                        slug: name.toLowerCase(),
+                        created_at: '2020-02-11T07:23:05.520Z',
+                        updated_at: '2020-02-11T07:23:05.520Z',
+                    })),
+                    created_at: '2019-10-03T11:54:10.123Z',
+                    updated_at: '2019-10-03T11:54:10.123Z',
                 },
-            );
+            ],
+        });
+
+        const labelBundle = (inputData) => ({
+            authData,
+            inputData: { id: '5c9c9c8d51b5bf974afad2a4', ...inputData },
+        });
+
+        it('adds labels while keeping the existing ones by default', function () {
+            apiMock
+                .get('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/')
+                .query(true)
+                .reply(200, labelReply(['VIP', 'Newsletter']));
 
             apiMock
                 .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
-                    members: [
-                        {
-                            labels: ['Zapier'],
-                        },
-                    ],
+                    members: [{ labels: ['VIP', 'Newsletter', 'Zapier'] }],
                 })
+                .reply(200, labelReply(['VIP', 'Newsletter', 'Zapier']));
+
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({ labels: ['Zapier'] }),
+            ).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
+                expect(member.labels).toHaveLength(3);
+            });
+        });
+
+        it('does not duplicate a label the member already has', function () {
+            apiMock
+                .get('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/')
+                .query(true)
+                .reply(200, labelReply(['Zapier']));
+
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{ labels: ['Zapier', 'VIP'] }],
+                })
+                .reply(200, labelReply(['Zapier', 'VIP']));
+
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({
+                    labels: [' zapier ', 'VIP', '', 'vip'],
+                    labels_keep_existing: 'true',
+                }),
+            ).then(() => {
+                expect(apiMock.isDone()).toBe(true);
+            });
+        });
+
+        it('adds labels to a member without any labels', function () {
+            apiMock
+                .get('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/')
+                .query(true)
                 .reply(200, {
-                    members: [
-                        {
-                            id: '5c9c9c8d51b5bf974afad2a4',
-                            name: 'Test Member',
-                            email: 'test@example.com',
-                            labels: [
-                                {
-                                    id: '5e425659230484605f002c57',
-                                    name: 'Zapier',
-                                    created_at: '2020-02-11T07:23:05.520Z',
-                                    updated_at: '2020-02-11T07:23:05.520Z',
-                                    slug: 'zapier',
-                                },
-                            ],
-                            created_at: '2019-10-03T11:54:10.123Z',
-                            updated_at: '2019-10-03T11:54:10.123Z',
-                        },
-                    ],
+                    members: [{ id: '5c9c9c8d51b5bf974afad2a4', email: 'test@example.com' }],
                 });
 
-            return appTester(App.creates.update_member.operation.perform, bundle).then((member) => {
-                expect(apiMock.isDone()).toBe(true);
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{ labels: ['Zapier'] }],
+                })
+                .reply(200, labelReply(['Zapier']));
 
-                expect(member.id).toBe('5c9c9c8d51b5bf974afad2a4');
-                expect(member.name).toBe('Test Member');
-                expect(member.email).toBe('test@example.com');
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({ labels: ['Zapier'], labels_keep_existing: true }),
+            ).then(() => {
+                expect(apiMock.isDone()).toBe(true);
+            });
+        });
+
+        it('replaces labels when keeping existing labels is turned off', function () {
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{ labels: ['Zapier'] }],
+                })
+                .reply(200, labelReply(['Zapier']));
+
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({ labels: ['Zapier'], labels_keep_existing: false }),
+            ).then((member) => {
+                expect(apiMock.isDone()).toBe(true);
                 expect(member.labels).toHaveLength(1);
+            });
+        });
+
+        it('replaces labels when the keep flag arrives stringified as false', function () {
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{ labels: ['Zapier'] }],
+                })
+                .reply(200, labelReply(['Zapier']));
+
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({ labels: ['Zapier'], labels_keep_existing: 'false' }),
+            ).then(() => {
+                expect(apiMock.isDone()).toBe(true);
+            });
+        });
+
+        it('leaves labels alone and skips the lookup when no labels are given', function () {
+            apiMock
+                .put('/ghost/api/admin/members/5c9c9c8d51b5bf974afad2a4/', {
+                    members: [{ name: 'Test Member' }],
+                })
+                .reply(200, labelReply(['VIP']));
+
+            return appTester(
+                App.creates.update_member.operation.perform,
+                labelBundle({ name: 'Test Member', labels: [] }),
+            ).then(() => {
+                expect(apiMock.isDone()).toBe(true);
             });
         });
 

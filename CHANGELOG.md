@@ -1,3 +1,14 @@
+## Unreleased
+
+Fixes:
+
+* (Fix) Update Member no longer removes a member's existing labels. Labels
+  entered in the action are now added to the ones the member already has,
+  so a Zap that tags members keeps their other labels. A new "Keep existing
+  labels" field, on by default, controls this: turn it off to replace the
+  member's labels with exactly the ones entered, which is how the action
+  behaved before.
+
 ## 3.1.0
 
 New:
