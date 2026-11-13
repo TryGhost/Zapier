@@ -5,6 +5,25 @@ import {
     customFieldValuesFrom,
 } from '../lib/custom_fields.js';
 
+// Zaps saved before the keep-existing field existed send nothing for it, and
+// booleans sometimes arrive stringified, so only an explicit false opts out
+const keepsExistingLabels = (value) => value !== false && value !== 'false';
+
+// Existing labels come back as objects, new ones arrive as names. Ghost
+// matches labels by name, so dedupe on the name, ignoring case and spacing.
+const mergeLabels = (existing = [], incoming) => {
+    const seen = new Set();
+    const merged = [];
+    for (const label of [...existing.map((item) => item.name), ...incoming]) {
+        const key = String(label).trim().toLowerCase();
+        if (key && !seen.has(key)) {
+            seen.add(key);
+            merged.push(label);
+        }
+    }
+    return merged;
+};
+
 const updateMember = async (z, bundle) => {
     const memberData = {
         id: bundle.inputData.id,
@@ -34,8 +53,18 @@ const updateMember = async (z, bundle) => {
         memberData.subscribed = bundle.inputData.subscribed;
     }
 
+    const api = initAdminApi(z, bundle.authData);
+
     if (bundle.inputData.labels && bundle.inputData.labels.length > 0) {
-        memberData.labels = bundle.inputData.labels;
+        // Ghost saves `labels` as the member's complete list, so sending only
+        // the new ones silently strips every label the member already had.
+        // Unless the user opts out, merge with the current labels first.
+        if (keepsExistingLabels(bundle.inputData.labels_keep_existing)) {
+            const current = await api.members.read({ id: bundle.inputData.id });
+            memberData.labels = mergeLabels(current.labels, bundle.inputData.labels);
+        } else {
+            memberData.labels = bundle.inputData.labels;
+        }
     }
 
     // isEnabled keeps a stringified 'false' from removing comps by accident
@@ -68,8 +97,6 @@ const updateMember = async (z, bundle) => {
     if (customFields) {
         memberData.metafields = customFields;
     }
-
-    const api = initAdminApi(z, bundle.authData);
 
     const queryParams = {};
 
@@ -162,7 +189,17 @@ export default {
                 key: 'labels',
                 required: false,
                 list: true,
-                helpText: 'Provide a list of labels to attach to the member',
+                helpText:
+                    'Labels to add to the member. Their existing labels are kept unless "Keep existing labels" is turned off.',
+            },
+            {
+                key: 'labels_keep_existing',
+                label: 'Keep existing labels',
+                type: 'boolean',
+                required: false,
+                default: 'true',
+                helpText:
+                    "If enabled, the labels above are added to the member's existing labels. If disabled, the member's labels are replaced with exactly the labels above, and any others are removed.",
             },
             {
                 key: 'comped_tier',
