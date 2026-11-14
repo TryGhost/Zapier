@@ -9,7 +9,7 @@ overrides:
   diff@>=6.0.0 <8.0.3: '>=8.0.3'
   form-data@<4.0.6: '>=4.0.6'
   glob@>=10.0.0 <14.0.4: 14.0.4
-  minimatch@>=7.0.0 <11.0.5: 11.0.5
+  minimatch@>=7.0.0 <11.0.5: 11.0.8
   sigstore@<4.1.1: '>=4.1.1'
   simple-git@<4.0.2: 4.0.2
   tar@<7.5.16: '>=7.5.16'
@@ -3067,6 +3067,10 @@ packages:
     resolution: {integrity: sha512-snPlVppFcYWfLLFQGhDxUyBcHNtMlWmn3jtj7pEaO+DP8pqL0IvAzXhMYmn1z9ASNtgmwLBdFxSf4tMUB0OTKA==}
     engines: {node: 20 || >=22}
 
+  minimatch@11.0.8:
+    resolution: {integrity: sha512-nFQuYSTVrGvysVBps5Ih+0BdnYFN/Cj3C816r6+p7yK+FHrVLGE4O4N9AFwykrlNlvM2HYt+Rad1Uiro6h88Ig==}
+    engines: {node: 20 || >=22}
+
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
 
@@ -3471,6 +3475,7 @@ packages:
   postcss-selector-parser@7.2.0:
     resolution: {integrity: sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==}
     engines: {node: '>=4'}
+    deprecated: Double-escapes CSS Modules class names (#362). Use 7.2.1.
 
   postcss@8.5.32:
     resolution: {integrity: sha512-LJlKCCAUFKOuZxipUdYw1NzIITEsPcgyOG9LkvRJvuKj/bRzbuRY0ARXvL0pWGpsZvn8jku+LMep2eU0seHp8g==}
@@ -5020,7 +5025,7 @@ snapshots:
       hosted-git-info: 10.1.1
       json-stringify-nice: 1.1.4
       lru-cache: 11.5.3
-      minimatch: 11.0.5
+      minimatch: 11.0.8
       nopt: 10.0.1
       npm-install-checks: 9.0.0
       npm-package-arg: 14.0.0
@@ -5066,7 +5071,7 @@ snapshots:
       '@npmcli/name-from-folder': 5.0.0
       '@npmcli/package-json': 8.0.0
       glob: 14.0.4
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   '@npmcli/metavuln-calculator@10.0.0':
     dependencies:
@@ -5123,7 +5128,7 @@ snapshots:
       indent-string: 4.0.0
       is-wsl: 2.2.0
       lilconfig: 3.1.4
-      minimatch: 11.0.5
+      minimatch: 11.0.8
       semver: 7.8.6
       string-width: 4.2.3
       supports-color: 8.1.1
@@ -5479,7 +5484,7 @@ snapshots:
   '@tufjs/models@5.0.2':
     dependencies:
       '@tufjs/canonical-json': 2.0.0
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   '@types/chai@5.2.3':
     dependencies:
@@ -5579,7 +5584,7 @@ snapshots:
       isbinaryfile: 5.0.7
       mem-fs: 4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)
       mem-fs-editor: 12.1.0(@types/node@26.6.6)(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12))
-      minimatch: 11.0.5
+      minimatch: 11.0.8
       p-transform: 5.0.1
       pretty-bytes: 7.2.0
       slash: 5.1.0
@@ -5596,7 +5601,7 @@ snapshots:
   '@yeoman/transform@2.1.2(@types/node@26.6.6)':
     dependencies:
       '@types/node': 26.6.6
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   '@yeoman/types@1.13.1(@types/node@26.6.6)(@yeoman/adapter@5.1.1(@types/node@26.6.6))(mem-fs@4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12))':
     dependencies:
@@ -6716,7 +6721,7 @@ snapshots:
 
   ignore-walk@9.0.0:
     dependencies:
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   ignore@7.0.5: {}
 
@@ -7242,7 +7247,7 @@ snapshots:
       globby: 14.1.0
       isbinaryfile: 5.0.3
       mem-fs: 4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)
-      minimatch: 11.0.5
+      minimatch: 11.0.8
       multimatch: 7.0.0
       normalize-path: 3.0.0
       textextensions: 6.11.0
@@ -7262,7 +7267,7 @@ snapshots:
       ejs: 6.0.1
       isbinaryfile: 5.0.7
       mem-fs: 4.1.5(@types/node@26.6.6)(@types/vinyl@2.0.12)
-      minimatch: 11.0.5
+      minimatch: 11.0.8
       multimatch: 8.0.0
       normalize-path: 3.0.0
       textextensions: 6.11.0
@@ -7314,6 +7319,11 @@ snapshots:
   mimic-function@5.0.1: {}
 
   minimatch@11.0.5:
+    dependencies:
+      '@isaacs/nonrecursive-glob-match': 1.1.0
+      brace-expansion: 5.0.12
+
+  minimatch@11.0.8:
     dependencies:
       '@isaacs/nonrecursive-glob-match': 1.1.0
       brace-expansion: 5.0.12
@@ -7376,13 +7386,13 @@ snapshots:
     dependencies:
       array-differ: 4.0.0
       array-union: 3.0.1
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   multimatch@8.0.0:
     dependencies:
       array-differ: 4.0.0
       array-union: 3.0.1
-      minimatch: 11.0.5
+      minimatch: 11.0.8
 
   mute-stream@0.0.8: {}
 
