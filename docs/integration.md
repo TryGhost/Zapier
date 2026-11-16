@@ -116,6 +116,13 @@ newer complimentary tier fields are mutually exclusive with the deprecated
 default-tier field, and the code halts the Zap instead of guessing when a user
 sets conflicting inputs.
 
+Ghost saves a member's `labels` as their complete list, so Update Member
+merges the entered labels with the member's current ones by default: it reads
+the member first, then sends both, deduplicated by name. Turning off "Keep
+existing labels" sends only the entered labels, replacing the rest. Zaps saved
+before that field existed send no value for it and get the merge too; only an
+explicit `false` replaces.
+
 ## Complimentary members
 
 The current member actions let Zap users manage complimentary access more
