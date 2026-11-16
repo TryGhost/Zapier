@@ -178,7 +178,11 @@ type:
 
 - One value is one input: long text in a multi-line box, other text on one
   line, and a choice, such as a country, as a dropdown of what it chooses
-  from, such as Ghost's built-in list of countries.
+  from, such as Ghost's built-in list of countries. Ghost only accepts a
+  phone number with a country code, and stores it in E.164 format, such as
+  `+442079460000`, however it was entered. Numbers from other tools often
+  leave the country code out, so the phone input's help text asks for it.
+  Ghost rejects a number without one, and its error message stops the Zap.
 - A record, such as an address, is one input per part, each labelled from its
   key.
 - A set, such as a list field, is a dropdown of the options the publisher
@@ -194,10 +198,11 @@ type:
 A type the installed package doesn't know, which a site on a newer Ghost can
 have, is left out until the package is updated. Updating it is all a new type
 built from existing building blocks needs, because every type is drawn from
-the package. A new shape, a new kind of leaf or a new source of choices also
-needs handling in the app, and the unit test that offers inputs for every type
-fails until it has it. Types never change once Ghost ships them, so a newer
-package never offers a site a part it can't store.
+the package. A new shape, a new kind of leaf, a new text format or a new
+source of choices also needs handling in the app, and the unit test that
+offers inputs for every type fails until it has it. Types never change once
+Ghost ships them, so a newer package never offers a site a part it can't
+store.
 
 Blank inputs are dropped before the request, so a blank input leaves the
 member's value alone. Zapier passes an empty string for a mapped value that

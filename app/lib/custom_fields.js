@@ -29,16 +29,31 @@ const SOURCE_CHOICES = {
     })),
 };
 
-// How the Zap editor takes a leaf, one value stored as one string: long text in a
-// multi-line box, any other text on one line, and a choice as a dropdown of its
-// source. Ghost validates what is sent. A package update that adds a kind of leaf
-// needs a handler here, without which this throws, and one that adds a source
-// needs its choices above, without which its dropdown has none. The test that
-// offers inputs for every type fails on either.
+// The Zap editor input for each text format: a multi-line box for long text and a
+// single line for the rest. The phone input's hint asks for the country code, because
+// Ghost rejects a phone number without one and numbers from other tools often leave it
+// out. Its example is the one in Ghost's error message.
+const TEXT_INPUTS = {
+    line: { input: { type: 'string' } },
+    code: { input: { type: 'string' } },
+    long: { input: { type: 'text' } },
+    phone: {
+        input: { type: 'string' },
+        hint: 'Include the country code, starting with +, like +44 20 7946 0000.',
+    },
+};
+
+// The Zap editor `input` for a leaf, and a `hint` to add to its help text: text gets
+// the input for its format, and a choice gets a dropdown of its source. Ghost
+// validates the value. If a package update adds a text format or a leaf kind, it needs
+// an entry here, or its fields get no input, because matchLeaf returns undefined for a
+// kind without a handler. If it adds a choice source, the source needs an entry in
+// SOURCE_CHOICES, or its dropdown is empty. The unit test that offers inputs for every
+// type fails in each case.
 const inputForLeaf = (leaf) =>
     matchLeaf(leaf, {
-        text: ({ size }) => ({ type: size === 'long' ? 'text' : 'string' }),
-        choice: ({ from }) => ({ type: 'string', choices: SOURCE_CHOICES[from] }),
+        text: ({ format }) => TEXT_INPUTS[format],
+        choice: ({ from }) => ({ input: { type: 'string', choices: SOURCE_CHOICES[from] } }),
     });
 
 // A part's key as words, such as "Postal code" for postal_code or "Line 1" for line1.
@@ -77,13 +92,13 @@ const fieldsFor = (definitions) =>
         .flatMap(({ namespace, key, name, type, settings }) =>
             matchShape(type, {
                 scalar: ({ leaf }) => [
-                    { key: keyFor(namespace, key), label: name, input: inputForLeaf(leaf) },
+                    { key: keyFor(namespace, key), label: name, ...inputForLeaf(leaf) },
                 ],
                 record: ({ parts }) =>
                     Object.entries(parts).map(([part, leaf]) => ({
                         key: keyFor(namespace, key, part),
                         label: `${name}: ${partLabel(part)}`,
-                        input: inputForLeaf(leaf),
+                        ...inputForLeaf(leaf),
                     })),
                 // A set's answers are the text of each option picked, even when its field
                 // takes one. Zapier only sends a dropdown's picks as a list when the input

@@ -25,7 +25,7 @@ const defineCustomField = async ({ adminApiUrl, adminApiKey }, field) => {
 };
 
 describe('E2E Custom fields', function () {
-    let authData, company, shipping, plan, topics;
+    let authData, company, shipping, plan, topics, mobile;
 
     beforeAll(async function () {
         authData = getAuthData();
@@ -41,6 +41,7 @@ describe('E2E Custom fields', function () {
             type: 'list',
             settings: { options: ['News', 'Sport', 'Culture'], multiple: true },
         });
+        mobile = await defineCustomField(authData, { name: 'Mobile', type: 'phone' });
     });
 
     it("offers an input for each of the site's fields", async function () {
@@ -60,6 +61,7 @@ describe('E2E Custom fields', function () {
             'Shipping: Country',
             'Plan',
             'Topics',
+            'Mobile',
         ]);
         expect(inputs.find(({ label }) => label === 'Plan')).toMatchObject({
             choices: ['Gold', 'Silver'],
@@ -82,14 +84,17 @@ describe('E2E Custom fields', function () {
                 [`metafields__custom__${shipping}__country`]: 'IE',
                 [`metafields__custom__${plan}`]: ['Gold'],
                 [`metafields__custom__${topics}`]: ['News', 'Culture'],
+                [`metafields__custom__${mobile}`]: '+44 20 7946 0000',
             },
         });
 
+        // Ghost stores a phone number in E.164 format, however it was entered.
         expect(member.metafields.custom).toEqual({
             [company]: 'Ghost',
             [shipping]: { city: 'Dublin', country: 'IE' },
             [plan]: ['Gold'],
             [topics]: ['News', 'Culture'],
+            [mobile]: '+442079460000',
         });
     });
 
@@ -108,6 +113,7 @@ describe('E2E Custom fields', function () {
                 [`metafields__custom__${shipping}__country`]: 'GB',
                 [`metafields__custom__${plan}`]: [],
                 [`metafields__custom__${topics}`]: ['Sport'],
+                [`metafields__custom__${mobile}`]: '0044 20 7946 0123',
             },
         });
 
@@ -119,7 +125,22 @@ describe('E2E Custom fields', function () {
             [shipping]: { city: 'Dublin', country: 'GB' },
             [plan]: ['Gold'],
             [topics]: ['Sport'],
+            [mobile]: '+442079460123',
         });
+    });
+
+    it('stops the Zap when a phone number has no country code', async function () {
+        const [found] = await appTester(App.searches.member.operation.perform, {
+            authData,
+            inputData: { email: fixtures.customFieldsMember.email },
+        });
+
+        await expect(
+            appTester(App.creates.update_member.operation.perform, {
+                authData,
+                inputData: { id: found.id, [`metafields__custom__${mobile}`]: '020 7946 0000' },
+            }),
+        ).rejects.toThrow('country code');
     });
 
     it('stops the Zap when it picks several options for a field that takes one', async function () {
@@ -146,6 +167,7 @@ describe('E2E Custom fields', function () {
             [company]: 'Ghost Foundation',
             [plan]: ['Gold'],
             [topics]: ['Sport'],
+            [mobile]: '+442079460123',
         });
     });
 
@@ -160,6 +182,7 @@ describe('E2E Custom fields', function () {
             [company]: 'Ghost Foundation',
             [plan]: ['Gold'],
             [topics]: ['Sport'],
+            [mobile]: '+442079460123',
         });
     });
 });

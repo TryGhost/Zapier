@@ -35,6 +35,7 @@ const definitions = [
         options: ['News', 'Sport', 'Culture'],
         multiple: true,
     }),
+    definition('mobile', 'Mobile', 'phone'),
     // A type from a newer Ghost than this app's version of the types package.
     definition('birthday', 'Birthday', 'date'),
 ];
@@ -80,6 +81,7 @@ describe('Custom fields', function () {
                 ['metafields__custom__shipping__country', 'Shipping: Country', 'string'],
                 ['metafields__custom__plan', 'Plan', 'string'],
                 ['metafields__custom__topics', 'Topics', 'string'],
+                ['metafields__custom__mobile', 'Mobile', 'string'],
             ]);
             expect(inputs.every((input) => input.required === false)).toBe(true);
             // A country is picked from Ghost's own list rather than typed.
@@ -115,6 +117,23 @@ describe('Custom fields', function () {
             });
         });
 
+        // Ghost rejects a phone number without a country code, and numbers from other tools
+        // often leave it out.
+        it("asks for a country code in a phone input's help text", async function () {
+            site.get(DEFINITIONS).reply(200, { members_metafields: definitions });
+
+            const inputs = await appTester(
+                customFieldInputsOf(App.creates.update_member.operation),
+                bundle,
+            );
+
+            expect(inputs.find(({ key }) => key === 'metafields__custom__mobile')).toMatchObject({
+                type: 'string',
+                helpText:
+                    'Include the country code, starting with +, like +44 20 7946 0000. Leave blank to keep what the member already has.',
+            });
+        });
+
         // Ghost falls back to no options when it can't read a list field's settings, and
         // then refuses every answer, so an input could never succeed.
         it('offers no input for a list field Ghost has no options for', async function () {
@@ -136,21 +155,27 @@ describe('Custom fields', function () {
         // Every type in the package this app is built with gets inputs, so updating the
         // package is all a new type built from existing building blocks needs.
         it('offers inputs for every type Ghost has', async function () {
-            site.get(DEFINITIONS).reply(200, {
-                members_metafields: FIELD_TYPE_IDS.map((type) =>
-                    definition(
-                        type,
-                        type,
-                        type,
-                        SET_TYPES.includes(type)
-                            ? { options: ['One', 'Two'], multiple: false }
-                            : undefined,
+            site.get(DEFINITIONS)
+                .twice()
+                .reply(200, {
+                    members_metafields: FIELD_TYPE_IDS.map((type) =>
+                        definition(
+                            type,
+                            type,
+                            type,
+                            SET_TYPES.includes(type)
+                                ? { options: ['One', 'Two'], multiple: false }
+                                : undefined,
+                        ),
                     ),
-                ),
-            });
+                });
 
             const inputs = await appTester(
                 customFieldInputsOf(App.creates.create_member.operation),
+                bundle,
+            );
+            const outputs = await appTester(
+                customFieldOutputsOf(App.searches.member.operation),
                 bundle,
             );
 
@@ -160,9 +185,12 @@ describe('Custom fields', function () {
                     type,
                 ).toBe(true);
             }
+            // Every output, including each part of a record, has an input, so a package update
+            // that adds a text format or a leaf kind fails here until the app has an input for
+            // it. One that adds a shape fails before this, because the app has no handler for it.
+            expect(inputs.map(({ key }) => key)).toEqual(outputs.map(({ key }) => key));
             // Each dropdown has choices, so an update that adds a source of choices fails here
-            // until the app has its choices. One that adds a kind of leaf or a shape fails
-            // above, since the app has no handler for it.
+            // until the app has its choices.
             for (const input of inputs.filter((input) => 'choices' in input)) {
                 expect(input.choices?.length, input.key).toBeGreaterThan(0);
             }

@@ -21,9 +21,16 @@ the build checks the packaged app loads, so a dependency that only loads with
 those defaults fails CI rather than failing on Zapier.
 
 `pnpm test:e2e` runs the Zapier app against a real Ghost. With Docker running,
-it boots a fresh `ghost:6` container, creates the owner user, creates a custom
-integration, writes the Admin API credentials to `test-e2e/.env.local`, runs
-the ordered e2e files, and tears the container down.
+it pulls the latest `ghost:6` image, boots a fresh container, creates the owner
+user, turns on the labs flag of each custom field type still in development,
+creates a custom integration, writes the Admin API credentials to
+`test-e2e/.env.local`, runs the ordered e2e files, and tears the container
+down.
+
+The suite tests the custom field types in the app's version of
+`@tryghost/metafield-types`, so it needs a Ghost at least as new as that
+package. A Ghost checkout or a Ghost you started yourself must be recent
+enough, or the custom fields tests fail when they create their fields.
 
 The e2e files share state. They run one file at a time in filename order, and
 `02-creates.test.js` seeds fixtures the later trigger and search tests assert

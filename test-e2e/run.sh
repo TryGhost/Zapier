@@ -9,7 +9,8 @@ set -euo pipefail
 # 2. test-e2e/.env.local pointing at a Ghost that still answers: reuse it
 # 3. GHOST_CORE_PATH set: boot Ghost from that source checkout
 # 4. docker available: boot a fresh ghost:6 container in development mode
-#    (development so Ghost accepts sqlite - no MySQL service needed)
+#    (development so Ghost accepts sqlite - no MySQL service needed), pulling
+#    the latest ghost:6 first, since the suite tests the newest Ghost features
 # 5. otherwise: explain the options
 #
 # Ghosts provisioned by 3 and 4 are fresh installs - the suite's fixtures
@@ -104,7 +105,7 @@ elif command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
     provisioned="docker"
     echo "Booting a fresh ghost:6 container ('${container}') on ${ghost_url}"
     docker rm -f "${container}" >/dev/null 2>&1 || true
-    docker run -d --name "${container}" -p "${port}:2368" \
+    docker run -d --pull always --name "${container}" -p "${port}:2368" \
         -e NODE_ENV=development \
         -e url="${ghost_url}" \
         -e database__client=sqlite3 \
