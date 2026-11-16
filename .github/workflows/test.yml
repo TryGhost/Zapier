@@ -59,8 +59,9 @@ jobs:
           # the default theme lives in a submodule and Ghost needs it to boot
           submodules: true
           persist-credentials: false
-      # Node version follows Ghost's engines (^22.18.0); the Zapier app
-      # itself is tested on its full matrix in the build job
+      # Node 22, Zapier's runtime, which Ghost's engines also allow;
+      # renovate.json5 keeps it on 22. The Zapier app itself is tested on
+      # its full matrix in the build job
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22.23.5'

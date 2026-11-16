@@ -15,10 +15,16 @@
             allowedVersions: '<11',
         },
         {
-            description: "Keep Node updates on 22: the Zapier Lambda runtime for core 19 is Node 22, the e2e job follows Ghost's engines (^22.18.0), and `.nvmrc` mirrors both. The shared preset automerges these bumps, so without this rule a major bump to Node 24 would silently drift CI and local dev off the deployed runtime. Patch/minor bumps within 22 stay in range and may automerge.",
+            description: "Keep Node updates on 22: the Zapier Lambda runtime for core 19 is Node 22, the e2e job runs Ghost on the same Node 22, which Ghost's engines allow, and `.nvmrc` mirrors both. The shared preset automerges these bumps, so without this rule a major bump would silently drift CI and local dev off the deployed runtime. Patch/minor bumps within 22 stay in range and may automerge. The rule matches the dependency name, `node`, which both managers give it: Renovate looks up setup-node's `node-version` under the package name `actions/node-versions`, so a package name match never held the e2e job back.",
             matchManagers: ['github-actions', 'nvm'],
-            matchPackageNames: ['node'],
+            matchDepNames: ['node'],
             allowedVersions: '<23',
+        },
+        {
+            description: "Automerge minor and patch updates to pnpm overrides. An override here pins a transitive dependency past a security advisory, and Renovate keeps the pinned version current, but the shared preset only automerges direct dependency types, so these updates waited on a person even when CI passed. A major update moves every package the override covers onto a new major, so it still waits for review.",
+            matchDepTypes: ['pnpm.overrides'],
+            matchUpdateTypes: ['minor', 'patch'],
+            automerge: true,
         },
     ],
 }
