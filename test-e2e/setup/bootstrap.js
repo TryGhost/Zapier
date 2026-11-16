@@ -4,7 +4,7 @@
  * Runs the Ghost Admin setup flow over HTTP against a running instance:
  * 1. creates the owner user (no auth required on a fresh install)
  * 2. logs in with the owner credentials to obtain a session cookie
- * 3. switches on member custom fields, which are behind a labs flag
+ * 3. turns on the labs flag of each custom field type still in development
  * 4. creates a "Zapier E2E" custom integration and extracts its Admin API key
  *
  * The resulting `GHOST_ADMIN_API_URL` and `GHOST_ADMIN_API_KEY` values are
@@ -26,6 +26,8 @@ import http from 'node:http';
 import fs from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { FIELD_TYPE_FLAGS } from '@tryghost/metafield-types/structure';
 
 const GHOST_URL = process.env.GHOST_URL || 'http://localhost:2368';
 
@@ -139,13 +141,18 @@ const createIntegration = async (sessionCookie) => {
     return adminKey.secret.includes(':') ? adminKey.secret : `${adminKey.id}:${adminKey.secret}`;
 };
 
-// Metafields are behind a labs flag. Only a staff session can change settings, so it's switched on here.
-const enableCustomFields = async (sessionCookie) => {
+// Ghost only lets a custom field be created with a type that's still in development
+// when the type's labs flag is on, such as customFieldTypePhone. The types package
+// lists those flags, so the suite can create a field of every type the app supports.
+// Only a staff session can change settings.
+const LABS = Object.fromEntries(Object.values(FIELD_TYPE_FLAGS).map((flag) => [flag, true]));
+
+const enableFieldTypesInDevelopment = async (sessionCookie) => {
     const response = await request('PUT', '/ghost/api/admin/settings/', {
-        body: { settings: [{ key: 'labs', value: JSON.stringify({ membersCustomFields: true }) }] },
+        body: { settings: [{ key: 'labs', value: JSON.stringify(LABS) }] },
         headers: { Cookie: sessionCookie },
     });
-    assertStatus('Enabling custom fields', response, 200);
+    assertStatus('Enabling field types in development', response, 200);
 };
 
 const exportCredentials = (adminApiKey) => {
@@ -173,7 +180,7 @@ const bootstrap = async () => {
 
     await createOwner();
     const sessionCookie = await createSession();
-    await enableCustomFields(sessionCookie);
+    await enableFieldTypesInDevelopment(sessionCookie);
     const adminApiKey = await createIntegration(sessionCookie);
     exportCredentials(adminApiKey);
 };
