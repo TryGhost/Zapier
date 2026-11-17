@@ -24,8 +24,8 @@ importers:
         specifier: 1.14.16
         version: 1.14.16
       '@tryghost/metafield-types':
-        specifier: 0.5.0
-        version: 0.5.0
+        specifier: 0.6.0
+        version: 0.6.0
       lodash:
         specifier: 4.18.1
         version: 4.18.1
@@ -1270,8 +1270,8 @@ packages:
   '@tryghost/admin-api@1.14.16':
     resolution: {integrity: sha512-VUZDJgVEquXrKm3SpXKACUq9DqsOUNN7aZG9F4G6k/2D9bNI8/KSZGaVUXxXMEFbLh4PfeamxgLJ6ozvVyyfPQ==}
 
-  '@tryghost/metafield-types@0.5.0':
-    resolution: {integrity: sha512-Tk8xIwyrLnzobqVwxbcAqNdDInjQXMh+Tlv6DDbHcbMndFbHCX7+xvg/6yc/EQFJDq193UZRxnYOTDwlzjEmmQ==}
+  '@tryghost/metafield-types@0.6.0':
+    resolution: {integrity: sha512-eyPmVGSpCsVzWHUH+UiycOHOq8E+OVXtZaH83WSCf4AT+JBPOYIyYI1ZK5Cge8PB6kwAQJleeEgSm3ZzIXo8VQ==}
 
   '@tryghost/pro-ship@2.0.4':
     resolution: {integrity: sha512-tt6vcmI1m9ZyjhQ23FHDgQ6TmVzLqIWlw7PQ9nmOdce4iaW3RcxXZVIFnj90PvpmZdxX2j5Xl9KoMBOkqXwTxg==}
@@ -5468,7 +5468,7 @@ snapshots:
       - debug
       - supports-color
 
-  '@tryghost/metafield-types@0.5.0':
+  '@tryghost/metafield-types@0.6.0':
     dependencies:
       libphonenumber-js: 1.13.15
       zod: 4.6.7
