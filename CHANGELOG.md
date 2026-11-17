@@ -1,3 +1,14 @@
+## Unreleased
+
+New:
+
+* (New) Phone custom fields. Create Member and Update Member have an input
+  for each phone custom field on your site, and Find a Member, Member Created
+  and Member Updated return the number. Enter a number with its country code,
+  like +44 20 7946 0000. Ghost rejects a number without a country code, and
+  the Zap stops with Ghost's error message. Ghost saves numbers in E.164
+  format, so +44 20 7946 0000 comes back as +442079460000.
+
 ## 3.1.0
 
 New:
