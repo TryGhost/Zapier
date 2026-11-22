@@ -32,8 +32,8 @@
     "@tryghost/pro-ship": "2.0.4",
     "@vitest/coverage-v8": "5.1.1",
     "nock": "15.0.6",
-    "oxfmt": "0.78.0",
-    "oxlint": "1.93.0",
+    "oxfmt": "0.79.0",
+    "oxlint": "1.94.0",
     "vitest": "5.1.1",
     "zapier-platform-cli": "19.3.0"
   },
